@@ -48,7 +48,7 @@ function updateCtrl($scope, $http) {
 			$('.track-progress li.current').addClass('done');
 			$('.track-progress li.current').next().addClass('current');
 			$('.track-progress li.done').removeClass('current');
-			$('<span></span>').append(t('updater', 'Here is your backup: ') + $scope.backup).append('<br />').appendTo($('#upd-progress'));
+			$('<span></span>').append(t('updater', 'Here is your backup: {backupFile}', {backupFile: $scope.backup})).append('<br />').appendTo($('#upd-progress'));
 			$http.post(
 					OC.filePath('updater', 'ajax', 'download.php'),
 					{ 
