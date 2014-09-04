@@ -19,28 +19,30 @@ class Downloader {
 	protected static $package = false;
 
 	public static function getPackage($url, $version) {
-		self::$package = \OCP\Files::tmpFile();
-		if (!self::$package){
-			throw new \Exception('Unable to create a temporary file');
+		self::$package = App::getBackupBase() . $version;
+		if (preg_match('/\.zip$/i', $url)) {
+			$type = '.zip';
+		} elseif (preg_match('/(\.tgz|\.tar\.gz)$/i', $url)) {
+			$type = '.tgz';
+		} elseif (preg_match('/\.tar\.bz2$/i', $url)) {
+			$type = '.tar.bz2';
+		} else {
+			throw new \Exception('Unable to extract package ' . $url . ': unknown format');
 		}
+		
+		self::$package = self::$package . $type;
+		
 		try {
-			
-			if (self::fetch($url)===false) {
-				throw new \Exception("Error storing package content");
-			}
-			if (preg_match('/\.zip$/i', $url)) {
-				rename(self::$package, self::$package . '.zip');
-				self::$package .= '.zip';
-			} elseif (preg_match('/(\.tgz|\.tar\.gz)$/i', $url)) {
-				rename(self::$package, self::$package . '.tgz');
-				self::$package .= '.tgz';
-			} elseif (preg_match('/\.tar\.bz2$/i', $url)) {
-				rename(self::$package, self::$package . '.tar.bz2');
-				self::$package .= '.tar.bz2';
+			// Reuse already downloaded package
+			if (!file_exists(self::$package)){
+				if (self::fetch($url)===false) {
+					throw new \Exception("Error storing package content");
+				}
+				App::log('Downloaded ' . filesize(self::$package) . ' bytes.' , \OCP\Util::DEBUG);
 			} else {
-				throw new \Exception('Unable to extract package');
+				App::log('Use already downloaded package ' . self::$package . '. Size is ' . filesize(self::$package) . ' bytes.' , \OCP\Util::DEBUG);
 			}
-
+			
 			$extractDir = self::getPackageDir($version);
 			Helper::mkdir($extractDir, true);
 
@@ -54,7 +56,6 @@ class Downloader {
 			self::cleanUp($version);
 			throw $e;
 		}
-		Helper::removeIfExists(self::$package);
 		
 		//  Prepare extracted data
 		//  to have '3rdparty', 'apps' and 'core' subdirectories
@@ -65,7 +66,6 @@ class Downloader {
 		rename($baseDir, $sources[Helper::CORE_DIRNAME]);
 	}
 	
-	/* To be replaced with OC_Util::getUrlContent for 5.x */
 	public static function fetch($url){
 		
 		$urlFopen = ini_get('allow_url_fopen');
@@ -98,9 +98,6 @@ class Downloader {
 	}
 
 	public static function cleanUp($version){
-		if (self::$package) {
-			Helper::removeIfExists(self::$package);
-		}
 		Helper::removeIfExists(self::getPackageDir($version));
 		Helper::removeIfExists(App::getTempBase());
 	}
