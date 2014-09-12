@@ -59,8 +59,17 @@ class Downloader {
 		
 		//  Prepare extracted data
 		//  to have '3rdparty', 'apps' and 'core' subdirectories
-		$sources = Helper::getSources($version);
 		$baseDir = $extractDir. '/' . self::PACKAGE_ROOT;
+		if (!file_exists($baseDir)){
+			App::log('Expected fresh sources in ' . $baseDir . '. Nothing is found. Something is wrong with OC_Archive.');
+			App::log($extractDir  . ' content: ' . implode(' ', scandir($extractDir)));
+			if ($type === '.zip' && !extension_loaded('zip')){
+				$hint = App::$l10n->t('Please ask your server administrator to enable PHP zip extension.');
+			}
+			throw new \Exception(self::$package . " extraction error. " . $hint);
+		}
+
+		$sources = Helper::getSources($version);
 		rename($baseDir . '/' . Helper::THIRDPARTY_DIRNAME, $sources[Helper::THIRDPARTY_DIRNAME]);
 		rename($baseDir . '/' . Helper::APP_DIRNAME, $sources[Helper::APP_DIRNAME]);
 		rename($baseDir, $sources[Helper::CORE_DIRNAME]);
