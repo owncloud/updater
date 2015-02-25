@@ -21,6 +21,15 @@ try {
 	$list = array();
 }
 clearstatcache();
+
+// Sort by date
+$files = array();
+foreach($list as $l) {
+	$files[basename($l)] = filemtime(App::getBackupBase() . '/' . $l);
+}
+asort($files);
+$list = array_keys(array_reverse($files));
+
 $result = array();
 foreach ($list as $item){
 	if ($item=='.' || $item=='..'){
@@ -28,8 +37,16 @@ foreach ($list as $item){
 	}
 	$result[] = array(
 		'title' => $item,
-		'date' => date ("F d Y H:i:s", filectime(App::getBackupBase() . '/' . $item))
+		'date' => date ("F d Y H:i:s", filectime(App::getBackupBase() . '/' . $item)),
+		'size' => human_filesize(filesize(App::getBackupBase() . '/' . $item))
 	);
 }
 
 \OCP\JSON::success(array('data' => $result));
+
+/* adapted from http://php.net/manual/de/function.filesize.php */
+function human_filesize($bytes, $decimals = 2) {
+  $sz = 'BKMGTP';
+  $factor = floor((strlen($bytes) - 1) / 3);
+  return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+}
