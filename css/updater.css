@@ -61,8 +61,17 @@
 	font-weight: bold;
 }
 
-.updater-spinner {
+.updater-spinner,
+.backup-spinner {
 	display: block;
+}
+
+.backup-spinner {
+	width: 16px;
+}
+
+.doing-backup {
+    padding: 1em 0;
 }
 
 .updater-update {

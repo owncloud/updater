@@ -21,6 +21,15 @@ try {
 	$list = array();
 }
 clearstatcache();
+
+// Sort by date
+$files = array();
+foreach($list as $l) {
+	$files[basename($l)] = filemtime(App::getBackupBase() . '/' . $l);
+}
+asort($files);
+$list = array_keys(array_reverse($files));
+
 $result = array();
 foreach ($list as $item){
 	if ($item=='.' || $item=='..'){

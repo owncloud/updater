@@ -57,6 +57,15 @@
 			<?php p($l->t('Backup directory')) ?>:
 			<?php p(\OCA\Updater\App::getBackupBase()); ?>
 		</p>
+		<button ng-click="backup()" id="backup-start">
+			<?php p($l->t('manual core backup')) ?>
+		</button>
+		<div class="backup-progress">
+			<div class="doing-backup" style="display: none;">
+				<?php p($l->t('Working on the backup. This could take a while...')) ?>
+				<span class="backup-spinner icon-loading-small"></span>
+			</div>
+		</div>
 		<p ng-show="!entries.length"><?php p($l->t('No backups found.')) ?></p>
 		<table ng-hide="!entries.length" class="updater-backups-table">
 			<thead>

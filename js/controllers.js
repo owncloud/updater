@@ -106,10 +106,15 @@ function updateCtrl($scope, $http) {
 }
 
 function backupCtrl($scope, $http) {
-	$http.get(OC.filePath('updater', 'ajax', 'backup/list.php'), {headers: {'requesttoken': oc_requesttoken}})
+
+	$scope.list = function() {
+		$http.get(OC.filePath('updater', 'ajax', 'backup/list.php'), {headers: {'requesttoken': oc_requesttoken}})
 		.success(function (data) {
 			$scope.entries = data.data;
 		});
+	};	
+
+	$scope.list();
 
 	$scope.doDelete = function (name) {
 		$http.get(OC.filePath('updater', 'ajax', 'backup/delete.php'), {
@@ -128,5 +133,51 @@ function backupCtrl($scope, $http) {
 			'?requesttoken=' + oc_requesttoken +
 			'&filename=' + name
 		);
+	};
+
+	$scope.backup = function () {
+		$('.doing-backup').fadeIn();
+		$('#backup-start').fadeOut();
+		// Remove all errors if user retries
+		$('.backup-warning-p').parent().remove();
+
+		$http.get(OC.filePath('updater', 'ajax', 'manual_backup.php'), {headers: {'requesttoken': oc_requesttoken}})
+			.success(function (data) {
+				if (data && data.status && data.status === 'success') {
+
+					$('.doing-backup').fadeOut();
+
+					$('<p></p>')
+						.hide()
+						.addClass('updater-space-bottom')
+						.append(t('updater', '<strong>Backup done.</strong>'))
+						.appendTo($('.backup-progress'))
+						.fadeIn();
+
+					$scope.list();
+
+					$('#backup-start').fadeIn();
+					
+				} else {
+					$('.doing-backup').fadeOut();
+
+					$scope.fail(data);
+					$('#backup-start').text(t('updater', 'Retry')).fadeIn();
+				}
+			})
+			.error($scope.crash);
+	};
+
+	$scope.fail = function (data) {
+		var message = t('updater', '<strong>The backup was unsuccessful.</strong><br />Please check logs at admin page and report this issue to the <a href="https://github.com/owncloud/apps/issues" target="_blank">ownCloud community</a>.');
+		if (data && data.message) {
+			message = data.message;
+		}
+		$('<div></div>').hide().append($('<p></p>').addClass('backup-warning-p').append(message)).addClass('warning').appendTo($('.backup-progress')).fadeIn();
+	};
+
+	$scope.crash = function () {
+		var message = t('updater', '<strong>Server error.</strong> Please check web server log file for details');
+		$('<div></div>').hide().append($('<p></p>').addClass('backup-warning-p').append(message)).addClass('warning').appendTo($('.backup-progress')).fadeIn();
 	};
 }
