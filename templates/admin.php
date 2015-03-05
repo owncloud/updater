@@ -58,7 +58,7 @@
 			<?php p(\OCA\Updater\App::getBackupBase()); ?>
 		</p>
 		<button ng-click="backup()" id="backup-start">
-			<?php p($l->t('manual core backup')) ?>
+			<?php p($l->t('Backup core manually')) ?>
 		</button>
 		<div class="backup-progress">
 			<div class="doing-backup" style="display: none;">
@@ -70,18 +70,18 @@
 		<table ng-hide="!entries.length" class="updater-backups-table">
 			<thead>
 				<tr>
-					<th>&nbsp;</th>
 					<th><?php p($l->t('Backup')) ?></th>
 					<th><?php p($l->t('Done on')) ?></th>
 					<th><?php p($l->t('Size')) ?></th>
+					<th>&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="entry in entries">
-					<td title="<?php p($l->t('Delete')) ?>" class="item icon-delete" ng-confirm-click="<?php p($l->t('Are you sure you want to delete {{entry.title}}')); ?>" ng-click="doDelete(entry.title)"></td>
 					<td title="<?php p($l->t('Download')) ?>" class="item" ng-click="doDownload(entry.title)">{{entry.title}}</td>
 					<td title="<?php p($l->t('Download')) ?>" class="item" ng-click="doDownload(entry.title)">{{entry.date}}</td>
 					<td title="<?php p($l->t('Download')) ?>" class="item" ng-click="doDownload(entry.title)">{{entry.size}}</td>
+					<td title="<?php p($l->t('Delete')) ?>" class="item icon-delete" ng-confirm-click="<?php p($l->t('Are you sure you want to delete {{entry.title}}')); ?>" ng-click="doDelete(entry.title)"></td>
 				</tr>
 			</tbody>
 		</table>
