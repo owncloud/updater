@@ -5,6 +5,26 @@ function updateCtrl($scope, $http) {
 	$scope.backup = '';
 	$scope.version = '';
 	$scope.url = '';
+	
+	$scope.updateChannel = function(){
+		OC.msg.startAction('#channel_save_msg', t('updater', 'Fetching...'));
+		$.post(
+			OC.filePath('updater', 'ajax', 'channel.php'),
+			{
+				newChannel : $('#release-channel').val()
+			},
+			function(data){
+				if (data.status && data.status==='success'){
+					$scope.$apply(function(){
+						$scope.checkedAt = data.checkedAt;
+						$scope.newVersion = data.version;
+						$scope.hasUpdate = data.version && data.version.length;
+					});
+				}
+				OC.msg.finishedAction('#channel_save_msg', data);
+			}
+		);
+	};
 
 	$scope.fail = function (data) {
 		var message = t('updater', '<strong>The update was unsuccessful.</strong><br />Please check logs at admin page and report this issue to the <a href="https://github.com/owncloud/apps/issues" target="_blank">ownCloud community</a>.');
@@ -17,6 +37,7 @@ function updateCtrl($scope, $http) {
 	$scope.crash = function () {
 		var message = t('updater', '<strong>Server error.</strong> Please check web server log file for details');
 		$('<div></div>').hide().append($('<p></p>').addClass('updater-warning-p').append(message)).addClass('warning').appendTo($('.updater-progress')).fadeIn();
+		$('.updater-spinner').hide();
 	};
 
 	$scope.update = function () {
@@ -39,6 +60,7 @@ function updateCtrl($scope, $http) {
 						$scope.update();
 					} else {
 						$scope.fail(data);
+						$('.updater-spinner').hide();
 						$('#updater-start').text(t('updater', 'Retry')).fadeIn();
 					}
 				})
@@ -57,13 +79,18 @@ function updateCtrl($scope, $http) {
 					url: $scope.url,
 					version: $scope.version
 				},
-				{headers: {'requesttoken': oc_requesttoken}}
+				{
+					headers: {
+						'requesttoken': oc_requesttoken
+					}
+				}
 			).success(function (data) {
 					if (data && data.status && data.status === 'success') {
 						$scope.step = 2;
 						$scope.update();
 					} else {
 						$scope.fail(data);
+						$('.updater-spinner').hide();
 					}
 				})
 				.error($scope.crash);
@@ -82,7 +109,11 @@ function updateCtrl($scope, $http) {
 					version: $scope.version,
 					backupPath: $scope.backup
 				},
-				{headers: {'requesttoken': oc_requesttoken}}
+				{
+					headers: {
+						'requesttoken': oc_requesttoken
+					}
+				}
 			).success(function (data) {
 					if (data && data.status && data.status === 'success') {
 						$scope.step = 3;
@@ -98,6 +129,7 @@ function updateCtrl($scope, $http) {
 						$('<p></p>').hide().addClass('bold').append($('<a href="' + href + '">' + title + '</a>').addClass('button')).appendTo($('.updater-progress')).fadeIn();
 					} else {
 						$scope.fail(data);
+						$('.updater-spinner').hide();
 					}
 				})
 				.error($scope.crash);
