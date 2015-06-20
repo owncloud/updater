@@ -18,3 +18,5 @@ $this->create('updater_ajax_backup_list', 'ajax/backup/list.php')
 	->actionInclude('updater/ajax/backup/list.php');
 $this->create('updater_ajax_channel', 'ajax/channel.php')
 	->actionInclude('updater/ajax/channel.php');
+$this->create('updater_ajax_manual_backup', 'ajax/manual_backup.php')
+	->actionInclude('updater/ajax/manual_backup.php');

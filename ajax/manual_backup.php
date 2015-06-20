@@ -20,7 +20,7 @@ clearstatcache();
 
 try {
 	
-	$backupPath = Backup::create(-1);
+	$backupPath = Backup::create(null);
 
 	// zip backup 
 	$zip = new \ZipArchive();
