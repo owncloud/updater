@@ -12,14 +12,19 @@ use Symfony\Component\Console\Command\Command;
 class Application extends \Symfony\Component\Console\Application {
 
 	/** @var Container */
-	protected $container;
+	public static $container;
+
+
+	/** @var Container */
+	protected $DIcontainer;
 
 	/**
 	 * Pass Pimple container into application
 	 * @param Container $container
 	 */
 	public function setContainer(Container $container){
-		$this->container = $container;
+		$this->DIcontainer = $container;
+		self::$container = $container;
 	}
 
 	/**
@@ -27,7 +32,7 @@ class Application extends \Symfony\Component\Console\Application {
 	 * @return Container
 	 */
 	public function getContainer(){
-		return $this->container;
+		return $this->DIcontainer;
 	}
 
 	/**
@@ -35,7 +40,7 @@ class Application extends \Symfony\Component\Console\Application {
 	 * @return \Psr\Log\LoggerInterface
 	 */
 	public function getLogger(){
-		return $this->container['logger'];
+		return $this->DIcontainer['logger'];
 	}
 
 	/**
@@ -49,7 +54,7 @@ class Application extends \Symfony\Component\Console\Application {
 	}
 
 	public function doRun(InputInterface $input, OutputInterface $output){
-		if (!($this->container['logger.output'] instanceof StreamOutput)){
+		if (!($this->DIcontainer['logger.output'] instanceof StreamOutput)){
 			$output->writeln('[Warning] Failed to init logger. Logging is disabled.');
 		}
 		try {
@@ -57,7 +62,7 @@ class Application extends \Symfony\Component\Console\Application {
 			$this->assertOwncloudFound();
 			$this->initDirectoryStructure();
 
-			$configReader = $this->container['utils.configReader'];
+			$configReader = $this->DIcontainer['utils.configReader'];
 			$configReader->init();
 			return parent::doRun($input, $output);
 		} catch (\Exception $e) {

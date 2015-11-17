@@ -90,7 +90,7 @@ class ConfigReader {
 		$rawConfig = $process->getOutput();
 		$this->cache = json_decode($rawConfig, true);
 		if (is_null($this->cache)){
-			throw new \UnexpectedValueException('Can not parse ownCloud config. Please check if the current shell user can run occ command.');
+			throw new \UnexpectedValueException('Can not parse ownCloud config. Please check if the current shell user can run occ command. Raw output: ' . PHP_EOL . $rawConfig);
 		}
 	}
 
