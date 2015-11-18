@@ -3,7 +3,6 @@
 namespace Owncloud\Updater\Utils;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Psr7\Response;
 use Owncloud\Updater\Utils\Feed;
 
@@ -55,7 +54,7 @@ class Fetcher {
 			$url = $feed->getUrl();
 			$response = $this->httpClient->get($url, [
 				'save_to' => $downloadPath,
-				RequestOptions::TIMEOUT => 600
+				'timeout' => 600
 			]);
 			if ($response->getStatusCode() !== 200){
 				throw new \UnexpectedValueException('Failed to download ' . $url . '. Server responded with ' . $response->getStatusCode() . ' instead of 200.');
@@ -117,7 +116,7 @@ class Fetcher {
 		$version = explode('.', $currentVersion);
 		$version['installed'] = $this->configReader->getByPath('apps.core.installedat');
 		$version['updated'] = $this->configReader->getByPath('apps.core.lastupdatedat');
-		$version['updatechannel'] = 'daily'; //$this->configReader->getByPath('apps.core.OC_Channel');
+		$version['updatechannel'] = $this->configReader->getByPath('apps.core.OC_Channel');
 		$version['edition'] = $this->configReader->getEdition();
 		$version['build'] = $this->locator->getBuild();
 
@@ -132,7 +131,7 @@ class Fetcher {
 	 * @throws \UnexpectedValueException
 	 */
 	protected function download($url){
-		$response = $this->httpClient->get($url);
+		$response = $this->httpClient->get($url, ['timeout' => 600]);
 		if ($response->getStatusCode() !== 200){
 			throw new \UnexpectedValueException('Failed to download ' . $url . '. Server responded with ' . $response->getStatusCode() . ' instead of 200.');
 		}
