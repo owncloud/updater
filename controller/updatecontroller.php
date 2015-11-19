@@ -156,7 +156,7 @@ class UpdateController extends Controller{
 			\OC::$server->getLogger()->error($e->getMessage(), ['app' => 'updater']);
 			$result = [
 				'status' => 'error',
-				'message' => (string) $this->l10n->t('Update failed.') . $e->getMessage()
+				'message' => (string) $this->l10n->t('Update failed.') . ' ' . $e->getMessage()
 			];
 		}
 		return $result;
