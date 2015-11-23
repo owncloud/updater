@@ -66,7 +66,7 @@ class DetectCommand extends Command {
 					$this->fetcher->getOwncloud($feed);
 					if (md5_file($path) !== $this->fetcher->getMd5($feed)){
 						$output->writeln('Downloaded ' . $feed->getDownloadedFileName() . '. Checksum is incorrect.');
-						//@unlink($path);
+						@unlink($path);
 					} else {
 						$fileExists = true;
 					}

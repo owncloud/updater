@@ -41,7 +41,6 @@ class StartCommand extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output){
-		$output->writeln($this->getDescription());
 		$app = $this->getApplication();
 		foreach ($this->stack as $command){
 			$input = new ArrayInput($command);

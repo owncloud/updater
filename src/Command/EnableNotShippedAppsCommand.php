@@ -18,7 +18,8 @@ class EnableNotShippedAppsCommand extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output){
-		$output->writeln($this->getDescription());
+		$container = $this->getApplication()->getContainer();
+		$container['utils.appmanager']->reenableNotShippedApps($output);
 	}
 
 }

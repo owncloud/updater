@@ -7,20 +7,18 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Owncloud\Updater\Utils\Locator;
+use Owncloud\Updater\Utils\OccRunner;
 
 class ExecuteCoreUpgradeScriptsCommand extends Command {
 
 	/**
-	 * @var Locator $locator
+	 * @var OccRunner $occRunner
 	 */
-	protected $locator;
+	protected $occRunner;
 
-	public function __construct($locator){
+	public function __construct($occRunner){
 		parent::__construct();
-		$this->locator = $locator;
+		$this->occRunner = $occRunner;
 	}
 
 	protected function configure(){
@@ -32,14 +30,8 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output){
-		$process = new Process($this->locator->getPathToOccFile() . ' upgrade');
-		$process->run();
-
-		if (!$process->isSuccessful()){
-			throw new ProcessFailedException($process);
-		}
-
-		$output->writeln($process->getOutput());
+		$plain = $this->occRunner->run('upgrade');
+		$output->writeln($plain);
 	}
 
 }

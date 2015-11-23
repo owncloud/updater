@@ -2,9 +2,7 @@
 
 namespace Owncloud\Updater\Utils;
 
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Owncloud\Updater\Utils\Locator;
+use Owncloud\Updater\Utils\OccRunner;
 
 class ConfigReader {
 
@@ -12,16 +10,16 @@ class ConfigReader {
 	protected $cache = [];
 
 	/**
-	 * @var Locator $locator
+	 * @var OccRunner $occRunner
 	 */
-	protected $locator;
+	protected $occRunner;
 
 	/**
 	 *
-	 * @param Locator $locator
+	 * @param OccRunner $occRunner
 	 */
-	public function __construct(Locator $locator){
-		$this->locator = $locator;
+	public function __construct(OccRunner $occRunner){
+		$this->occRunner = $occRunner;
 	}
 
 	public function init(){
@@ -64,14 +62,7 @@ class ConfigReader {
 	 * @throws ProcessFailedException
 	 */
 	public function getEdition(){
-		$process = new Process($this->locator->getPathToOccFile() . ' status --output "json"');
-		$process->run();
-
-		if (!$process->isSuccessful()){
-			throw new ProcessFailedException($process);
-		}
-		$rawConfig = $process->getOutput();
-		$response = json_decode($rawConfig, true);
+		$response = $this->occRunner->runJson('status');
 		return $response['edition'];
 	}
 
@@ -81,17 +72,7 @@ class ConfigReader {
 	 * @throws \UnexpectedValueException
 	 */
 	private function load(){
-		$process = new Process($this->locator->getPathToOccFile() . ' config:list --output "json"');
-		$process->run();
-
-		if (!$process->isSuccessful()){
-			throw new ProcessFailedException($process);
-		}
-		$rawConfig = $process->getOutput();
-		$this->cache = json_decode($rawConfig, true);
-		if (is_null($this->cache)){
-			throw new \UnexpectedValueException('Can not parse ownCloud config. Please check if the current shell user can run occ command. Raw output: ' . PHP_EOL . $rawConfig);
-		}
+		$this->cache = $this->occRunner->runJson('config:list');
 	}
 
 }

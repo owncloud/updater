@@ -13,12 +13,13 @@ class DisableNotShippedAppsCommand extends Command {
 	protected function configure(){
 		$this
 				->setName('upgrade:disableNotShippedApps')
-				->setDescription('disable 3rdparty/not shipped apps')
+				->setDescription('Disable not shipped apps')
 		;
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output){
-		$output->writeln($this->getDescription());
+		$container = $this->getApplication()->getContainer();
+		$container['utils.appmanager']->disableNotShippedApps($output);
 	}
 
 }

@@ -6,26 +6,24 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessUtils;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Owncloud\Updater\Utils\Locator;
+use Owncloud\Updater\Utils\OccRunner;
 
 class MaintenanceModeCommand extends Command {
 
 	/**
-	 * @var Locator $locator
+	 * @var OccRunner $occRunner
 	 */
-	protected $locator;
+	protected $occRunner;
 
 	/**
 	 * Constructor
 	 *
-	 * @param Locator $locator
+	 * @param OccRunner $occRunner
 	 */
-	public function __construct(Locator $locator){
+	public function __construct(OccRunner $occRunner){
 		parent::__construct();
-		$this->locator = $locator;
+		$this->occRunner = $occRunner;
 	}
 
 	protected function configure(){
@@ -48,16 +46,13 @@ class MaintenanceModeCommand extends Command {
 		} elseif ($input->getOption('off')){
 			$mode = '--off';
 		}
-		$process = new Process(
-				$this->locator->getPathToOccFile() . ' maintenance:mode ' . ProcessUtils::escapeArgument($mode)
-		);
-		$process->run();
 
-		if (!$process->isSuccessful()){
-			throw new ProcessFailedException($process);
+		if ($mode !== ''){
+			$mode = ProcessUtils::escapeArgument($mode);
 		}
 
-		$output->writeln($process->getOutput());
+		$response =  $this->occRunner->run('maintenance:mode ' . $mode);
+		$output->writeln($response);
 	}
 
 }

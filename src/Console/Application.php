@@ -74,6 +74,8 @@ class Application extends \Symfony\Component\Console\Application {
 	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output){
 		$commandName = $this->getCommandName($input);
 		$this->getLogger()->info('Execution of ' . $commandName . ' command started');
+		$message = sprintf('<info>%s</info>', $command->getDescription());
+		$output->writeln($message);
 		$exitCode = parent::doRunCommand($command, $input, $output);
 		$this->getLogger()->info('Execution of ' . $commandName . ' command stopped. Exit code is ' . $exitCode);
 		return $exitCode;

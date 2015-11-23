@@ -22,7 +22,7 @@ class DbUpgradeCommand extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$simulation = strtolower($input->getArgument('simulation'));
-		$message = $this->getDescription() . ($simulation === 'true' ? ' simulated (optionally, can be done online in advance)' : 'real [danger, might take long]' );
+		$message = $simulation === 'true' ? ' simulated (optionally, can be done online in advance)' : 'real [danger, might take long]';
 		$output->writeln($message);
 	}
 

@@ -6,11 +6,13 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\StreamOutput;
 use Owncloud\Updater\Console\Application;
 use Symfony\Component\Console\Logger\ConsoleLogger;
-use Owncloud\Updater\Utils\Locator;
+use Owncloud\Updater\Utils\AppManager;
 use Owncloud\Updater\Utils\ConfigReader;
 use Owncloud\Updater\Utils\ConfigWriter;
 use Owncloud\Updater\Utils\Fetcher;
 use Owncloud\Updater\Utils\FilesystemHelper;
+use Owncloud\Updater\Utils\Locator;
+use Owncloud\Updater\Utils\OccRunner;
 use Owncloud\Updater\Command\BackupDataCommand;
 use Owncloud\Updater\Command\BackupDbCommand;
 use Owncloud\Updater\Command\CheckSystemCommand;
@@ -46,6 +48,14 @@ $c['utils.locator'] = function($c){
 	return new Locator(CURRENT_DIR);
 };
 
+$c['utils.occrunner'] = function($c){
+	return new OccRunner($c['utils.locator']);
+};
+
+$c['utils.appmanager'] = function($c){
+	return new AppManager($c['utils.occrunner']);
+};
+
 $c['utils.filesystemhelper'] = function($c){
 	return new FilesystemHelper();
 };
@@ -62,7 +72,7 @@ $c['logger'] = function($c){
 	return new ConsoleLogger($c['logger.output']);
 };
 $c['utils.configReader'] = function($c){
-	return new ConfigReader($c['utils.locator']);
+	return new ConfigReader($c['utils.occrunner']);
 };
 $c['utils.configWriter'] = function($c){
 	return new ConfigWriter($c['utils.locator']);
@@ -96,13 +106,13 @@ $c['command.enableNotShippedApps'] = function($c){
 	return new EnableNotShippedAppsCommand();
 };
 $c['command.executeCoreUpgradeScripts'] = function($c){
-	return new ExecuteCoreUpgradeScriptsCommand($c['utils.locator']);
+	return new ExecuteCoreUpgradeScriptsCommand($c['utils.occrunner']);
 };
 $c['command.info'] = function($c){
 	return new InfoCommand();
 };
 $c['command.maintenaceMode'] = function($c){
-	return new MaintenanceModeCommand($c['utils.locator']);
+	return new MaintenanceModeCommand($c['utils.occrunner']);
 };
 $c['command.postUpgradeCleanup'] = function($c){
 	return new PostUpgradeCleanupCommand();
