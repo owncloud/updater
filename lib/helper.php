@@ -49,7 +49,11 @@ class Helper {
 	 * @throws \Exception on error
 	 */
 	public static function move($src, $dest) {
-		if (!rename($src, $dest)) {
+		if (is_dir($src)) {
+			self::copyr($src, $dest);
+			self::rmdirr($src);
+		}
+		elseif (!rename($src, $dest)) {
 			throw new \Exception("Unable to move $src to $dest");
 		}
 	}
