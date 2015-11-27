@@ -64,6 +64,9 @@ class FilesystemHelper {
 	 * @param Collection $collection - object to store incorrect permissions
 	 */
 	public function checkr($src, $collection){
+		if (!file_exists($src)){
+			return;
+		}
 		if (!is_writable($src)){
 			$collection->addNotWritable($src);
 		}

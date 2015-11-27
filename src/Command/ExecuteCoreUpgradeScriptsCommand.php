@@ -30,6 +30,10 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output){
+		$container = $this->getApplication()->getContainer();
+		$locator = $container['utils.locator'];
+		$fsHelper = $container['utils.filesystemhelper'];
+		
 		$plain = $this->occRunner->run('upgrade');
 		$output->writeln($plain);
 	}

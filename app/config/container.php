@@ -7,6 +7,7 @@ use Symfony\Component\Console\Output\StreamOutput;
 use Owncloud\Updater\Console\Application;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Owncloud\Updater\Utils\AppManager;
+use Owncloud\Updater\Utils\Checkpoint;
 use Owncloud\Updater\Utils\ConfigReader;
 use Owncloud\Updater\Utils\ConfigWriter;
 use Owncloud\Updater\Utils\Fetcher;
@@ -15,6 +16,7 @@ use Owncloud\Updater\Utils\Locator;
 use Owncloud\Updater\Utils\OccRunner;
 use Owncloud\Updater\Command\BackupDataCommand;
 use Owncloud\Updater\Command\BackupDbCommand;
+use Owncloud\Updater\Command\CheckpointCommand;
 use Owncloud\Updater\Command\CheckSystemCommand;
 use Owncloud\Updater\Command\CleanCacheCommand;
 use Owncloud\Updater\Command\DbUpgradeCommand;
@@ -55,9 +57,11 @@ $c['utils.occrunner'] = function($c){
 $c['utils.appmanager'] = function($c){
 	return new AppManager($c['utils.occrunner']);
 };
-
 $c['utils.filesystemhelper'] = function($c){
 	return new FilesystemHelper();
+};
+$c['utils.checkpoint'] = function($c){
+	return new Checkpoint($c['utils.locator'], $c['utils.filesystemhelper']);
 };
 
 $c['logger.output'] = function($c){
@@ -86,6 +90,9 @@ $c['command.backupData'] = function($c){
 };
 $c['command.backupDb'] = function($c){
 	return new BackupDbCommand();
+};
+$c['command.checkpoint'] = function($c){
+	return new CheckpointCommand();
 };
 $c['command.checkSystem'] = function($c){
 	return new CheckSystemCommand();
@@ -140,6 +147,7 @@ $c['commands'] = function($c){
 	return [
 		$c['command.backupData'],
 		$c['command.backupDb'],
+		$c['command.checkpoint'],
 		$c['command.checkSystem'],
 		$c['command.cleanCache'],
 		$c['command.dbUpgrade'],

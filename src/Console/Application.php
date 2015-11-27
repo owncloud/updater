@@ -16,14 +16,14 @@ class Application extends \Symfony\Component\Console\Application {
 
 
 	/** @var Container */
-	protected $DIcontainer;
+	protected $diContainer;
 
 	/**
 	 * Pass Pimple container into application
 	 * @param Container $container
 	 */
 	public function setContainer(Container $container){
-		$this->DIcontainer = $container;
+		$this->diContainer = $container;
 		self::$container = $container;
 	}
 
@@ -32,7 +32,7 @@ class Application extends \Symfony\Component\Console\Application {
 	 * @return Container
 	 */
 	public function getContainer(){
-		return $this->DIcontainer;
+		return $this->diContainer;
 	}
 
 	/**
@@ -40,7 +40,7 @@ class Application extends \Symfony\Component\Console\Application {
 	 * @return \Psr\Log\LoggerInterface
 	 */
 	public function getLogger(){
-		return $this->DIcontainer['logger'];
+		return $this->diContainer['logger'];
 	}
 
 	/**
@@ -54,7 +54,7 @@ class Application extends \Symfony\Component\Console\Application {
 	}
 
 	public function doRun(InputInterface $input, OutputInterface $output){
-		if (!($this->DIcontainer['logger.output'] instanceof StreamOutput)){
+		if (!($this->diContainer['logger.output'] instanceof StreamOutput)){
 			$output->writeln('[Warning] Failed to init logger. Logging is disabled.');
 		}
 		try {
@@ -62,8 +62,11 @@ class Application extends \Symfony\Component\Console\Application {
 			$this->assertOwncloudFound();
 			$this->initDirectoryStructure();
 
-			$configReader = $this->DIcontainer['utils.configReader'];
-			$configReader->init();
+			$configReader = $this->diContainer['utils.configReader'];
+			$commandName = $this->getCommandName($input);
+			if ($commandName!=='upgrade:executeCoreUpgradeScripts'){
+				$configReader->init();
+			}
 			return parent::doRun($input, $output);
 		} catch (\Exception $e) {
 			$this->logException($e);
@@ -111,6 +114,9 @@ class Application extends \Symfony\Component\Console\Application {
 		}
 		if (!file_exists($locator->getDownloadBaseDir())){
 			$fsHelper->mkdir($locator->getDownloadBaseDir());
+		}
+		if (!file_exists($locator->getCheckpointDir())){
+			$fsHelper->mkdir($locator->getCheckpointDir());
 		}
 	}
 

@@ -25,8 +25,51 @@ class Locator {
 		$this->owncloudRootPath = dirname($baseDir);
 	}
 
+	public function getRootDirItems(){
+		/* 8.2. can not provide items so we list them here.
+		 * waiting for https://github.com/owncloud/core/pull/20285
+		 */
+		$items = [
+			"config/config.sample.php",
+			"core",
+			"l10n",
+			"lib",
+			"ocs",
+			"ocs-provider",
+			"resources",
+			"settings",
+			".htaccess",
+			".mailmap",
+			".tag",
+			".user.ini",
+			"AUTHORS",
+			"console.php",
+			"COPYING-AGPL",
+			"cron.php",
+			"db_structure.xml",
+			"index.html",
+			"index.php",
+			"indie.json",
+			"occ",
+			"public.php",
+			"remote.php",
+			"robots.txt",
+			"status.php",
+			"version.php"
+		];
+		$items = array_map(
+			function($item){ return $this->owncloudRootPath . "/" . $item;	},
+			$items
+		);
+		return $items;
+	}
+
 	public function getDataDir(){
 		return $this->updaterRootPath . '/data';
+	}
+
+	public function getCheckpointDir(){
+		return $this->getDataDir() . '/checkpoint';
 	}
 
 	public function getDownloadBaseDir(){
