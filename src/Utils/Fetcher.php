@@ -3,7 +3,7 @@
 namespace Owncloud\Updater\Utils;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Event\ProgressEvent;
 use Owncloud\Updater\Utils\Feed;
 
 class Fetcher {
@@ -46,16 +46,23 @@ class Fetcher {
 	/**
 	 * Download new owncloud package
 	 * @param Feed $feed
+	 * @param Callable $onProgress
 	 * @throws \UnexpectedValueException
 	 */
-	public function getOwncloud(Feed $feed){
+	public function getOwncloud(Feed $feed, callable $onProgress){
 		if ($feed->isValid()){
 			$downloadPath = $this->getBaseDownloadPath($feed);
 			$url = $feed->getUrl();
-			$response = $this->httpClient->get($url, [
-				'save_to' => $downloadPath,
-				'timeout' => 600
-			]);
+			$request = $this->httpClient->createRequest(
+					'GET',
+					$url,
+					[
+						'save_to' => $downloadPath,
+						'timeout' => 600
+					]
+			);
+			$request->getEmitter()->on('progress', $onProgress);
+			$response = $this->httpClient->send($request);
 			if ($response->getStatusCode() !== 200){
 				throw new \UnexpectedValueException('Failed to download ' . $url . '. Server responded with ' . $response->getStatusCode() . ' instead of 200.');
 			}

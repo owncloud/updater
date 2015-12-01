@@ -46,6 +46,7 @@ class ZipExtractor {
 		}
 
 		$zipArchive->close();
+		return true;
 	}
 
 	protected function getErrorMessage($retval){

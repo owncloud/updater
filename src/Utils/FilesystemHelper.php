@@ -83,4 +83,35 @@ class FilesystemHelper {
 		}
 	}
 
+	public function removeIfExists($path) {
+		if (!file_exists($path)) {
+			return;
+		}
+
+		if (is_dir($path)) {
+			$this->rmdirr($path);
+		} else {
+			@unlink($path);
+		}
+	}
+
+	protected function rmdirr($dir) {
+		if(is_dir($dir)) {
+			$files = scandir($dir);
+			foreach($files as $file) {
+				if ($file != "." && $file != "..") {
+					$this->rmdirr("$dir/$file");
+				}
+			}
+			@rmdir($dir);
+		}elseif(file_exists($dir)) {
+			@unlink($dir);
+		}
+		if(file_exists($dir)) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+
 }

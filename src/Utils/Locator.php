@@ -76,6 +76,10 @@ class Locator {
 		return $this->getDataDir() . '/download';
 	}
 
+	public function getExtractionBaseDir(){
+		 return $this->owncloudRootPath . "/_oc_upgrade";
+	}
+
 	/**
 	 *
 	 * @return string
