@@ -2,7 +2,6 @@
 
 namespace Owncloud\Updater\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -30,9 +29,8 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output){
-		$container = $this->getApplication()->getContainer();
-		$locator = $container['utils.locator'];
-		$fsHelper = $container['utils.filesystemhelper'];
+		$locator = $this->container['utils.locator'];
+		$fsHelper = $this->container['utils.filesystemhelper'];
 		
 		$plain = $this->occRunner->run('upgrade');
 		$output->writeln($plain);

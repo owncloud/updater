@@ -2,7 +2,6 @@
 
 namespace Owncloud\Updater\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -27,8 +26,7 @@ class CheckpointCommand extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output){
-		$container = $this->getApplication()->getContainer();
-		$checkpoint = $container['utils.checkpoint'];
+		$checkpoint = $this->container['utils.checkpoint'];
 		if ($input->getOption('create')){
 			$checkpoint->create();
 		} elseif ($input->getOption('restore')) {

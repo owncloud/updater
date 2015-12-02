@@ -75,6 +75,7 @@ class Application extends \Symfony\Component\Console\Application {
 	}
 
 	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output){
+		$command->setContainer($this->getContainer());
 		$commandName = $this->getCommandName($input);
 		$this->getLogger()->info('Execution of ' . $commandName . ' command started');
 		$message = sprintf('<info>%s</info>', $command->getDescription());
