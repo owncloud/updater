@@ -13,7 +13,7 @@ class RestartWebServerCommand extends Command {
 	protected function configure(){
 		$this
 				->setName('upgrade:restartWebServer')
-				->setDescription('Please Restart Web Server')
+				->setDescription('Please restart your Web Server')
 		;
 	}
 

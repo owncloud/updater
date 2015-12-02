@@ -14,8 +14,8 @@ class StartCommand extends Command {
 	protected $stack = [
 		[ 'command' => 'upgrade:info'],
 		[ 'command' => 'upgrade:checkSystem'],
+		[ 'command' => 'upgrade:detect', '--exit-if-none' => '1'],
 		[ 'command' => 'upgrade:maintenanceMode', '--on' => '1'],
-		[ 'command' => 'upgrade:detect'],
 		[ 'command' => 'upgrade:backupDb'],
 		[ 'command' => 'upgrade:backupData'],
 		[ 'command' => 'upgrade:preUpgradeRepair'],
@@ -36,7 +36,7 @@ class StartCommand extends Command {
 	protected function configure(){
 		$this
 				->setName('upgrade:start')
-				->setDescription('go through the flow')
+				->setDescription('automated process')
 		;
 	}
 

@@ -45,6 +45,9 @@ class DetectCommand extends Command {
 - 2. version in config.php, 
 - 3. online available verison.
 (ASK) what to do? (download, upgrade, abort, …)')
+				->addOption(
+						'exit-if-none', null, InputOption::VALUE_NONE, 'exit with non-zero status code if new version is not found'
+				)
 		;
 	}
 
@@ -102,10 +105,14 @@ class DetectCommand extends Command {
 					}
 				}
 			} else {
-				$output->writeln('No updates found');
+				$output->writeln('No updates found online.');
+				if ($input->getOption('exit-if-none')){
+					exit(4);
+				}
 			}
 		} catch (\Exception $e){
 			$this->getApplication()->getLogger()->error($e->getMessage());
+			exit(2);
 		}
 	}
 
