@@ -13,8 +13,7 @@
 ?>
 <?php style('updater', 'updater'); ?>
 <?php script('updater', '3rdparty/angular'); ?>
-<?php script('updater', 'app'); ?>
-<?php script('updater', 'controllers'); ?>
+<?php script('updater', 'updater'); ?>
 <?php $isNewVersionAvailable = $_['isNewVersionAvailable']?>
 <div ng-app="updater" ng-init="navigation='backup'" class="updater-admin">
 	<div class="section" ng-controller="updateCtrl" ng-init="hasUpdate=<?php p($isNewVersionAvailable) ?>;">

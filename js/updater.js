@@ -1,6 +1,7 @@
-/* global oc_requesttoken */
+/* global angular, oc_requesttoken */
+var updaterApp = angular.module('updater', []);
 
-function updateCtrl($scope, $http) {
+updaterApp.controller('updateCtrl', ['$scope', '$http', function ($scope, $http) {
 	$scope.step = 0;
 	$scope.backup = '';
 	$scope.version = '';
@@ -133,9 +134,9 @@ function updateCtrl($scope, $http) {
 			).error($scope.crash);
 		}
 	};
-}
+}]);
 
-function backupCtrl($scope, $http) {
+updaterApp.controller('backupCtrl', ['$scope', '$http', function ($scope, $http) {
 	$http.get(OC.generateUrl('apps/updater/backup/index'), {headers: {'requesttoken': oc_requesttoken}})
 		.success(function (data) {
 			$scope.entries = data.data;
@@ -160,4 +161,29 @@ function backupCtrl($scope, $http) {
 				+ '&filename=' + encodeURIComponent(name)
 		);
 	};
-}
+}]);
+
+updaterApp.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.
+	when('/index', { controller: 'backupCtrl' } ).
+	when('/update', { templateUrl: 'templates/partials/update.html', controller: 'updateCtrl' } ).
+	otherwise( { redirectTo: '/index' } );
+}]);
+
+updaterApp.directive('ngConfirmClick', [
+  function() {
+    return {
+      priority: 1,
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        element.bind('click', function(e) {
+          var message = attrs.ngConfirmClick;
+          if(message && !confirm(message)) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+          }
+        });
+      }
+    };
+  }
+]);
