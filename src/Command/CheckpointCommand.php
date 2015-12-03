@@ -49,9 +49,15 @@ class CheckpointCommand extends Command {
 		if ($input->getOption('create')){
 			$checkpoint->create();
 		} elseif ($input->getOption('restore')) {
-			$checkpoint->restore($input->getOption('restore'));
+			$checkpointId = stripslashes($input->getOption('restore'));
+			$checkpoint->restore($checkpointId);
 		} else {
-			$checkpoint->show();
+			$checkpoints = $checkpoint->getAll();
+			if (count($checkpoints)){
+				$output->writeln(implode(PHP_EOL, $checkpoints));
+			} else {
+				$output->writeln('No checkpoints found');
+			}
 		}
 	}
 

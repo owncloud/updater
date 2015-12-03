@@ -65,11 +65,23 @@ class Checkpoint {
 	}
 
 	public function restore($checkpointId){
-
+		$checkpointDir = $this->locator->getCheckpointDir();
+		if (!file_exists($checkpointDir . '/' . $checkpointId)){
+			$message = sprintf('Checkpoint %s does not exist.', $checkpointId);
+			throw new \UnexpectedValueException($message);
+		}
 	}
 
-	public function show(){
-		
+	public function getAll(){
+		$checkpointDir = $this->locator->getCheckpointDir();
+		$content = scandir($checkpointDir);
+		$checkpoints = array_filter(
+				$content,
+				function($dir){
+					return !in_array($dir, ['.', '..']);
+				}
+		);
+		return $checkpoints;
 	}
 
 	protected function getCheckpointName(){

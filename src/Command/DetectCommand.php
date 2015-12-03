@@ -78,7 +78,7 @@ class DetectCommand extends Command {
 				throw new \UnexpectedValueException('Could not detect installed version.');
 			}
 
-			$this->getApplication()->getLogger()->info('ownCloud ' . $currentVersion . 'found');
+			$this->getApplication()->getLogger()->info('ownCloud ' . $currentVersion . ' found');
 			$output->writeln('Current version is ' . $currentVersion);
 
 			$feed = $this->fetcher->getFeed();
