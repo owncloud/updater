@@ -47,7 +47,8 @@ class CheckpointCommand extends Command {
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$checkpoint = $this->container['utils.checkpoint'];
 		if ($input->getOption('create')){
-			$checkpoint->create();
+			$checkpointName = $checkpoint->create();
+			$output->writeln('Created checkpoint ' . $checkpointName);
 		} elseif ($input->getOption('restore')) {
 			$checkpointId = stripslashes($input->getOption('restore'));
 			$checkpoint->restore($checkpointId);

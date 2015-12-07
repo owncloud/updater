@@ -44,6 +44,10 @@ class Locator {
 		$this->owncloudRootPath = dirname($baseDir);
 	}
 
+	public function getOwncloudRootPath(){
+		return $this->owncloudRootPath;
+	}
+
 	public function getRootDirItems(){
 		/* 8.2. can not provide items so we list them here.
 		 * waiting for https://github.com/owncloud/core/pull/20285

@@ -88,6 +88,18 @@ class AppManager {
 		}
 	}
 
+	public function getAllApps(){
+		$shippedApps = $this->occRunner->runJson('app:list');
+		$allApps = array_merge(array_keys($shippedApps['enabled']), array_keys($shippedApps['disabled']));
+		return $allApps;
+	}
+
+	public function getShippedApps(){
+		$shippedApps = $this->occRunner->runJson('app:list --shipped true');
+		$allApps = array_merge(array_keys($shippedApps['enabled']), array_keys($shippedApps['disabled']));
+		return $allApps;
+	}
+
 	public function getAppPath($appId){
 		$response = $this->occRunner->runJson('config:app:getpath ' . ProcessUtils::escapeArgument($appId));
 		if (!is_array($response) || !isset($response['path'])){

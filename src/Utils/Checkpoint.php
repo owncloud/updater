@@ -21,10 +21,15 @@
 
 namespace Owncloud\Updater\Utils;
 
-use \Owncloud\Updater\Utils\FilesystemHelper;
+use Owncloud\Updater\Console\Application;
+use Owncloud\Updater\Utils\FilesystemHelper;
 use Owncloud\Updater\Utils\Locator;
 
 class Checkpoint {
+
+	const CORE_DIR = 'core';
+	const THIRDPARTY_DIR = '3rdparty';
+	const APP_DIR = 'apps';
 
 	/**
 	 * @var Locator $locator
@@ -50,26 +55,48 @@ class Checkpoint {
 		$checkpointPath = $this->locator->getCheckpointDir() . '/' . $checkpointName;
 		try{
 			$this->fsHelper->mkdir($checkpointPath);
+
+			$checkpointCorePath = $checkpointPath . '/' . self::CORE_DIR;
+			$this->fsHelper->mkdir($checkpointCorePath);
 			$core = $this->locator->getRootDirItems();
 			foreach ($core as $coreItem){
-				$cpItemPath = $checkpointPath . '/' . basename($coreItem);
+				$cpItemPath = $checkpointCorePath . '/' . basename($coreItem);
 				$this->fsHelper->copyr($coreItem, $cpItemPath, true);
 			}
 			//copy config.php
-			$configDirSrc = dirname($core[2]) . '/config';
-			$configDirDst = $checkpointPath . '/config';
+			$configDirSrc = $this->locator->getOwncloudRootPath() . '/config';
+			$configDirDst = $checkpointCorePath . '/config';
 			$this->fsHelper->copyr($configDirSrc, $configDirDst, true);
+
+			//copy 3rdparty
+			$this->fsHelper->copyr($this->locator->getOwncloudRootPath() . '/' . self::THIRDPARTY_DIR, $checkpointCorePath . '/' . self::THIRDPARTY_DIR, true);
+
+			$checkpointAppPath = $checkpointPath . '/' . self::APP_DIR;
+			$this->fsHelper->mkdir($checkpointAppPath);
+			$appManager = Application::$container['utils.appmanager'];
+			$apps = $appManager->getAllApps();
+			foreach ($apps as $appId){
+				$appPath = $appManager->getAppPath($appId);
+				if ($appPath){
+					$this->fsHelper->copyr($appPath, $checkpointAppPath . '/' . $appId, true);
+				}
+			}
+
 		} catch (\Exception $ex){
 			//var_dump($ex->getMessage());
 		}
+		return $checkpointName;
 	}
 
 	public function restore($checkpointId){
-		$checkpointDir = $this->locator->getCheckpointDir();
-		if (!file_exists($checkpointDir . '/' . $checkpointId)){
+		$checkpointDir = $this->locator->getCheckpointDir() . '/' . $checkpointId;
+		if (!file_exists($checkpointDir)){
 			$message = sprintf('Checkpoint %s does not exist.', $checkpointId);
 			throw new \UnexpectedValueException($message);
 		}
+		$ocRoot = $this->locator->getOwncloudRootPath();
+		$this->fsHelper->copyr($checkpointDir . '/' . self::CORE_DIR, $ocRoot, false);
+		$this->fsHelper->copyr($checkpointDir . '/' . self::APP_DIR, $ocRoot . '/' . self::APP_DIR, false);
 	}
 
 	public function getAll(){
