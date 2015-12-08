@@ -101,11 +101,12 @@ class AppManager {
 	}
 
 	public function getAppPath($appId){
-		$response = $this->occRunner->runJson('config:app:getpath ' . ProcessUtils::escapeArgument($appId));
-		if (!is_array($response) || !isset($response['path'])){
+		try {
+			$response = $this->occRunner->run('app:getpath ' . ProcessUtils::escapeArgument($appId));
+		} catch (\Exception $e) {
 			return '';
 		}
-		return $response['path'];
+		return trim($response);
 	}
 
 }
