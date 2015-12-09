@@ -82,7 +82,7 @@ class Application extends \Symfony\Component\Console\Application {
 
 			$configReader = $this->diContainer['utils.configReader'];
 			$commandName = $this->getCommandName($input);
-			if ($commandName!=='upgrade:executeCoreUpgradeScripts'){
+			if (!in_array($commandName, ['upgrade:executeCoreUpgradeScripts', 'upgrade:checkpoint'])){
 				$configReader->init();
 			}
 			return parent::doRun($input, $output);
