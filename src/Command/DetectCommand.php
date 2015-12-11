@@ -25,6 +25,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use GuzzleHttp\Event\ProgressEvent;
 use Owncloud\Updater\Utils\Fetcher;
 use Owncloud\Updater\Utils\Feed;
@@ -84,6 +85,20 @@ class DetectCommand extends Command {
 			$feed = $this->fetcher->getFeed();
 			if ($feed->isValid()){
 				$output->writeln($feed->getVersionString() . ' is found online');
+
+				$helper = $this->getHelper('question');
+				$question = new ChoiceQuestion(
+					'What would you do next?',
+					['download', 'upgrade', 'abort'],
+					'1'
+				);
+				$action = $helper->ask($input, $output, $question);
+
+				if ($action === 'abort'){
+					$output->writeln('Abort has been choosed. Exiting.');
+					return 0;
+				}
+
 				$path = $this->fetcher->getBaseDownloadPath($feed);
 				$fileExists = $this->isCached($feed, $output);
 				if (!$fileExists){
@@ -101,6 +116,10 @@ class DetectCommand extends Command {
 					} else {
 						$fileExists = true;
 					}
+				}
+				if ($action === 'download'){
+					$output->writeln('Downloading has been completed. Exiting.');
+					return 0;
 				}
 				if ($fileExists){
 					$fullExtractionPath = $locator->getExtractionBaseDir() . '/' . $feed->getVersion();
