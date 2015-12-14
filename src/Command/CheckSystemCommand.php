@@ -30,6 +30,8 @@ use Owncloud\Updater\Utils\Collection;
 
 class CheckSystemCommand extends Command {
 
+	protected $message = 'Checking system health.';
+
 	protected function configure(){
 		$this
 				->setName('upgrade:checkSystem')
@@ -40,6 +42,8 @@ class CheckSystemCommand extends Command {
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$locator = $this->container['utils.locator'];
 		$fsHelper = $this->container['utils.filesystemhelper'];
+		$occRunner = $this->container['utils.occrunner'];
+
 		$collection = new Collection();
 
 		$rootDirItems= $locator->getRootDirItems();
@@ -61,7 +65,10 @@ class CheckSystemCommand extends Command {
 
 		if (count($notReadableFiles) || count($notWritableFiles)){
 			$output->writeln('<info>Please check if owner and permissions fot these files are correct.</info>');
-			$output->writeln('See https://doc.owncloud.org/server/9.0/admin_manual/installation/installation_wizard.html#strong-perms-label for details.</info>');
+			$output->writeln('<info>See https://doc.owncloud.org/server/9.0/admin_manual/installation/installation_wizard.html#strong-perms-label for details.</info>');
+			return 2;
+		} else {
+			$output->writeln(' - file permissions are ok.');
 		}
 	}
 
