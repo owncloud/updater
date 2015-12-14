@@ -22,7 +22,19 @@
 namespace Owncloud\Updater\Command;
 
 class Command extends \Symfony\Component\Console\Command\Command{
+	/**
+	 * @var \Pimple\Container
+	 */
 	protected $container;
+
+	/**
+	 * @var string
+	 */
+	protected $message = '';
+
+	public function getMessage(){
+		return $this->message;
+	}
 
 	public function setContainer($container){
 		$this->container = $container;
