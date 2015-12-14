@@ -33,6 +33,7 @@ use Owncloud\Updater\Utils\Fetcher;
 use Owncloud\Updater\Utils\FilesystemHelper;
 use Owncloud\Updater\Utils\Locator;
 use Owncloud\Updater\Utils\OccRunner;
+use Owncloud\Updater\Utils\Registry;
 use Owncloud\Updater\Command\BackupDataCommand;
 use Owncloud\Updater\Command\BackupDbCommand;
 use Owncloud\Updater\Command\CheckpointCommand;
@@ -71,6 +72,10 @@ $c['utils.locator'] = function($c){
 
 $c['utils.occrunner'] = function($c){
 	return new OccRunner($c['utils.locator']);
+};
+
+$c['utils.registry'] = function($c){
+	return new Registry();
 };
 
 $c['utils.appmanager'] = function($c){
@@ -187,7 +192,7 @@ $c['commands'] = function($c){
 };
 
 $c['application'] = function($c){
-	$application = new Application('ownCloud updater', '0.1');
+	$application = new Application('ownCloud updater', '1.0');
 	$application->setContainer($c);
 	$application->addCommands($c['commands']);
 	return $application;

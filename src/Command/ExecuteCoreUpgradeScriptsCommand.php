@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  *
@@ -26,6 +27,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Owncloud\Updater\Utils\OccRunner;
+use Owncloud\Updater\Utils\ZipExtractor;
 
 class ExecuteCoreUpgradeScriptsCommand extends Command {
 
@@ -42,17 +44,45 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	protected function configure(){
 		$this
 				->setName('upgrade:executeCoreUpgradeScripts')
-				->setDescription('execute core upgrade scripts
-[danger, might take long]')
-		;
+				->setDescription('execute core upgrade scripts [danger, might take long]');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$locator = $this->container['utils.locator'];
 		$fsHelper = $this->container['utils.filesystemhelper'];
-		
-		$plain = $this->occRunner->run('upgrade');
-		$output->writeln($plain);
+		$registry = $this->container['utils.registry'];
+		$fetcher = $this->container['utils.fetcher'];
+
+		$feed = $registry->get('feed');
+
+		if ($feed){
+			$path = $fetcher->getBaseDownloadPath($feed);
+			$fullExtractionPath = $locator->getExtractionBaseDir() . '/' . $feed->getVersion();
+
+			if (!file_exists($fullExtractionPath)){
+				try{
+					$fsHelper->mkdir($fullExtractionPath, true);
+				} catch (\Exception $ex){
+
+					$output->writeln('Unable create directory ' . $fullExtractionPath);
+				}
+			}
+			$output->writeln('Extracting source into ' . $fullExtractionPath);
+
+			$zipExtractor = new ZipExtractor($path, $fullExtractionPath);
+			try{
+				$zipExtractor->extract();
+			} catch (\Exception $e){
+				$output->writeln('Extraction has been failed');
+				$fsHelper->removeIfExists($locator->getExtractionBaseDir());
+				throw $e;
+			}
+
+			$plain = $this->occRunner->run('upgrade');
+			$output->writeln($plain);
+
+		}
+
 	}
 
 }
