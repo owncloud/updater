@@ -26,6 +26,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
+use \Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Application extends \Symfony\Component\Console\Application {
 
@@ -82,8 +83,23 @@ class Application extends \Symfony\Component\Console\Application {
 
 			$configReader = $this->diContainer['utils.configReader'];
 			$commandName = $this->getCommandName($input);
-			if (!in_array($commandName, ['upgrade:executeCoreUpgradeScripts', 'upgrade:checkpoint'])){
-				$configReader->init();
+			if (!in_array(
+					$commandName,
+					['upgrade:executeCoreUpgradeScripts', 'upgrade:checkpoint', 'upgrade:maintenanceMode', 'help']
+				)
+			){
+				try {
+					$configReader->init();
+				} catch (ProcessFailedException $e){
+					$this->logException($e);
+					$output->writeln("<error>Initialization failed with message:</error>");
+					$output->writeln($e->getProcess()->getOutput());
+					$output->writeln('<info>Use upgrade:checkpoint --list to view a list of checkpoints</info>');
+					$output->writeln('<info>upgrade:checkpoint --restore [checkpointid] to revert to the last checkpoint</info>');
+					$output->writeln('Please attach your update.log to the issues you reporting.');
+					return 1;
+				}
+				
 			}
 			return parent::doRun($input, $output);
 		} catch (\Exception $e) {
@@ -93,13 +109,21 @@ class Application extends \Symfony\Component\Console\Application {
 	}
 
 	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output){
-		$command->setContainer($this->getContainer());
-		$commandName = $this->getCommandName($input);
-		$this->getLogger()->info('Execution of ' . $commandName . ' command started');
-		$message = sprintf('<info>%s</info>', $command->getDescription());
-		$output->writeln($message);
-		$exitCode = parent::doRunCommand($command, $input, $output);
-		$this->getLogger()->info('Execution of ' . $commandName . ' command stopped. Exit code is ' . $exitCode);
+		if ($command instanceof \Owncloud\Updater\Command\Command){
+			$command->setContainer($this->getContainer());
+			$commandName = $this->getCommandName($input);
+			$this->getLogger()->info('Execution of ' . $commandName . ' command started');
+			if (!empty($command->getMessage())){
+				$message = sprintf('<info>%s</info>', $command->getMessage());
+				$output->writeln($message);
+			}
+			$exitCode = parent::doRunCommand($command, $input, $output);
+			$this->getLogger()->info(
+					'Execution of ' . $commandName . ' command stopped. Exit code is ' . $exitCode
+			);
+		} else {
+			$exitCode = parent::doRunCommand($command, $input, $output);
+		}
 		return $exitCode;
 	}
 
