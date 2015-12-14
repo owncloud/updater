@@ -33,7 +33,7 @@ class StartCommand extends Command {
 		[ 'command' => 'upgrade:info'],
 		[ 'command' => 'upgrade:checkSystem'],
 		[ 'command' => 'upgrade:detect', '--exit-if-none' => '1'],
-		[ 'command' => 'upgrade:maintenanceMode', '--on' => '1'],
+		//[ 'command' => 'upgrade:maintenanceMode', '--on' => '1'],
 		[ 'command' => 'upgrade:backupDb'],
 		[ 'command' => 'upgrade:backupData'],
 		[ 'command' => 'upgrade:preUpgradeRepair'],
@@ -47,7 +47,7 @@ class StartCommand extends Command {
 		[ 'command' => 'upgrade:postUpgradeRepair'],
 		[ 'command' => 'upgrade:restartWebServer'],
 		[ 'command' => 'upgrade:updateConfig'],
-		[ 'command' => 'upgrade:maintenanceMode', '--off' => '1'],
+		//[ 'command' => 'upgrade:maintenanceMode', '--off' => '1'],
 		[ 'command' => 'upgrade:postUpgradeCleanup'],
 	];
 
