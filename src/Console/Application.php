@@ -85,7 +85,7 @@ class Application extends \Symfony\Component\Console\Application {
 			$commandName = $this->getCommandName($input);
 			if (!in_array(
 					$commandName,
-					['upgrade:executeCoreUpgradeScripts', 'upgrade:checkpoint', 'upgrade:maintenanceMode', 'help']
+					['upgrade:executeCoreUpgradeScripts', 'upgrade:checkpoint', 'upgrade:maintenanceMode', 'help', 'list']
 				)
 			){
 				try {
