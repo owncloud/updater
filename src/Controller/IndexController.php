@@ -87,7 +87,7 @@ class IndexController {
 
 	public function ajaxAction(){
 		if (is_null($this->request->postParameter('token'))
-				|| $this->request->postParameter('token') !== $_SESSION['updater_ajax_token']
+				|| !hash_equals($_SESSION['updater_ajax_token'], $this->request->postParameter('token'))
 		){
 			header( 'HTTP/1.0 401 Unauthorized' );
 			exit();
