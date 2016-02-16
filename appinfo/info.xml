@@ -9,6 +9,8 @@
 	<repository type="git">http://github.com/owncloud/updater.git</repository>
 	<shipped>true</shipped>
 	<default_enable/>
-	<require>8</require>
-		<types></types>
+	<dependencies>
+		<owncloud min-version="8.2" max-version="8.2" />
+	</dependencies>
+	<types></types>
 </info>
