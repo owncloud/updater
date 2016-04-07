@@ -55,7 +55,7 @@ class CheckpointCommand extends Command {
 				$checkpointId = $checkpoint->create();
 				$output->writeln('Created checkpoint ' . $checkpointId);
 			} catch (\Exception $e){
-				$output->writeln('Error while creating a checkpoint ' . $checkpointId);
+				$output->writeln('Error while creating a checkpoint');
 			}
 		} elseif ($input->getOption('remove')){
 			$checkpointId = stripslashes($input->getOption('remove'));
