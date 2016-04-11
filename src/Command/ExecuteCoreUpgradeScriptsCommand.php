@@ -22,12 +22,13 @@
 
 namespace Owncloud\Updater\Command;
 
+use Alchemy\Zippy\Zippy;
+use Owncloud\Updater\Utils\FilesystemHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Owncloud\Updater\Utils\OccRunner;
-use Owncloud\Updater\Utils\ZipExtractor;
-use Owncloud\Updater\Utils\BzipExtractor;
+
 
 class ExecuteCoreUpgradeScriptsCommand extends Command {
 
@@ -49,6 +50,7 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$locator = $this->container['utils.locator'];
+		/** @var FilesystemHelper $fsHelper */
 		$fsHelper = $this->container['utils.filesystemhelper'];
 		$registry = $this->container['utils.registry'];
 		$fetcher = $this->container['utils.fetcher'];
@@ -62,24 +64,24 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 			$path = $fetcher->getBaseDownloadPath($feed);
 			$fullExtractionPath = $locator->getExtractionBaseDir() . '/' . $feed->getVersion();
 
-			if (file_exists($fullExtractionPath)){
-				$fsHelper->removeIfExists($fullExtractionPath);
-			}
+			$fsHelper->removeIfExists($fullExtractionPath);
+			$fsHelper->mkdir($fullExtractionPath);
+
 			try{
 				$fsHelper->mkdir($fullExtractionPath, true);
 			} catch (\Exception $e){
-					$output->writeln('Unable create directory ' . $fullExtractionPath);
-					throw $e;
+				$output->writeln('Unable create directory ' . $fullExtractionPath);
+				throw $e;
 			}
 
 			$output->writeln('Extracting source into ' . $fullExtractionPath);
-			if (preg_match('|\.tar\.bz2$|', $path)){
-				$extractor = new BzipExtractor($path, $fullExtractionPath);
-			} else {
-				$extractor = new ZipExtractor($path, $fullExtractionPath);
-			}
+
+			/** @var Zippy $zippy */
+			$zippy = Zippy::load();
+
 			try{
-				$extractor->extract();
+				$archive = $zippy->open($path);
+				$archive->extract($fullExtractionPath);
 			} catch (\Exception $e){
 				$output->writeln('Extraction has been failed');
 				$fsHelper->removeIfExists($locator->getExtractionBaseDir());
