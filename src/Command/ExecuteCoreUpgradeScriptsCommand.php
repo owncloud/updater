@@ -91,7 +91,6 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 			$tmpDir = $locator->getExtractionBaseDir() . '/' . $installedVersion;
 			$fsHelper->removeIfExists($tmpDir);
 			$fsHelper->mkdir($tmpDir);
-			$fsHelper->mkdir($tmpDir . '/config');
 			$oldSourcesDir = $locator->getOwncloudRootPath();
 			$newSourcesDir = $fullExtractionPath . '/owncloud';
 
@@ -99,6 +98,8 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 				$this->getApplication()->getLogger()->debug('Replacing ' . $dir);
 				$fsHelper->tripleMove($oldSourcesDir, $newSourcesDir, $tmpDir, $dir);
 			}
+			
+			$fsHelper->copyr($tmpDir . '/config/config.php', $oldSourcesDir . '/config/config.php');
 			
 			try {
 				$fsHelper->move($oldSourcesDir . '/apps', $oldSourcesDir . '/__apps');
