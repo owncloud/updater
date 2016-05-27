@@ -232,7 +232,7 @@ class Application extends \Symfony\Component\Console\Application {
 	 * Check for ownCloud instance
 	 * @throws \RuntimeException
 	 */
-	protected function assertOwnCloudFound(){
+	public function assertOwnCloudFound(){
 		$container = $this->getContainer();
 		/** @var Locator $locator */
 		$locator = $container['utils.locator'];
@@ -250,7 +250,7 @@ class Application extends \Symfony\Component\Console\Application {
 
 		$status = $occRunner->runJson('status');
 		if (!isset($status['installed'])  || $status['installed'] != 'true'){
-			throw new \RuntimeException('ownCloud in ' . dirname(dirname($file)) . ' is not installed.');
+			throw new \RuntimeException('ownCloud in ' . dirname($file) . ' is not installed.');
 		}
 
 		// datadir should exist
