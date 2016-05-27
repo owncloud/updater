@@ -22,15 +22,16 @@
 
 namespace Owncloud\Updater\Controller;
 
-use League\Plates\Extension\URI;
 use Owncloud\Updater\Utils\Checkpoint;
 use Owncloud\Updater\Utils\ConfigReader;
-use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Owncloud\Updater\Formatter\HtmlOutputFormatter;
 use Owncloud\Updater\Http\Request;
 use League\Plates\Engine;
 use League\Plates\Extension\Asset;
+use League\Plates\Extension\URI;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class IndexController {
 
@@ -60,11 +61,29 @@ class IndexController {
 	}
 
 	public function dispatch() {
+		/** @var ConfigReader $configReader */
+		$configReader = $this->container['utils.configReader'];
+
 		// strip index.php and query string (if any) to get a real base url
 		$baseUrl = preg_replace('/(index\.php.*|\?.*)$/', '', $_SERVER['REQUEST_URI']);
 		$templates = new Engine(CURRENT_DIR . '/src/Resources/views/');
 		$templates->loadExtension(new Asset(CURRENT_DIR . '/pub/', false));
 		$templates->loadExtension(new URI($baseUrl));
+
+		try {
+			$this->container['application']->assertOwnCloudFound();
+			$configReader->init();
+		} catch (\Exception $e){
+			$content = $templates->render(
+				'partials/error',
+				[
+					'title' => 'Updater',
+					'version' => $this->container['application']->getVersion(),
+					'error' => $e->getMessage()
+				]
+			);
+			return $content;
+		}
 
 		// Check if the user is logged-in
 		if(!$this->isLoggedIn()) {
@@ -90,11 +109,14 @@ class IndexController {
 		return $content;
 	}
 
+	/**
+	 * @return bool
+	 */
 	protected function isLoggedIn() {
 		/** @var ConfigReader $configReader */
 		$locator = $this->container['utils.locator'];
 		$storedSecret = $locator->getSecretFromConfig();
-		if($storedSecret === '') {
+		if ($storedSecret === '') {
 			die('updater.secret is undefined in config/config.php. Either browse the admin settings in your ownCloud and click "Open updater" or define a strong secret using <pre>php -r \'echo password_hash("MyStrongSecretDoUseYourOwn!", PASSWORD_DEFAULT)."\n";\'</pre> and set this in the config.php.');
 		}
 		$sentAuthHeader = ($this->request->header('X_Updater_Auth') !== null) ? $this->request->header('X_Updater_Auth') : '';
