@@ -22,7 +22,6 @@
 namespace Owncloud\Updater\Utils;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\ProcessUtils;
 use Owncloud\Updater\Utils\OccRunner;
 
 class AppManager {
@@ -47,7 +46,7 @@ class AppManager {
 
 	public function disableApp($appId){
 		try{
-			$this->occRunner->run('app:disable ' . ProcessUtils::escapeArgument($appId));
+			$this->occRunner->run('app:disable', ['app-id' => $appId]);
 		} catch (\Exception $e){
 			return false;
 		}
@@ -56,7 +55,7 @@ class AppManager {
 
 	public function enableApp($appId){
 		try{
-			$this->occRunner->run('app:enable ' . ProcessUtils::escapeArgument($appId));
+			$this->occRunner->run('app:enable', ['app-id' => $appId]);
 			array_unshift($this->disabledApps, $appId);
 		} catch (\Exception $e){
 			return false;
@@ -65,7 +64,7 @@ class AppManager {
 	}
 
 	public function disableNotShippedApps(OutputInterface $output = null){
-		$notShippedApps = $this->occRunner->runJson('app:list --shipped false');
+		$notShippedApps = $this->occRunner->runJson('app:list', ['--shipped' => 'false']);
 		$appsToDisable = array_keys($notShippedApps['enabled']);
 		foreach ($appsToDisable as $appId){
 			$result = $this->disableApp($appId);
@@ -95,20 +94,20 @@ class AppManager {
 	}
 
 	public function getNotShippedApps(){
-		$shippedApps = $this->occRunner->runJson('app:list --shipped false');
+		$shippedApps = $this->occRunner->runJson('app:list', ['--shipped' => 'false']);
 		$allApps = array_merge(array_keys($shippedApps['enabled']), array_keys($shippedApps['disabled']));
 		return $allApps;
 	}
 
 	public function getShippedApps(){
-		$shippedApps = $this->occRunner->runJson('app:list --shipped true');
+		$shippedApps = $this->occRunner->runJson('app:list', ['--shipped' => 'true']);
 		$allApps = array_merge(array_keys($shippedApps['enabled']), array_keys($shippedApps['disabled']));
 		return $allApps;
 	}
 
 	public function getAppPath($appId){
 		try {
-			$response = $this->occRunner->run('app:getpath ' . ProcessUtils::escapeArgument($appId));
+			$response = $this->occRunner->run('app:getpath', ['app-id' => $appId]);
 		} catch (\Exception $e) {
 			return '';
 		}

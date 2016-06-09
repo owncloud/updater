@@ -68,7 +68,9 @@ $c['utils.locator'] = function($c){
 };
 
 $c['utils.occrunner'] = function($c){
-	return new OccRunner($c['utils.locator']);
+	$disabled = explode(',', ini_get('disable_functions'));
+	$isProcOpenEnabled = function_exists('proc_open') && !in_array('proc_open', $disabled);
+	return new OccRunner($c['utils.locator'], $isProcOpenEnabled && !IS_CLI);
 };
 
 $c['utils.registry'] = function($c){

@@ -92,10 +92,9 @@ class IndexController {
 
 	protected function isLoggedIn() {
 		/** @var ConfigReader $configReader */
-		$configReader = $this->container['utils.configReader'];
-		$configReader->init();
-		$storedSecret = isset($configReader->get(['system'])['updater.secret']) ? $configReader->get(['system'])['updater.secret'] : null;
-		if(is_null($storedSecret)) {
+		$locator = $this->container['utils.locator'];
+		$storedSecret = $locator->getSecretFromConfig();
+		if($storedSecret === '') {
 			die('updater.secret is undefined in config/config.php. Either browse the admin settings in your ownCloud and click "Open updater" or define a strong secret using <pre>php -r \'echo password_hash("MyStrongSecretDoUseYourOwn!", PASSWORD_DEFAULT)."\n";\'</pre> and set this in the config.php.');
 		}
 		$sentAuthHeader = ($this->request->header('X_Updater_Auth') !== null) ? $this->request->header('X_Updater_Auth') : '';
@@ -135,7 +134,18 @@ class IndexController {
 		$output->setFormatter(new HtmlOutputFormatter($formatter));
 
 		$application->setAutoExit(false);
-		// Some commands  dump things out instead of returning a value
+
+		$endpoint = preg_replace('/(updater\/|updater\/index.php)$/', '', $this->request->getRequestUri());
+		$fullEndpoint = sprintf(
+			'%s://%s%sindex.php/occ/',
+			$this->request->getServerProtocol(),
+			$this->request->getHost(),
+			$endpoint !== '' ? $endpoint : '/'
+		);
+
+		$application->setEndpoint($fullEndpoint);
+		$application->setAuthToken($this->request->header('X_Updater_Auth'));
+		// Some commands dump things out instead of returning a value
 		ob_start();
 		$errorCode = $application->run($input, $output);
 		if (!$result = $output->fetch()){

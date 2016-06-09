@@ -22,6 +22,7 @@
 
 use Owncloud\Updater\Controller\IndexController;
 
+define ('IS_CLI', false);
 require __DIR__ . '/app/bootstrap.php';
 
 $controller = new IndexController($container);
