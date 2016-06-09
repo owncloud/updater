@@ -29,17 +29,87 @@ class Request {
 		$this->vars = $vars;
 	}
 
-	public function postParameter($parameter){
-		return isset($this->vars['post'][$parameter]) ? $this->vars['post'][$parameter] : null;
+	/**
+	 * Returns the request uri
+	 * @return string
+	 */
+	public function getRequestUri() {
+		return $this->server('REQUEST_URI');
+	}
+
+	public function getServerProtocol() {
+		$forwardedProto = $this->server('HTTP_X_FORWARDED_PROTO');
+		if (!is_null($forwardedProto)) {
+			if (strpos($forwardedProto, ',') !== false) {
+				$parts = explode(',', $forwardedProto);
+				$proto = strtolower(trim($parts[0]));
+			} else {
+				$proto = strtolower($forwardedProto);
+			}
+
+			// Verify that the protocol is always HTTP or HTTPS
+			// default to http if an invalid value is provided
+			return $proto === 'https' ? 'https' : 'http';
+		}
+
+		$isHttps = $this->server('HTTPS');
+		if ($isHttps !== null
+			&& $isHttps !== 'off'
+			&& $isHttps !== ''
+		) {
+			return 'https';
+		}
+
+		return 'http';
+	}
+
+	public function getHost(){
+		$host = 'localhost';
+		$forwardedHost = $this->server('HTTP_X_FORWARDED_HOST');
+		if (!is_null($forwardedHost)) {
+			if (strpos($forwardedHost, ',') !== false) {
+				$parts = explode(',', $forwardedHost);
+				$host = trim(current($parts));
+			} else {
+				$host = $forwardedHost;
+			}
+		} else {
+			$httpHost = $this->server('HTTP_HOST');
+			if (is_null($httpHost)) {
+				$serverName = $this->server('SERVER_NAME');
+				if (!is_null($serverName)){
+					$host = $serverName;
+				}
+			} else {
+				$host = $httpHost;
+			}
+		}
+		return $host;
 	}
 
 	/**
-	 * @param string$name
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function postParameter($name){
+		return isset($this->vars['post'][$name]) ? $this->vars['post'][$name] : null;
+	}
+
+	/**
+	 * @param string $name
 	 * @return mixed
 	 */
 	public function header($name) {
 		$name = strtoupper($name);
 		return isset($this->vars['headers']['HTTP_'.$name]) ? $this->vars['headers']['HTTP_'.$name] : null;
+	}
+
+	/**
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function server($name){
+		return isset($this->vars['headers'][$name]) ? $this->vars['headers'][$name] : null;
 	}
 
 }
