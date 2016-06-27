@@ -40,13 +40,7 @@ class Request {
 	public function getServerProtocol() {
 		$forwardedProto = $this->server('HTTP_X_FORWARDED_PROTO');
 		if (!is_null($forwardedProto)) {
-			if (strpos($forwardedProto, ',') !== false) {
-				$parts = explode(',', $forwardedProto);
-				$proto = strtolower(trim($parts[0]));
-			} else {
-				$proto = strtolower($forwardedProto);
-			}
-
+			$proto = strtolower($this->getPartBeforeComma($forwardedProto));
 			// Verify that the protocol is always HTTP or HTTPS
 			// default to http if an invalid value is provided
 			return $proto === 'https' ? 'https' : 'http';
@@ -67,12 +61,7 @@ class Request {
 		$host = 'localhost';
 		$forwardedHost = $this->server('HTTP_X_FORWARDED_HOST');
 		if (!is_null($forwardedHost)) {
-			if (strpos($forwardedHost, ',') !== false) {
-				$parts = explode(',', $forwardedHost);
-				$host = trim(current($parts));
-			} else {
-				$host = $forwardedHost;
-			}
+			$host = $this->getPartBeforeComma($forwardedHost);
 		} else {
 			$httpHost = $this->server('HTTP_HOST');
 			if (is_null($httpHost)) {
@@ -101,7 +90,7 @@ class Request {
 	 */
 	public function header($name) {
 		$name = strtoupper($name);
-		return isset($this->vars['headers']['HTTP_'.$name]) ? $this->vars['headers']['HTTP_'.$name] : null;
+		return $this->server('HTTP_'.$name);
 	}
 
 	/**
@@ -110,6 +99,21 @@ class Request {
 	 */
 	public function server($name){
 		return isset($this->vars['headers'][$name]) ? $this->vars['headers'][$name] : null;
+	}
+
+	/**
+	 * Return first part before comma or the string itself if there is no comma
+	 * @param string $str
+	 * @return string
+	 */
+	private function getPartBeforeComma($str){
+		if (strpos($str, ',') !== false) {
+			$parts = explode(',', $str);
+			$result = $parts[0];
+		} else {
+			$result = $str;
+		}
+		return trim($result);
 	}
 
 }
