@@ -166,13 +166,6 @@ $(function () {
 							;
 				})
 				.then(function (response) {
-					handleResponse(response, function () {}, '#step-coreupgrade');
-					return response.error_code === 0
-							? $.post($('#meta-information').data('endpoint'), {command: 'upgrade:upgradeShippedApps'})
-							: $.Deferred()
-							;
-				})
-				.then(function (response) {
 					if (response.error_code === 0){
 						accordion.setCurrent('#step-appupgrade');
 					}
