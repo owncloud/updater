@@ -103,12 +103,22 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 			}
 			
 			$fsHelper->copyr($tmpDir . '/config/config.php', $oldSourcesDir . '/config/config.php');
+
+			//Remove old apps
+			$appDirectories = $fsHelper->scandirFiltered($oldSourcesDir . '/apps');
+			foreach ($appDirectories as $appDirectory){
+				$fsHelper->rmdirr($oldSourcesDir . '/apps/' . $appDirectory);
+			}
+
+			//Put new shipped apps
+			$newAppsDir = $fullExtractionPath . '/owncloud/apps';
+			$newAppsList = $fsHelper->scandirFiltered($newAppsDir);
+			foreach ($newAppsList as $appId){
+				$output->writeln('Copying the application ' . $appId);
+				$fsHelper->copyr($newAppsDir . '/' . $appId, $locator->getOwnCloudRootPath() . '/apps/' . $appId, false);
+			}
 			
 			try {
-				$appDirectories = $fsHelper->scandirFiltered($oldSourcesDir . '/apps');
-				foreach ($appDirectories as $appDirectory){
-					$fsHelper->rmdirr($oldSourcesDir . '/apps/' . $appDirectory);
-				}
 				$plain = $this->occRunner->run('upgrade');
 				$output->writeln($plain);
 			} catch (ProcessFailedException $e){

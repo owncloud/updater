@@ -75,7 +75,10 @@ class OccRunner {
 
 	public function runJson($command, $args = []){
 		$plain = $this->run($command, $args, true);
-		$decoded = json_decode($plain, true);
+		// trim response to always be a valid json. Capture everything between the first and the last curly brace
+		preg_match_all('!(\{.*\})!ms', $plain, $matches);
+		$clean = isset($matches[1][0]) ? $matches[1][0] : '';
+		$decoded = json_decode($clean, true);
 		if (!is_array($decoded)){
 			throw new \UnexpectedValueException('Could not parse a response for ' . $command . '. Please check if the current shell user can run occ command. Raw output: ' . PHP_EOL . $plain);
 		}

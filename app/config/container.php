@@ -48,7 +48,6 @@ use Owncloud\Updater\Command\PostUpgradeRepairCommand;
 use Owncloud\Updater\Command\PreUpgradeRepairCommand;
 use Owncloud\Updater\Command\RestartWebServerCommand;
 use Owncloud\Updater\Command\UpdateConfigCommand;
-use Owncloud\Updater\Command\UpgradeShippedAppsCommand;
 use Owncloud\Updater\Command\StartCommand;
 
 $c = new Container();
@@ -70,7 +69,7 @@ $c['utils.locator'] = function($c){
 $c['utils.occrunner'] = function($c){
 	$disabled = explode(',', ini_get('disable_functions'));
 	$isProcOpenEnabled = function_exists('proc_open') && !in_array('proc_open', $disabled);
-	return new OccRunner($c['utils.locator'], $isProcOpenEnabled && !IS_CLI);
+	return new OccRunner($c['utils.locator'], $isProcOpenEnabled && IS_CLI);
 };
 
 $c['utils.registry'] = function($c){
@@ -129,7 +128,7 @@ $c['command.executeCoreUpgradeScripts'] = function($c){
 $c['command.info'] = function($c){
 	return new InfoCommand();
 };
-$c['command.maintenaceMode'] = function($c){
+$c['command.maintenanceMode'] = function($c){
 	return new MaintenanceModeCommand($c['utils.occrunner']);
 };
 $c['command.postUpgradeCleanup'] = function($c){
@@ -144,11 +143,8 @@ $c['command.preUpgradeRepair'] = function($c){
 $c['command.restartWebServer'] = function($c){
 	return new RestartWebServerCommand();
 };
-$c['command.updateCoreCofig'] = function($c){
+$c['command.updateCoreConfig'] = function($c){
 	return new UpdateConfigCommand();
-};
-$c['command.upgradeShippedApps'] = function($c){
-	return new UpgradeShippedAppsCommand($c['utils.occrunner']);
 };
 $c['command.start'] = function($c){
 	return new StartCommand();
@@ -167,13 +163,12 @@ $c['commands'] = function($c){
 		$c['command.enableNotShippedApps'],
 		$c['command.executeCoreUpgradeScripts'],
 		$c['command.info'],
-		$c['command.maintenaceMode'],
+		$c['command.maintenanceMode'],
 		$c['command.postUpgradeCleanup'],
 		$c['command.postUpgradeRepair'],
 		$c['command.preUpgradeRepair'],
 		$c['command.restartWebServer'],
-		$c['command.updateCoreCofig'],
-		$c['command.upgradeShippedApps'],
+		$c['command.updateCoreConfig'],
 		$c['command.start'],
 	];
 };
