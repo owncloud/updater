@@ -21,7 +21,10 @@
 
 namespace Owncloud\Updater\Utils;
 
+use GuzzleHttp\Client;
+use Owncloud\Updater\Console\Application;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\ProcessUtils;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Owncloud\Updater\Utils\Locator;
 
@@ -32,16 +35,85 @@ class OccRunner {
 	protected $locator;
 
 	/**
+	 * @var bool
+	 */
+	protected $canUseProcess;
+
+	/**
 	 *
 	 * @param Locator $locator
+	 * @param bool $canUseProcess
 	 */
-	public function __construct(Locator $locator){
+	public function __construct(Locator $locator, $canUseProcess){
 		$this->locator = $locator;
+		$this->canUseProcess = $canUseProcess;
 	}
 
-	public function run($args){
+	public function run($command, $args = [], $asJson = false){
+		if ($this->canUseProcess){
+			$extra = $asJson ? '--output=json' : '';
+			$cmdLine = trim($command . ' ' . $extra);
+			foreach ($args as $optionTitle => $optionValue){
+				if (strpos($optionTitle, '--') === 0){
+					$line = trim("$optionTitle $optionValue");
+				} else {
+					$line = $optionValue;
+				}
+				$escapedLine = ProcessUtils::escapeArgument($line);
+				$cmdLine .= " $escapedLine";
+			}
+			return $this->runAsProcess($cmdLine);
+		} else {
+			if ($asJson){
+				$args['--output'] = 'json';
+			}
+			$response = $this->runAsRequest($command, $args);
+			$decodedResponse = json_decode($response, true);
+			return $decodedResponse['response'];
+		}
+	}
+
+	public function runJson($command, $args = []){
+		$plain = $this->run($command, $args, true);
+		// trim response to always be a valid json. Capture everything between the first and the last curly brace
+		preg_match_all('!(\{.*\})!ms', $plain, $matches);
+		$clean = isset($matches[1][0]) ? $matches[1][0] : '';
+		$decoded = json_decode($clean, true);
+		if (!is_array($decoded)){
+			throw new \UnexpectedValueException('Could not parse a response for ' . $command . '. Please check if the current shell user can run occ command. Raw output: ' . PHP_EOL . $plain);
+		}
+		return $decoded;
+	}
+
+	protected function runAsRequest($command, $args){
+		$application = $this->getApplication();
+		$client = new Client();
+		$request = $client->createRequest(
+			'POST',
+			$application->getEndpoint() . $command,
+			[
+				'timeout' => 0,
+				'json' => [
+					'token' => $application->getAuthToken(),
+					'params'=> $args
+				]
+			]
+		);
+
+		$response = $client->send($request);
+		$responseBody = $response->getBody()->getContents();
+		return $responseBody;
+	}
+
+	protected function getApplication(){
+		$container = Application::$container;
+		$application = $container['application'];
+		return $application;
+	}
+
+	protected function runAsProcess($cmdLine){
 		$occPath = $this->locator->getPathToOccFile();
-		$cmd = "php $occPath --no-warnings $args";
+		$cmd = "php $occPath --no-warnings $cmdLine";
 		$process = new Process($cmd);
 		$process->setTimeout(null);
 		$process->run();
@@ -51,14 +123,4 @@ class OccRunner {
 		}
 		return $process->getOutput();
 	}
-
-	public function runJson($args){
-		$plain = $this->run($args . '  --output "json"');
-		$decoded = json_decode($plain, true);
-		if (!is_array($decoded)){
-			throw new \UnexpectedValueException('Could not parse a response for ' . $args . '. Please check if the current shell user can run occ command. Raw output: ' . PHP_EOL . $plain);
-		}
-		return $decoded;
-	}
-
 }
