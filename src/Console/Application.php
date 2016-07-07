@@ -49,6 +49,11 @@ class Application extends \Symfony\Component\Console\Application {
 	/** @var ConsoleLogger */
 	protected $fallbackLogger;
 
+	/** @var  string */
+	protected $endpoint;
+
+	/** @var  string */
+	protected $authToken;
 
 	/** @var array */
 	protected $allowFailure = [
@@ -74,6 +79,34 @@ class Application extends \Symfony\Component\Console\Application {
 	 */
 	public function getContainer(){
 		return $this->diContainer;
+	}
+
+	/**
+	 * @param string $endpoint
+	 */
+	public function setEndpoint($endpoint){
+		$this->endpoint = $endpoint;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getEndpoint(){
+		return $this->endpoint;
+	}
+
+	/**
+	 * @param $token
+	 */
+	public function setAuthToken($token){
+		$this->authToken = $token;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAuthToken(){
+		return $this->authToken;
 	}
 
 	/**

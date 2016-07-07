@@ -31,7 +31,7 @@ if (version_compare(PHP_VERSION, '5.4.0') === -1){
 // symlinks are not resolved by PHP properly
 // getcwd always reports source and not target
  if(getcwd()){
-	define('CURRENT_DIR', getcwd());
+	define('CURRENT_DIR', trim(getcwd()));
 } elseif (isset($_SERVER['PWD'])){
 	define('CURRENT_DIR', $_SERVER['PWD']);
 } elseif (isset($_SERVER['SCRIPT_FILENAME'])){

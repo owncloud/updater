@@ -213,6 +213,17 @@ class Locator {
 		return $OC_Build;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function getSecretFromConfig(){
+		include $this->getPathToConfigFile();
+		if (isset($CONFIG['updater.secret'])){
+			return $CONFIG['updater.secret'];
+		}
+		return '';
+	}
+
 	public function getPathtoConfigFiles($filePostfix = 'config.php'){
 		// Only config.php for now
 		return [

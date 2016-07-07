@@ -20,6 +20,8 @@
  *
  */
 
+define('IS_CLI', true);
+
 $oldWorkingDir = getcwd();
 if ($oldWorkingDir === false) {
 	echo "This script can be run from the ownCloud root directory only." . PHP_EOL;
@@ -29,6 +31,7 @@ if ($oldWorkingDir === false) {
 	echo "Can't change to ownCloud root directory." . PHP_EOL;
 	exit(1);
 }
+
 require __DIR__ . '/app/bootstrap.php';
 /** @var \Owncloud\Updater\Console\Application $application */
 $application = $container['application'];
