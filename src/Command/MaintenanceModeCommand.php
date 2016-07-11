@@ -24,7 +24,6 @@ namespace Owncloud\Updater\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\ProcessUtils;
 use Owncloud\Updater\Utils\OccRunner;
 
 class MaintenanceModeCommand extends Command {
@@ -58,18 +57,14 @@ class MaintenanceModeCommand extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output){
-		$mode = '';
+		$args = [];
 		if ($input->getOption('on')){
-			$mode = '--on';
+			$args = ['--on' => ''];
 		} elseif ($input->getOption('off')){
-			$mode = '--off';
+			$args = ['--off' => ''];
 		}
 
-		if ($mode !== ''){
-			$mode = ProcessUtils::escapeArgument($mode);
-		}
-
-		$response =  $this->occRunner->run('maintenance:mode ' . $mode);
+		$response = $this->occRunner->run('maintenance:mode', $args);
 		$output->writeln($response);
 	}
 
