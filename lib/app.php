@@ -35,7 +35,7 @@ class App {
 			$config = \OC::$server->getConfig();
 		}
 		$updater = new \OC\Updater($helper, $config);
-		$feed = $updater->check('https://apps.owncloud.com/updater.php');
+		$feed = $updater->check('https://updates.owncloud.com/server/');
 		$data = array();
 		if (is_array($feed)){
 			foreach (array('version', 'versionstring', 'url', 'web') as $field){
