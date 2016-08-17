@@ -66,6 +66,10 @@ class Updater {
 				);
 				$coreUpdater->update($tempDir . '/' . Helper::CORE_DIRNAME);
 				self::$processed[] = $coreUpdater;
+				if (file_exists($sources[Helper::CORE_DIRNAME] . '/config/ca-bundle.crt')){
+					Helper::removeIfExists($installed[Helper::CORE_DIRNAME] . '/config/ca-bundle.crt');
+					copy($sources[Helper::CORE_DIRNAME] . '/config/ca-bundle.crt', $installed[Helper::CORE_DIRNAME] . '/config/ca-bundle.crt');
+				}
 				
 				$appsUpdater = new \OCA\Updater\Location\Apps(
 						'', //TODO: put smth really helpful here ;)
