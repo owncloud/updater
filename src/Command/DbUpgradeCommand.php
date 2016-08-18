@@ -25,6 +25,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class DbUpgradeCommand
+ *
+ * @package Owncloud\Updater\Command
+ */
 class DbUpgradeCommand extends Command {
 
 	protected function configure(){
@@ -37,6 +42,10 @@ class DbUpgradeCommand extends Command {
 		;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$simulation = strtolower($input->getArgument('simulation'));
 		$message = $simulation === 'true' ? ' simulated (optionally, can be done online in advance)' : 'real [danger, might take long]';

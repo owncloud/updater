@@ -28,6 +28,11 @@ use Symfony\Component\Process\ProcessUtils;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Owncloud\Updater\Utils\Locator;
 
+/**
+ * Class OccRunner
+ *
+ * @package Owncloud\Updater\Utils
+ */
 class OccRunner {
 	/**
 	 * @var Locator $locator
@@ -49,6 +54,12 @@ class OccRunner {
 		$this->canUseProcess = $canUseProcess;
 	}
 
+	/**
+	 * @param $command
+	 * @param array $args
+	 * @param bool $asJson
+	 * @return string
+	 */
 	public function run($command, $args = [], $asJson = false){
 		if ($this->canUseProcess){
 			$extra = $asJson ? '--output=json' : '';
@@ -73,6 +84,11 @@ class OccRunner {
 		}
 	}
 
+	/**
+	 * @param $command
+	 * @param array $args
+	 * @return mixed
+	 */
 	public function runJson($command, $args = []){
 		$plain = $this->run($command, $args, true);
 		// trim response to always be a valid json. Capture everything between the first and the last curly brace
@@ -85,6 +101,11 @@ class OccRunner {
 		return $decoded;
 	}
 
+	/**
+	 * @param $command
+	 * @param $args
+	 * @return string
+	 */
 	protected function runAsRequest($command, $args){
 		$application = $this->getApplication();
 		$client = new Client();
@@ -105,12 +126,19 @@ class OccRunner {
 		return $responseBody;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	protected function getApplication(){
 		$container = Application::$container;
 		$application = $container['application'];
 		return $application;
 	}
 
+	/**
+	 * @param $cmdLine
+	 * @return string
+	 */
 	protected function runAsProcess($cmdLine){
 		$occPath = $this->locator->getPathToOccFile();
 		$cmd = "php $occPath --no-warnings $cmdLine";

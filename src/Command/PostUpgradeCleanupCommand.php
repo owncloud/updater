@@ -24,6 +24,11 @@ namespace Owncloud\Updater\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class PostUpgradeCleanupCommand
+ *
+ * @package Owncloud\Updater\Command
+ */
 class PostUpgradeCleanupCommand extends Command {
 
 	protected function configure(){
@@ -33,6 +38,10 @@ class PostUpgradeCleanupCommand extends Command {
 		;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$registry = $this->container['utils.registry'];
 		$fsHelper = $this->container['utils.filesystemhelper'];

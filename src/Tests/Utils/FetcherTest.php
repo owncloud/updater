@@ -4,6 +4,11 @@ namespace Owncloud\Updater\Tests\Utils;
 
 use Owncloud\Updater\Utils\Fetcher;
 
+/**
+ * Class FetcherTest
+ *
+ * @package Owncloud\Updater\Tests\Utils
+ */
 class FetcherTest extends \PHPUnit_Framework_TestCase {
 
 	protected $httpClient;
@@ -86,6 +91,10 @@ class FetcherTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse($feed->isValid());
 	}
 
+	/**
+	 * @param $body
+	 * @return mixed
+	 */
 	private function getResponseMock($body){
 		$bodyMock = $this->getMockBuilder('Owncloud\Updater\Tests\StreamInterface')
 				->disableOriginalConstructor()

@@ -26,6 +26,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Owncloud\Updater\Utils\OccRunner;
 
+/**
+ * Class MaintenanceModeCommand
+ *
+ * @package Owncloud\Updater\Command
+ */
 class MaintenanceModeCommand extends Command {
 
 	/**
@@ -56,6 +61,10 @@ class MaintenanceModeCommand extends Command {
 		;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$args = [];
 		if ($input->getOption('on')){

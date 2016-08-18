@@ -25,6 +25,11 @@ use Owncloud\Updater\Utils\Fetcher;
 use Owncloud\Updater\Utils\Registry;
 use Owncloud\Updater\Utils\FilesystemHelper;
 
+/**
+ * Class DownloadController
+ *
+ * @package Owncloud\Updater\Controller
+ */
 class DownloadController {
 	
 	/**
@@ -42,12 +47,22 @@ class DownloadController {
 	 */
 	protected $fsHelper;
 
+	/**
+	 * DownloadController constructor.
+	 *
+	 * @param Fetcher $fetcher
+	 * @param Registry $registry
+	 * @param FilesystemHelper $fsHelper
+	 */
 	public function __construct(Fetcher $fetcher, Registry $registry, FilesystemHelper $fsHelper){
 		$this->fetcher = $fetcher;
 		$this->registry = $registry;
 		$this->fsHelper = $fsHelper;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function checkFeed(){
 		$response = $this->getDefaultResponse();
 		try {
@@ -61,6 +76,10 @@ class DownloadController {
 		return $response;
 	}
 
+	/**
+	 * @param null $progressCallback
+	 * @return array
+	 */
 	public function downloadOwncloud($progressCallback = null){
 		$response = $this->getDefaultResponse();
 		if (is_null($progressCallback)){

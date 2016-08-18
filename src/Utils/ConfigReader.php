@@ -23,6 +23,11 @@ namespace Owncloud\Updater\Utils;
 
 use Owncloud\Updater\Utils\OccRunner;
 
+/**
+ * Class ConfigReader
+ *
+ * @package Owncloud\Updater\Utils
+ */
 class ConfigReader {
 
 	/** @var array Associative array ($key => $value) */
@@ -90,7 +95,7 @@ class ConfigReader {
 	/**
 	 * Get OC Edition
 	 * @return string
-	 * @throws ProcessFailedException
+	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
 	 */
 	public function getEdition(){
 		$response = $this->occRunner->runJson('status');
@@ -99,7 +104,7 @@ class ConfigReader {
 
 	/**
 	 * Export OC config as JSON and parse it into the cache
-	 * @throws ProcessFailedException
+	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
 	 * @throws \UnexpectedValueException
 	 */
 	private function load(){

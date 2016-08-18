@@ -31,6 +31,11 @@ use Owncloud\Updater\Utils\Fetcher;
 use Owncloud\Updater\Utils\ConfigReader;
 use \Owncloud\Updater\Controller\DownloadController;
 
+/**
+ * Class DetectCommand
+ *
+ * @package Owncloud\Updater\Command
+ */
 class DetectCommand extends Command {
 
 	/**
@@ -78,6 +83,11 @@ class DetectCommand extends Command {
 		;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 * @return int
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$registry = $this->container['utils.registry'];
 		$registry->set('feed', false);

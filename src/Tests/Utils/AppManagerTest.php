@@ -4,6 +4,11 @@ namespace Owncloud\Updater\Tests\Utils;
 
 use Owncloud\Updater\Utils\AppManager;
 
+/**
+ * Class AppManagerTest
+ *
+ * @package Owncloud\Updater\Tests\Utils
+ */
 class AppManagerTest extends \PHPUnit_Framework_TestCase {
 
 	public function testDisableApp(){
@@ -20,6 +25,9 @@ class AppManagerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($result);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function appListProvider(){
 		return [
 
@@ -61,6 +69,10 @@ class AppManagerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
+	/**
+	 * @param $result
+	 * @return mixed
+	 */
 	protected function getOccRunnerMock($result){
 		$runnerMock = $this->getMockBuilder('Owncloud\Updater\Utils\OccRunner')
 				->setMethods(['run'])

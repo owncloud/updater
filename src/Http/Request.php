@@ -22,9 +22,19 @@
 
 namespace Owncloud\Updater\Http;
 
+/**
+ * Class Request
+ *
+ * @package Owncloud\Updater\Http
+ */
 class Request {
 	protected $vars;
 
+	/**
+	 * Request constructor.
+	 *
+	 * @param array $vars
+	 */
 	public function __construct($vars = []){
 		$this->vars = $vars;
 	}
@@ -37,6 +47,9 @@ class Request {
 		return $this->server('REQUEST_URI');
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getServerProtocol() {
 		$forwardedProto = $this->server('HTTP_X_FORWARDED_PROTO');
 		if (!is_null($forwardedProto)) {
@@ -57,6 +70,9 @@ class Request {
 		return 'http';
 	}
 
+	/**
+	 * @return mixed|string
+	 */
 	public function getHost(){
 		$host = 'localhost';
 		$forwardedHost = $this->server('HTTP_X_FORWARDED_HOST');

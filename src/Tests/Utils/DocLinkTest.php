@@ -4,6 +4,11 @@ namespace Owncloud\Updater\Tests\Utils;
 
 use Owncloud\Updater\Utils\DocLink;
 
+/**
+ * Class DocLinkTest
+ *
+ * @package Owncloud\Updater\Tests\Utils
+ */
 class DocLinkTest extends \PHPUnit_Framework_TestCase {
 	public function testGetServerUrl(){
 		$expected = 'https://doc.owncloud.org/server/9.0/admin_manual/installation/installation_wizard.html#strong-perms-label';
@@ -15,6 +20,9 @@ class DocLinkTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $docLink->getAdminManualUrl($relativePart));
 	}
 
+	/**
+	 * @return array
+	 */
 	public function versionDataProvider(){
 		return [
 			[ '1.2.3.4', 'https://doc.owncloud.org/server/1.2/admin_manual/' ],

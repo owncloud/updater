@@ -25,6 +25,11 @@ use Owncloud\Updater\Console\Application;
 use Owncloud\Updater\Utils\FilesystemHelper;
 use Owncloud\Updater\Utils\Locator;
 
+/**
+ * Class Checkpoint
+ *
+ * @package Owncloud\Updater\Utils
+ */
 class Checkpoint {
 
 	const CORE_DIR = 'core';

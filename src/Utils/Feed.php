@@ -21,6 +21,11 @@
 
 namespace Owncloud\Updater\Utils;
 
+/**
+ * Class Feed
+ *
+ * @package Owncloud\Updater\Utils
+ */
 class Feed {
 
 	/** string $version */

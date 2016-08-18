@@ -25,6 +25,11 @@ namespace Owncloud\Updater\Formatter;
 use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyleInterface;
 
+/**
+ * Class HtmlOutputFormatter
+ *
+ * @package Owncloud\Updater\Formatter
+ */
 class HtmlOutputFormatter implements OutputFormatterInterface {
 
 	const PATTERN = "/\[(([\d+];?)*)m(.*?)\[(([\d+];?)*)m/i";
@@ -52,30 +57,59 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 	];
 	private $formatter;
 
+	/**
+	 * HtmlOutputFormatter constructor.
+	 *
+	 * @param $formatter
+	 */
 	public function __construct($formatter){
 		$this->formatter = $formatter;
 	}
 
+	/**
+	 * @param bool $decorated
+	 * @return mixed
+	 */
 	public function setDecorated($decorated){
 		return $this->formatter->setDecorated($decorated);
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function isDecorated(){
 		return $this->formatter->isDecorated();
 	}
 
+	/**
+	 * @param string $name
+	 * @param OutputFormatterStyleInterface $style
+	 * @return mixed
+	 */
 	public function setStyle($name, OutputFormatterStyleInterface $style){
 		return $this->formatter->setStyle($name, $style);
 	}
 
+	/**
+	 * @param string $name
+	 * @return mixed
+	 */
 	public function hasStyle($name){
 		return $this->formatter->hasStyle($name);
 	}
 
+	/**
+	 * @param string $name
+	 * @return mixed
+	 */
 	public function getStyle($name){
 		return $this->formatter->getStyle($name);
 	}
 
+	/**
+	 * @param string $message
+	 * @return mixed
+	 */
 	public function format($message){
 		$formatted = $this->formatter->format($message);
 		$escaped = htmlspecialchars($formatted, ENT_QUOTES, 'UTF-8');
@@ -84,6 +118,10 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 		return $converted;
 	}
 
+	/**
+	 * @param $matches
+	 * @return string
+	 */
 	protected function replaceFormat($matches){
 		$text = $matches[3];
 		$styles = explode(';', $matches[1]);

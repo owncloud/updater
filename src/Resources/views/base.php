@@ -3,6 +3,7 @@
 <!--[if (gt IE 9)|!(IE)]><!--><html class="ng-csp" data-placeholder-focus="false" lang="en" ><!--<![endif]-->
 	<head>
 		<meta charset="utf-8">
+		<?php /** @var $title string */ ?>
 		<title>ownCloud	Updater - <?=$this->e($title)?></title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="referrer" content="never">
@@ -10,6 +11,7 @@
 		<link rel="stylesheet" href="<?=$this->uri() . '/pub/' . $this->asset('css/main.css')?>" />
 		<script src="<?=$this->uri() . '/pub/' . $this->asset('js/vendor/jquery.min.js')?>"></script>
 	</head>
+	<?php /** @var $bodyId string */ ?>
 	<body id="<?=$this->e($bodyId)?>">
 		<noscript>
 		<div id="nojavascript">
@@ -18,9 +20,7 @@
 			</div>
 		</div>
 		</noscript>
-
-				<?=$this->section('login')?>
-				<?=$this->section('inner')?>
-
+		<?=$this->section('login')?>
+		<?=$this->section('inner')?>
 	</body>
 </html>

@@ -26,6 +26,11 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessUtils;
 use ZipArchive;
 
+/**
+ * Class ZipExtractor
+ *
+ * @package Owncloud\Updater\Utils
+ */
 class ZipExtractor {
 
 	protected $file;
@@ -60,6 +65,9 @@ class ZipExtractor {
 		return $this->extractZipArchive();
 	}
 
+	/**
+	 * @return bool
+	 */
 	private function extractShell(){
 		$command = 'unzip ' . ProcessUtils::escapeArgument($this->file) . ' -d ' . ProcessUtils::escapeArgument($this->path) . ' && chmod -R u+w ' . ProcessUtils::escapeArgument($this->path);
 		$process = new Process($command);

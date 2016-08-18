@@ -25,6 +25,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class CheckpointCommand
+ *
+ * @package Owncloud\Updater\Command
+ */
 class CheckpointCommand extends Command {
 
 	protected function configure(){
@@ -46,6 +51,11 @@ class CheckpointCommand extends Command {
 		;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 * @throws \Exception
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output){
 		clearstatcache();
 		$checkpoint = $this->container['utils.checkpoint'];

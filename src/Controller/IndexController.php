@@ -33,6 +33,11 @@ use League\Plates\Extension\URI;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Input\StringInput;
 
+/**
+ * Class IndexController
+ *
+ * @package Owncloud\Updater\Controller
+ */
 class IndexController {
 
 	/** @var Container */
@@ -60,6 +65,9 @@ class IndexController {
 		$this->command = $this->request->postParameter('command');
 	}
 
+	/**
+	 * @return string
+	 */
 	public function dispatch() {
 		/** @var ConfigReader $configReader */
 		$configReader = $this->container['utils.configReader'];
@@ -128,6 +136,10 @@ class IndexController {
 		return false;
 	}
 
+	/**
+	 * @param Engine $templates
+	 * @return string
+	 */
 	public function showLogin(Engine $templates) {
 		// If it is a request with invalid token just return "false" so that we can catch this
 		$token = ($this->request->header('X_Updater_Auth') !== null) ? $this->request->header('X_Updater_Auth') : '';
@@ -144,6 +156,9 @@ class IndexController {
 		return $content;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function ajaxAction() {
 		$application = $this->container['application'];
 

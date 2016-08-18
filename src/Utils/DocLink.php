@@ -23,6 +23,11 @@ namespace Owncloud\Updater\Utils;
 
 use Owncloud\Updater\Utils\OccRunner;
 
+/**
+ * Class DocLink
+ *
+ * @package Owncloud\Updater\Utils
+ */
 class DocLink {
 
 	const BASE_DOC_URL = 'https://doc.owncloud.org/server';

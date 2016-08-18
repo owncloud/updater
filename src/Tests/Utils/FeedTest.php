@@ -4,8 +4,16 @@ namespace Owncloud\Updater\Tests\Utils;
 
 use Owncloud\Updater\Utils\Feed;
 
+/**
+ * Class FeedTest
+ *
+ * @package Owncloud\Updater\Tests\Utils
+ */
 class FeedTest extends \PHPUnit_Framework_TestCase {
 
+	/**
+	 * @return array
+	 */
 	public function resultProvider(){
 		return [
 			[ [], false ],
@@ -22,7 +30,10 @@ class FeedTest extends \PHPUnit_Framework_TestCase {
 		$feed = new Feed($feedData);
 		$this->assertEquals($expectedValidity, $feed->isValid());
 	}
-	
+
+	/**
+	 * @return array
+	 */
 	public function feedFileNameProvider(){
 		return [
 			[ [ 'url'=>'http://example.org/package.zip', 'version' => '1.2.3', 'versionstring' => '1.2.3' ], '1.2.3.zip' ],
