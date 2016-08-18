@@ -29,7 +29,7 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 
 	const PATTERN = "/\[(([\d+];?)*)m(.*?)\[(([\d+];?)*)m/i";
 
-	static private $styles = array(
+	static private $styles = [
 		'30' => 'color:rgba(0,0,0,1)',
 		'31' => 'color:rgba(230,50,50,1)',
 		'32' => 'color:rgba(50,230,50,1)',
@@ -49,7 +49,7 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 		'1' => 'font-weight:bold',
 		'4' => 'text-decoration:underline',
 		'8' => 'visibility:hidden',
-	);
+	];
 	private $formatter;
 
 	public function __construct($formatter){
@@ -79,7 +79,7 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 	public function format($message){
 		$formatted = $this->formatter->format($message);
 		$escaped = htmlspecialchars($formatted, ENT_QUOTES, 'UTF-8');
-		$converted = preg_replace_callback(self::PATTERN, array($this, 'replaceFormat'), $escaped);
+		$converted = preg_replace_callback(self::PATTERN, [$this, 'replaceFormat'], $escaped);
 
 		return $converted;
 	}
@@ -87,7 +87,7 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 	protected function replaceFormat($matches){
 		$text = $matches[3];
 		$styles = explode(';', $matches[1]);
-		$css = array();
+		$css = [];
 
 		foreach ($styles as $style){
 			if (isset(self::$styles[$style])){

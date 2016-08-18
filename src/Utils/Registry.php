@@ -24,7 +24,7 @@ namespace Owncloud\Updater\Utils;
 
 class Registry {
 
-	protected $objects = array();
+	protected $objects = [];
 
 	/**
 	 *

@@ -120,7 +120,7 @@ class DetectCommand extends Command {
 			);
 
 			if ($input->getOption('only-check')){
-				return;
+				return 0;
 			}
 
 			$action = $this->ask($input, $output);
@@ -142,7 +142,7 @@ class DetectCommand extends Command {
 				$output->writeln('Downloading has been completed. Exiting.');
 				return 64;
 			}
-		} catch (\GuzzleHttp\Exception\ClientException $e){
+		} catch (ClientException $e){
 			$this->getApplication()->getLogger()->error($e->getMessage());
 			$output->writeln('<error>Network error</error>');
 			$output->writeln(
@@ -159,6 +159,8 @@ class DetectCommand extends Command {
 			$output->writeln('<error>'.$e->getMessage().'</error>');
 			return 2;
 		}
+
+		return 0;
 	}
 
 	/**

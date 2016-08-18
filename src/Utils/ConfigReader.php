@@ -77,10 +77,10 @@ class ConfigReader {
 		do {
 			$key = array_shift($keys);
 			if (!count($keys)>0 && !is_array($config)){
-				return;
+				return null;
 			}
 			if (!array_key_exists($key, $config)){
-				return;
+				return null;
 			}
 			$config = $config[$key];
 		} while ($keys);

@@ -27,7 +27,7 @@ use Owncloud\Updater\Utils\OccRunner;
 class AppManager {
 
 	/**
-	 * @var OccRunner $occRunner
+	 * @var Owncloud\Updater\Utils\OccRunner $occRunner
 	 */
 	protected $occRunner;
 

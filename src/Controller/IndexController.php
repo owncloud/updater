@@ -24,6 +24,7 @@ namespace Owncloud\Updater\Controller;
 
 use Owncloud\Updater\Utils\Checkpoint;
 use Owncloud\Updater\Utils\ConfigReader;
+use Pimple\Container;
 use Owncloud\Updater\Formatter\HtmlOutputFormatter;
 use Owncloud\Updater\Http\Request;
 use League\Plates\Engine;
@@ -31,11 +32,10 @@ use League\Plates\Extension\Asset;
 use League\Plates\Extension\URI;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class IndexController {
 
-	/** @var \Pimple\Container */
+	/** @var Container */
 	protected $container;
 
 	/** @var Request */
@@ -45,10 +45,10 @@ class IndexController {
 	protected $command;
 
 	/**
-	 * @param \Pimple\Container $container
+	 * @param Container $container
 	 * @param Request|null $request
 	 */
-	public function __construct(\Pimple\Container $container,
+	public function __construct(Container $container,
 								Request $request = null) {
 		$this->container = $container;
 		if (is_null($request)){

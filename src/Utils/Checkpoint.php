@@ -53,7 +53,7 @@ class Checkpoint {
 	/**
 	 * Creates a checkpoint
 	 * @return string
-	 * @throws Exception if base checkpoint directory is not writable
+	 * @throws \Exception if base checkpoint directory is not writable
 	 */
 	public function create(){
 		$checkpointId = $this->createCheckpointId();
@@ -100,7 +100,7 @@ class Checkpoint {
 	 * Restore a checkpoint by id
 	 * @param string $checkpointId id of checkpoint
 	 * @return array
-	 * @throws UnexpectedValueException if there is no checkpoint with this id
+	 * @throws \UnexpectedValueException if there is no checkpoint with this id
 	 */
 	public function restore($checkpointId){
 		$this->assertCheckpointExists($checkpointId);
@@ -114,7 +114,7 @@ class Checkpoint {
 	 * Remove a checkpoint by id
 	 * @param string $checkpointId id of checkpoint
 	 * @return array
-	 * @throws UnexpectedValueException if there is no checkpoint with this id
+	 * @throws \UnexpectedValueException if there is no checkpoint with this id
 	 */
 	public function remove($checkpointId){
 		$this->assertCheckpointExists($checkpointId);

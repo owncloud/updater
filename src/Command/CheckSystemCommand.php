@@ -80,6 +80,8 @@ class CheckSystemCommand extends Command {
 		} else {
 			$output->writeln(' - file permissions are ok.');
 		}
+
+		return 0;
 	}
 
 	protected function longArrayToString($array){
