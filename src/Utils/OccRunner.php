@@ -26,7 +26,6 @@ use Owncloud\Updater\Console\Application;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessUtils;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Owncloud\Updater\Utils\Locator;
 
 /**
  * Class OccRunner

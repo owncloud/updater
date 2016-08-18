@@ -22,8 +22,6 @@
 namespace Owncloud\Updater\Utils;
 
 use Owncloud\Updater\Console\Application;
-use Owncloud\Updater\Utils\FilesystemHelper;
-use Owncloud\Updater\Utils\Locator;
 
 /**
  * Class Checkpoint

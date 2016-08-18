@@ -21,8 +21,6 @@
 
 namespace Owncloud\Updater\Utils;
 
-use Owncloud\Updater\Utils\OccRunner;
-
 /**
  * Class ConfigReader
  *

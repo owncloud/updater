@@ -22,7 +22,6 @@
 namespace Owncloud\Updater\Utils;
 
 use GuzzleHttp\Client;
-use Owncloud\Updater\Utils\Feed;
 
 /**
  * Class Fetcher

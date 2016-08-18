@@ -21,7 +21,6 @@
 
 namespace Owncloud\Updater\Utils;
 
-use Owncloud\Updater\Utils\OccRunner;
 use Symfony\Component\Console\Output\OutputInterface;
 
 

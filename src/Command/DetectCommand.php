@@ -113,6 +113,7 @@ class DetectCommand extends Command {
 				return $input->getOption('exit-if-none') ? 4 : null;
 			}
 
+			/** @var \Owncloud\Updater\Utils\Feed $feed */
 			$feed = $feedData['data']['feed'];
 			if (!$feed->isValid()){
 				// Feed is empty. Means there are no updates

@@ -35,7 +35,7 @@ class CheckpointCommand extends Command {
 	protected function configure(){
 		$this
 				->setName('upgrade:checkpoint')
-				->setDescription('Create or restore owncloud core files')
+				->setDescription('Create or restore ownCloud core files')
 				->addOption(
 						'create', null, InputOption::VALUE_NONE, 'create a checkpoint'
 				)
