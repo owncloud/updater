@@ -21,9 +21,11 @@
 
 set_time_limit(0);
 
-//  PHP versions below 5.4.0 are not supported
-if (version_compare(PHP_VERSION, '5.4.0') === -1){
-	echo 'This application requires at least PHP 5.4.0' . PHP_EOL;
+define('MINIMUM_PHP_VERSION', '5.6.0');
+
+// Check PHP version
+if (version_compare(PHP_VERSION, MINIMUM_PHP_VERSION) === -1){
+	echo 'This application requires at least PHP ' . MINIMUM_PHP_VERSION . PHP_EOL;
 	echo 'You are currently running ' . PHP_VERSION . '. Please update your PHP version.' . PHP_EOL;
 	exit(50);
 }
