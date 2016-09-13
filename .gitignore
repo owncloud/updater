@@ -1,4 +1,5 @@
 /nbproject/private/
+/pub/js/vendor/
 /vendor/symfony/console/Tests/
 /vendor/symfony/process/Tests
 /vendor/pimple/pimple/ext/
@@ -9,3 +10,4 @@
 /composer.lock
 /src/Tests/clover.xml
 *.exe
+
