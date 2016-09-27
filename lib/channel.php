@@ -75,7 +75,8 @@ class Channel {
 		$config = is_null($config) ? \OC::$server->getConfig() : $config;
 		$updater = new \OC\Updater($helper, $config);
 		
-		$feed = $updater->check('https://updates.owncloud.com/server/');
+		$serverUrl = $config->getSystemValue('updater.server.url', 'https://updates.owncloud.com/server/');
+		$feed = $updater->check($serverUrl);
 		$data = array();
 		if (is_array($feed)){
 			foreach (array('version', 'versionstring', 'url', 'web') as $field){
