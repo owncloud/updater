@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 #
 # Define NPM and check if it is available on the system.
 #
@@ -27,7 +29,7 @@ js_deps=pub/js/vendor/
 # Catch-all rules
 #
 .PHONY: all
-all: $(composer_dev_deps) install-js-deps
+all: $(composer_dev_deps) $(js_deps)
 
 .PHONY: clean
 clean: clean-composer-deps clean-js-deps clean-dist clean-build
@@ -69,16 +71,16 @@ update-composer: $(COMPOSER_BIN)
 #
 $(js_deps): $(BOWER) bower.json
 	mkdir $(js_deps)
+	$(BOWER) install
+	cp $(node_modules)jquery/jquery.min.{map,js} $(js_deps)
 
 .PHONY: install-js-deps
 install-js-deps: $(js_deps)
-	$(BOWER) install
-	cp $(node_modules)/jquery/jquery.min.{map,js} $(js_deps)
 
 .PHONY: update-js-deps
 update-js-deps: $(js_deps)
 	$(BOWER) update
-	cp $(node_modules)/jquery/jquery.min.{map,js} $(js_deps)
+	cp $(node_modules)jquery/jquery.min.{map,js} $(js_deps)
 
 .PHONY: clean-js-deps
 clean-js-deps:
@@ -88,7 +90,7 @@ clean-js-deps:
 # dist
 #
 
-$(dist_dir)/updater: $(composer_deps)  install-js-deps
+$(dist_dir)/updater: $(composer_deps)  $(js_deps)
 	rm -Rf $@; mkdir -p $@
 	cp -R $(updater_all_src) $@
 	find $@/{vendor/,src/} -type d -iname Test? -print | xargs rm -Rf
