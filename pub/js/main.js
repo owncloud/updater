@@ -201,8 +201,14 @@ $(function () {
 					handleResponse(response, function () {}, '#step-finalize');
 					if (response.error_code === 0){
 						accordion.setDone('#step-done');
-						accordion.setContent('#step-done', 'All done!');
+						accordion.setContent('#step-done', 'All done! Redirecting you to your ownCloud.');
 						accordion.showContent('#step-done');
+						setTimeout(
+							function(){
+								window.location.href = $('#meta-information').data('endpoint').replace(/\/updater\/.*$/, '');
+							},
+							3000
+						);
 					}
 				});
 	});
