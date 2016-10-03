@@ -25,6 +25,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Owncloud\Updater\Utils\Collection;
 
+/**
+ * Class CheckSystemCommand
+ *
+ * @package Owncloud\Updater\Command
+ */
 class CheckSystemCommand extends Command {
 
 	protected $message = 'Checking system health.';
@@ -36,6 +41,11 @@ class CheckSystemCommand extends Command {
 		;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 * @return int
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$locator = $this->container['utils.locator'];
 		$fsHelper = $this->container['utils.filesystemhelper'];
@@ -80,8 +90,14 @@ class CheckSystemCommand extends Command {
 		} else {
 			$output->writeln(' - file permissions are ok.');
 		}
+
+		return 0;
 	}
 
+	/**
+	 * @param $array
+	 * @return string
+	 */
 	protected function longArrayToString($array){
 		if (count($array)>7){
 			$shortArray = array_slice($array, 0, 7);

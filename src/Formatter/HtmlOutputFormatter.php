@@ -25,11 +25,16 @@ namespace Owncloud\Updater\Formatter;
 use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyleInterface;
 
+/**
+ * Class HtmlOutputFormatter
+ *
+ * @package Owncloud\Updater\Formatter
+ */
 class HtmlOutputFormatter implements OutputFormatterInterface {
 
 	const PATTERN = "/\[(([\d+];?)*)m(.*?)\[(([\d+];?)*)m/i";
 
-	static private $styles = array(
+	static private $styles = [
 		'30' => 'color:rgba(0,0,0,1)',
 		'31' => 'color:rgba(230,50,50,1)',
 		'32' => 'color:rgba(50,230,50,1)',
@@ -49,45 +54,78 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 		'1' => 'font-weight:bold',
 		'4' => 'text-decoration:underline',
 		'8' => 'visibility:hidden',
-	);
+	];
 	private $formatter;
 
+	/**
+	 * HtmlOutputFormatter constructor.
+	 *
+	 * @param $formatter
+	 */
 	public function __construct($formatter){
 		$this->formatter = $formatter;
 	}
 
+	/**
+	 * @param bool $decorated
+	 * @return mixed
+	 */
 	public function setDecorated($decorated){
 		return $this->formatter->setDecorated($decorated);
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function isDecorated(){
 		return $this->formatter->isDecorated();
 	}
 
+	/**
+	 * @param string $name
+	 * @param OutputFormatterStyleInterface $style
+	 * @return mixed
+	 */
 	public function setStyle($name, OutputFormatterStyleInterface $style){
 		return $this->formatter->setStyle($name, $style);
 	}
 
+	/**
+	 * @param string $name
+	 * @return mixed
+	 */
 	public function hasStyle($name){
 		return $this->formatter->hasStyle($name);
 	}
 
+	/**
+	 * @param string $name
+	 * @return mixed
+	 */
 	public function getStyle($name){
 		return $this->formatter->getStyle($name);
 	}
 
+	/**
+	 * @param string $message
+	 * @return mixed
+	 */
 	public function format($message){
 		$formatted = $this->formatter->format($message);
 		$escaped = htmlspecialchars($formatted, ENT_QUOTES, 'UTF-8');
-		$converted = preg_replace_callback(self::PATTERN, array($this, 'replaceFormat'), $escaped);
+		$converted = preg_replace_callback(self::PATTERN, [$this, 'replaceFormat'], $escaped);
 
 		return $converted;
 	}
 
+	/**
+	 * @param $matches
+	 * @return string
+	 */
 	protected function replaceFormat($matches){
 		$text = $matches[3];
 		$styles = explode(';', $matches[1]);
-		$css = array();
+		$css = [];
 
 		foreach ($styles as $style){
 			if (isset(self::$styles[$style])){

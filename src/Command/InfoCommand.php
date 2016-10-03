@@ -21,11 +21,14 @@
 
 namespace Owncloud\Updater\Command;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class InfoCommand
+ *
+ * @package Owncloud\Updater\Command
+ */
 class InfoCommand extends Command {
 
 	protected function configure(){
@@ -37,6 +40,10 @@ class InfoCommand extends Command {
 		;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$message = sprintf('%s %s - CLI based ownCloud server upgrades',
 						$this->getApplication()->getName(),

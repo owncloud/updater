@@ -6,6 +6,11 @@ use Owncloud\Updater\Controller\DownloadController;
 use Owncloud\Updater\Utils\Registry;
 use Owncloud\Updater\Utils\Feed;
 
+/**
+ * Class DownloadControllerTest
+ *
+ * @package Owncloud\Updater\Tests\Http
+ */
 class DownloadControllerTest extends \PHPUnit_Framework_TestCase {
 
 	protected $feedData = [

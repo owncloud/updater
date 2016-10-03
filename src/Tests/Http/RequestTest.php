@@ -4,8 +4,16 @@ namespace Owncloud\Updater\Tests\Http;
 
 use Owncloud\Updater\Http\Request;
 
+/**
+ * Class RequestTest
+ *
+ * @package Owncloud\Updater\Tests\Http
+ */
 class RequestTest extends \PHPUnit_Framework_TestCase {
 
+	/**
+	 * @return array
+	 */
 	public function varsProvider(){
 		return [
 			[ [], 'abcd', null ],
@@ -24,6 +32,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function serverProvider(){
 		return [
 			[ [], 'abcd', null ],
@@ -42,6 +53,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function headerProvider(){
 		return [
 			[ [], 'meow', null ],
@@ -62,6 +76,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	}
 
 
+	/**
+	 * @return array
+	 */
 	public function hostProvider(){
 		return [
 			[ [ 'headers'=> [ 'SERVER_NAME' => 'jump' ] ], 'jump', null ],

@@ -156,6 +156,7 @@ class Application extends \Symfony\Component\Console\Application {
 				$configReader->init();
 				if (!isset($this->diContainer['utils.docLink'])) {
 					$this->diContainer['utils.docLink'] = function ($c) {
+						/** @var Locator $locator */
 						$locator = $c['utils.locator'];
 						$installedVersion = implode('.', $locator->getInstalledVersion());
 						return new DocLink($installedVersion);
@@ -197,8 +198,9 @@ class Application extends \Symfony\Component\Console\Application {
 			$command->setContainer($this->getContainer());
 			$commandName = $this->getCommandName($input);
 			$this->getLogger()->info('Execution of ' . $commandName . ' command started');
-			if (!empty($command->getMessage())){
-				$message = sprintf('<info>%s</info>', $command->getMessage());
+			$message = $command->getMessage();
+			if (!empty($message)){
+				$message = sprintf('<info>%s</info>', $message);
 				$output->writeln($message);
 			}
 			$exitCode = parent::doRunCommand($command, $input, $output);

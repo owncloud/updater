@@ -23,11 +23,15 @@
 namespace Owncloud\Updater\Tests\Utils;
 
 
-
+/**
+ * Class OccRunnerTest
+ *
+ * @package Owncloud\Updater\Tests\Utils
+ */
 class OccRunnerTest extends \PHPUnit_Framework_TestCase {
 
 	/**
-	 * @expectedException UnexpectedValueException
+	 * @expectedException \UnexpectedValueException
 	 */
 	public function testInvalidJson(){
 		$occRunner = $this->getMockBuilder('Owncloud\Updater\Utils\OccRunner')
@@ -69,6 +73,9 @@ class OccRunnerTest extends \PHPUnit_Framework_TestCase {
 
 	}
 
+	/**
+	 * @return mixed
+	 */
 	private function getLocatorMock(){
 		$locatorMock = $this->getMockBuilder('Owncloud\Updater\Utils\Locator')
 			->disableOriginalConstructor()

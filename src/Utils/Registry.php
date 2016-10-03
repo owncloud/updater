@@ -22,9 +22,14 @@
 
 namespace Owncloud\Updater\Utils;
 
+/**
+ * Class Registry
+ *
+ * @package Owncloud\Updater\Utils
+ */
 class Registry {
 
-	protected $objects = array();
+	protected $objects = [];
 
 	/**
 	 *

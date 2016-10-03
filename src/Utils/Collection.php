@@ -21,6 +21,11 @@
 
 namespace Owncloud\Updater\Utils;
 
+/**
+ * Class Collection
+ *
+ * @package Owncloud\Updater\Utils
+ */
 class Collection {
 	private $notReadable = [];
 	private $notWritable = [];
@@ -30,22 +35,34 @@ class Collection {
 		$this->notWritable = [];
 	}
 
+	/**
+	 * @param $item
+	 */
 	public function addNotReadable($item) {
 		if (!in_array($item, $this->notReadable)) {
 			$this->notReadable[] = $item;
 		}
 	}
 
+	/**
+	 * @param $item
+	 */
 	public function addNotWritable($item) {
 		if (!in_array($item, $this->notWritable)) {
 			$this->notWritable[] = $item;
 		}
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getNotReadable(){
 		return $this->notReadable;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getNotWritable(){
 		return $this->notWritable;
 	}

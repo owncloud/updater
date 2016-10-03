@@ -1,3 +1,4 @@
+<?php /** @var $title string */ ?>
 <?php $this->layout('base', ['title' => $title, 'bodyId' => 'body-login']) ?>
 <?php $this->start('login') ?>
 	<script src="<?=$this->uri() . '/pub/' . $this->asset('js/login.js')?>"></script>

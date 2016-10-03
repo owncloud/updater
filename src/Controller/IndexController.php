@@ -24,6 +24,7 @@ namespace Owncloud\Updater\Controller;
 
 use Owncloud\Updater\Utils\Checkpoint;
 use Owncloud\Updater\Utils\ConfigReader;
+use Pimple\Container;
 use Owncloud\Updater\Formatter\HtmlOutputFormatter;
 use Owncloud\Updater\Http\Request;
 use League\Plates\Engine;
@@ -31,11 +32,15 @@ use League\Plates\Extension\Asset;
 use League\Plates\Extension\URI;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
+/**
+ * Class IndexController
+ *
+ * @package Owncloud\Updater\Controller
+ */
 class IndexController {
 
-	/** @var \Pimple\Container */
+	/** @var Container */
 	protected $container;
 
 	/** @var Request */
@@ -45,10 +50,10 @@ class IndexController {
 	protected $command;
 
 	/**
-	 * @param \Pimple\Container $container
+	 * @param Container $container
 	 * @param Request|null $request
 	 */
-	public function __construct(\Pimple\Container $container,
+	public function __construct(Container $container,
 								Request $request = null) {
 		$this->container = $container;
 		if (is_null($request)){
@@ -60,6 +65,9 @@ class IndexController {
 		$this->command = $this->request->postParameter('command');
 	}
 
+	/**
+	 * @return string
+	 */
 	public function dispatch() {
 		/** @var ConfigReader $configReader */
 		$configReader = $this->container['utils.configReader'];
@@ -128,6 +136,10 @@ class IndexController {
 		return false;
 	}
 
+	/**
+	 * @param Engine $templates
+	 * @return string
+	 */
 	public function showLogin(Engine $templates) {
 		// If it is a request with invalid token just return "false" so that we can catch this
 		$token = ($this->request->header('X_Updater_Auth') !== null) ? $this->request->header('X_Updater_Auth') : '';
@@ -144,6 +156,9 @@ class IndexController {
 		return $content;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function ajaxAction() {
 		$application = $this->container['application'];
 

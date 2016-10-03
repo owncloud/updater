@@ -6,6 +6,11 @@ use Owncloud\Updater\Utils\Checkpoint;
 use Owncloud\Updater\Utils\FilesystemHelper;
 use Owncloud\Updater\Utils\Locator;
 
+/**
+ * Class CheckpointTest
+ *
+ * @package Owncloud\Updater\Tests\Utils
+ */
 class CheckpointTest extends \PHPUnit_Framework_TestCase {
 	public function testGetAll() {
 		$checkpointList = ['a', 'b', 'c'];
@@ -59,6 +64,11 @@ class CheckpointTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals([], $actual);
 	}
 
+	/**
+	 * @param Locator $locator
+	 * @param FilesystemHelper $fsHelper
+	 * @return Checkpoint
+	 */
 	protected function getCheckpointInstance(Locator $locator, FilesystemHelper $fsHelper){
 		return new Checkpoint($locator, $fsHelper);
 	}

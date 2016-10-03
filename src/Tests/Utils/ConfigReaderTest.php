@@ -4,6 +4,11 @@ namespace Owncloud\Updater\Tests\Utils;
 
 use Owncloud\Updater\Utils\ConfigReader;
 
+/**
+ * Class ConfigReaderTest
+ *
+ * @package Owncloud\Updater\Tests\Utils
+ */
 class ConfigReaderTest extends \PHPUnit_Framework_TestCase {
 
 	protected $config = [
@@ -29,6 +34,9 @@ class ConfigReaderTest extends \PHPUnit_Framework_TestCase {
 		]
 	];
 
+	/**
+	 * @return array
+	 */
 	public function testGetByPathProvider(){
 		return [
 				[ 'apps.core.OC_Channel', 'beta']
@@ -46,6 +54,10 @@ class ConfigReaderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $value);
 	}
 
+	/**
+	 * @param $result
+	 * @return mixed
+	 */
 	protected function getOccRunnerMock($result){
 		$runnerMock = $this->getMockBuilder('Owncloud\Updater\Utils\OccRunner')
 				->setMethods(['run'])

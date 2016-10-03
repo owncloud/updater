@@ -21,11 +21,14 @@
 
 namespace Owncloud\Updater\Command;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class EnableNotShippedAppsCommand
+ *
+ * @package Owncloud\Updater\Command
+ */
 class EnableNotShippedAppsCommand extends Command {
 
 	protected function configure(){
@@ -35,6 +38,10 @@ class EnableNotShippedAppsCommand extends Command {
 		;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output){
 		/** @var \Owncloud\Updater\Utils\Locator $locator */
 		$locator = $this->container['utils.locator'];

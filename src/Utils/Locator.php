@@ -23,6 +23,11 @@ namespace Owncloud\Updater\Utils;
 
 use \Owncloud\Updater\Console\Application;
 
+/**
+ * Class Locator
+ *
+ * @package Owncloud\Updater\Utils
+ */
 class Locator {
 
 	/**
@@ -46,6 +51,9 @@ class Locator {
 		$this->ownCloudRootPath = dirname($baseDir);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getOwnCloudRootPath(){
 		return $this->ownCloudRootPath;
 	}
@@ -86,6 +94,9 @@ class Locator {
 		];
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getUpdaterContent(){
 		return [
 			'app',
@@ -198,7 +209,7 @@ class Locator {
 	public function getChannelFromVersionsFile(){
 		include $this->getPathToVersionFile();
 
-		/** @var $OC_Version string */
+		/** @var $OC_Channel string */
 		return $OC_Channel;
 	}
 
@@ -224,6 +235,10 @@ class Locator {
 		return '';
 	}
 
+	/**
+	 * @param string $filePostfix
+	 * @return array
+	 */
 	public function getPathtoConfigFiles($filePostfix = 'config.php'){
 		// Only config.php for now
 		return [
@@ -231,6 +246,9 @@ class Locator {
 		];
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getPathToConfigFile(){
 		return $this->ownCloudRootPath . '/config/config.php';
 	}

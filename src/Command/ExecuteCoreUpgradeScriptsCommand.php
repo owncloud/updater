@@ -30,6 +30,11 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Owncloud\Updater\Utils\OccRunner;
 use Owncloud\Updater\Utils\ZipExtractor;
 
+/**
+ * Class ExecuteCoreUpgradeScriptsCommand
+ *
+ * @package Owncloud\Updater\Command
+ */
 class ExecuteCoreUpgradeScriptsCommand extends Command {
 
 	/**
@@ -37,6 +42,11 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	 */
 	protected $occRunner;
 
+	/**
+	 * ExecuteCoreUpgradeScriptsCommand constructor.
+	 *
+	 * @param null|string $occRunner
+	 */
 	public function __construct($occRunner){
 		parent::__construct();
 		$this->occRunner = $occRunner;
@@ -48,6 +58,11 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 				->setDescription('execute core upgrade scripts [danger, might take long]');
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 * @throws \Exception
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$locator = $this->container['utils.locator'];
 		/** @var FilesystemHelper $fsHelper */

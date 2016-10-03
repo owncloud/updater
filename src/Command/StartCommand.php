@@ -21,12 +21,15 @@
 
 namespace Owncloud\Updater\Command;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 
+/**
+ * Class StartCommand
+ *
+ * @package Owncloud\Updater\Command
+ */
 class StartCommand extends Command {
 
 	protected $stack = [
@@ -58,6 +61,10 @@ class StartCommand extends Command {
 		;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$app = $this->getApplication();
 		foreach ($this->stack as $command){

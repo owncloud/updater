@@ -80,6 +80,7 @@
 							<td class="item"></td>
 							<td class="item"></td>
 						</tr>
+						<?php /** @var $checkpoints [] */ ?>
 						<?php foreach ($checkpoints as $checkpoint){ ?>
 						<tr>
 							<td class="item"><?= $this->e($checkpoint['title']) ?></td>

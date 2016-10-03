@@ -21,6 +21,11 @@
 
 namespace Owncloud\Updater\Utils;
 
+/**
+ * Class FilesystemHelper
+ *
+ * @package Owncloud\Updater\Utils
+ */
 class FilesystemHelper {
 
 	/**
@@ -185,6 +190,10 @@ class FilesystemHelper {
 		}
 	}
 
+	/**
+	 * @param $dir
+	 * @return bool
+	 */
 	public function rmdirr($dir) {
 		if(is_dir($dir)) {
 			$files = scandir($dir);

@@ -4,6 +4,11 @@ namespace Owncloud\Updater\Tests\Utils;
 
 use Owncloud\Updater\Utils\Registry;
 
+/**
+ * Class RegistryTest
+ *
+ * @package Owncloud\Updater\Tests\Utils
+ */
 class RegistryTest extends \PHPUnit_Framework_TestCase {
 	public function testGetUnsetValue(){
 		$registry = new Registry();
