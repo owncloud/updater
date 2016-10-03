@@ -77,10 +77,11 @@ $(function () {
 			$('#output').html($('#output').html() + response.output).show();
 		} else {
 			accordion.setContent(node, response.output);
-			accordion.showContent(node);
 			if (response.error_code !== 0) {
+				accordion.showContent(node);
 				accordion.setFailed(node);
 			} else {
+				accordion.hideContent(node);
 				accordion.setDone(node);
 			}
 		}
@@ -92,7 +93,7 @@ $(function () {
 				accordion.setCurrent('#step-init');
 				$.post($('#meta-information').data('endpoint'), {command: 'upgrade:detect --only-check --exit-if-none'})
 						.then(function (response) {
-							handleResponse(response, function () {}, '#step-init');
+							handleResponse(response, function () {accordion.showContent('#step-init');}, '#step-init');
 							accordion.setDone('#step-init');
 							accordion.setCurrent();
 							if (!response.error_code) {
@@ -100,6 +101,7 @@ $(function () {
 							} else {
 								accordion.setContent('#step-init', '<button id="recheck" class="button">Recheck</button>', true);
 							}
+							
 						});
 			};
 
@@ -127,6 +129,7 @@ $(function () {
 	$(document).on('click', '#start-upgrade', function () {
 		$('#output').html('');
 		$(this).attr('disabled', true);
+		accordion.setCurrent('#step-check');
 		$.post($('#meta-information').data('endpoint'), {command: 'upgrade:checkSystem'})
 				.then(function (response) {
 					if (response.error_code === 0){
@@ -159,9 +162,10 @@ $(function () {
 							;
 				})
 				.then(function (response) {
-					handleResponse(response, function () {}, '#step-coreupgrade');
+					handleResponse(response, function () {accordion.showContent('#step-coreupgrade');}, '#step-coreupgrade');
 					return response.error_code === 0
-							? $.post($('#meta-information').data('endpoint'), {command: 'upgrade:executeCoreUpgradeScripts'})
+							? accordion.setCurrent('#step-coreupgrade')
+							  || $.post($('#meta-information').data('endpoint'), {command: 'upgrade:executeCoreUpgradeScripts'})
 							: $.Deferred()
 							;
 				})
@@ -169,7 +173,7 @@ $(function () {
 					if (response.error_code === 0){
 						accordion.setCurrent('#step-appupgrade');
 					}
-					handleResponse(response, function () {}, '#step-appupgrade');
+					handleResponse(response, function () {}, '#step-coreupgrade');
 					return response.error_code === 0
 							? $.post($('#meta-information').data('endpoint'), {command: 'upgrade:enableNotShippedApps'})
 							: $.Deferred()
@@ -179,16 +183,17 @@ $(function () {
 					if (response.error_code === 0){
 						accordion.setCurrent('#step-finalize');
 					}
-					handleResponse(response, function () {}, '#step-finalize');
+					handleResponse(response, function () {}, '#step-appupgrade');
 					return response.error_code === 0
 							? $.post($('#meta-information').data('endpoint'), {command: 'upgrade:restartWebServer'})
 							: $.Deferred()
 							;
 				})
 				.then(function (response) {
-					handleResponse(response, function () {}, '#step-finalize');
+					handleResponse(response, function () {accordion.showContent('#step-finalize');}, '#step-finalize');
 					return response.error_code === 0
-							? $.post($('#meta-information').data('endpoint'), {command: 'upgrade:postUpgradeCleanup'})
+							?  accordion.setCurrent('#step-finalize')
+							  || $.post($('#meta-information').data('endpoint'), {command: 'upgrade:postUpgradeCleanup'})
 							: $.Deferred()
 							;
 				})
