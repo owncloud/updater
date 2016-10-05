@@ -139,7 +139,7 @@ class IndexController {
 		$fullEndpoint = sprintf(
 			'%s://%s%sindex.php/occ/',
 			$this->request->getServerProtocol(),
-			$this->request->getHost(),
+			'localhost',
 			$endpoint !== '' ? $endpoint : '/'
 		);
 
