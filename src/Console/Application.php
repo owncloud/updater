@@ -150,7 +150,23 @@ class Application extends \Symfony\Component\Console\Application {
 			$configReader = $this->diContainer['utils.configReader'];
 			$commandName = $this->getCommandName($input);
 			try{
-				$configReader->init();
+				try {
+					$configReader->init();
+				} catch (\UnexpectedValueException $e){
+					// try fallback to localhost
+					preg_match_all('/https?:\/\/([^\/]*).*$/', $this->getEndpoint(), $matches);
+					if (isset($matches[1][0])){
+						$newEndPoint = str_replace($matches[1][0], 'localhost', $this->getEndpoint());
+						$this->setEndpoint($newEndPoint);
+						try {
+							$configReader->init();
+						} catch (\UnexpectedValueException $e){
+							// fallback to CLI
+							$this->diContainer['utils.occrunner']->setCanUseProcess(true);
+							$configReader->init();
+						}
+					}
+				}
 			} catch (ProcessFailedException $e){
 				if (!in_array($commandName, $this->allowFailure)){
 					$this->logException($e);
