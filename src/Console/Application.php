@@ -153,7 +153,23 @@ class Application extends \Symfony\Component\Console\Application {
 			$this->assertOwnCloudFound();
 			$configReader = $this->diContainer['utils.configReader'];
 			try{
-				$configReader->init();
+				try {
+					$configReader->init();
+				} catch (\UnexpectedValueException $e){
+					// try fallback to localhost
+					preg_match_all('/https?:\/\/([^\/]*).*$/', $this->getEndpoint(), $matches);
+					if (isset($matches[1][0])){
+						$newEndPoint = str_replace($matches[1][0], 'localhost', $this->getEndpoint());
+						$this->setEndpoint($newEndPoint);
+						try {
+							$configReader->init();
+						} catch (\UnexpectedValueException $e){
+							// fallback to CLI
+							$this->diContainer['utils.occrunner']->setCanUseProcess(true);
+							$configReader->init();
+						}
+ 					}
+ 				}
 				if (!isset($this->diContainer['utils.docLink'])) {
 					$this->diContainer['utils.docLink'] = function ($c) {
 						$locator = $c['utils.locator'];
@@ -198,7 +214,7 @@ class Application extends \Symfony\Component\Console\Application {
 			$command->setContainer($this->getContainer());
 			$commandName = $this->getCommandName($input);
 			$this->getLogger()->info('Execution of ' . $commandName . ' command started');
-			if (!empty($command->getMessage())){
+			if ($command->getMessage()!==''){
 				$message = sprintf('<info>%s</info>', $command->getMessage());
 				$output->writeln($message);
 			}

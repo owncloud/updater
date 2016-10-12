@@ -49,6 +49,10 @@ class OccRunner {
 		$this->canUseProcess = $canUseProcess;
 	}
 
+	public function setCanUseProcess($canUseProcess){
+		$this->canUseProcess = $canUseProcess;
+	}
+
 	public function run($command, $args = [], $asJson = false){
 		if ($this->canUseProcess){
 			$extra = $asJson ? '--output=json' : '';
