@@ -153,7 +153,23 @@ class Application extends \Symfony\Component\Console\Application {
 			$this->assertOwnCloudFound();
 			$configReader = $this->diContainer['utils.configReader'];
 			try{
-				$configReader->init();
+				try {
+					$configReader->init();
+				} catch (\UnexpectedValueException $e){
+					// try fallback to localhost
+					preg_match_all('/https?:\/\/([^\/]*).*$/', $this->getEndpoint(), $matches);
+					if (isset($matches[1][0])){
+						$newEndPoint = str_replace($matches[1][0], 'localhost', $this->getEndpoint());
+						$this->setEndpoint($newEndPoint);
+						try {
+							$configReader->init();
+						} catch (\UnexpectedValueException $e){
+							// fallback to CLI
+							$this->diContainer['utils.occrunner']->setCanUseProcess(true);
+							$configReader->init();
+						}
+ 					}
+ 				}
 				if (!isset($this->diContainer['utils.docLink'])) {
 					$this->diContainer['utils.docLink'] = function ($c) {
 						/** @var Locator $locator */
