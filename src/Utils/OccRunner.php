@@ -49,13 +49,17 @@ class OccRunner {
 		$this->canUseProcess = $canUseProcess;
 	}
 
+	public function setCanUseProcess($canUseProcess){
+		$this->canUseProcess = $canUseProcess;
+	}
+
 	public function run($command, $args = [], $asJson = false){
 		if ($this->canUseProcess){
 			$extra = $asJson ? '--output=json' : '';
 			$cmdLine = trim($command . ' ' . $extra);
 			foreach ($args as $optionTitle => $optionValue){
 				if (strpos($optionTitle, '--') === 0){
-					$line = trim("$optionTitle $optionValue");
+					$line = trim("$optionTitle=$optionValue");
 				} else {
 					$line = $optionValue;
 				}
