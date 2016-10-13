@@ -77,8 +77,16 @@ class IndexController {
 		$templates = new Engine(CURRENT_DIR . '/src/Resources/views/');
 		$templates->loadExtension(new Asset(CURRENT_DIR . '/pub/', false));
 		$templates->loadExtension(new URI($baseUrl));
-
+		
+		// Check if the user is logged-in
+		if(!$this->isLoggedIn()) {
+			return $this->showLogin($templates);
+		}
+		
 		try {
+			$fullEndpoint = $this->getEndpoint();
+			$this->container['application']->setEndpoint($fullEndpoint);
+			$this->container['application']->setAuthToken($this->request->header('X_Updater_Auth'));
 			$this->container['application']->assertOwnCloudFound();
 			$configReader->init();
 		} catch (\Exception $e){
@@ -92,12 +100,7 @@ class IndexController {
 			);
 			return $content;
 		}
-
-		// Check if the user is logged-in
-		if(!$this->isLoggedIn()) {
-			return $this->showLogin($templates);
-		}
-
+		
 		if (is_null($this->command)){
 			/** @var Checkpoint $checkpoint */
 			$checkpoint = $this->container['utils.checkpoint'];
@@ -172,14 +175,7 @@ class IndexController {
 
 		$application->setAutoExit(false);
 
-		$endpoint = preg_replace('/(updater\/|updater\/index.php)$/', '', $this->request->getRequestUri());
-		$fullEndpoint = sprintf(
-			'%s://%s%sindex.php/occ/',
-			$this->request->getServerProtocol(),
-			$this->request->getHost(),
-			$endpoint !== '' ? $endpoint : '/'
-		);
-
+		$fullEndpoint = $this->getEndpoint();
 		$application->setEndpoint($fullEndpoint);
 		$application->setAuthToken($this->request->header('X_Updater_Auth'));
 		// Some commands dump things out instead of returning a value
@@ -198,6 +194,18 @@ class IndexController {
 			'environment' => '',
 			'error_code' => $errorCode
 		];
+	}
+	
+	protected function getEndpoint(){
+		$endpoint = preg_replace('/(updater\/|updater\/index.php)$/', '', $this->request->getRequestUri());
+		$fullEndpoint = sprintf(
+			'%s://%s%sindex.php/occ/',
+			$this->request->getServerProtocol(),
+			$this->request->getHost(),
+			$endpoint !== '' ? $endpoint : '/'
+		);
+		
+		return $fullEndpoint;
 	}
 
 }

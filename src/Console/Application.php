@@ -33,7 +33,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
-use \Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Class Application
@@ -149,9 +149,9 @@ class Application extends \Symfony\Component\Console\Application {
 	 */
 	public function doRun(InputInterface $input, OutputInterface $output){
 		try{
+			$commandName = $this->getCommandName($input);
 			$this->assertOwnCloudFound();
 			$configReader = $this->diContainer['utils.configReader'];
-			$commandName = $this->getCommandName($input);
 			try{
 				$configReader->init();
 				if (!isset($this->diContainer['utils.docLink'])) {
@@ -178,12 +178,13 @@ class Application extends \Symfony\Component\Console\Application {
 				$locator = $this->diContainer['utils.locator'];
 				$this->initLogger($locator->getDataDir());
 			}
-			
-			return parent::doRun($input, $output);
 		} catch (\Exception $e){
-			$this->logException($e);
-			throw $e;
+			if (!in_array($commandName, $this->allowFailure)){
+				$this->logException($e);
+				throw $e;
+			}
 		}
+		return parent::doRun($input, $output);
 	}
 
 	/**
