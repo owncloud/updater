@@ -87,8 +87,8 @@ class IndexController {
 			$fullEndpoint = $this->getEndpoint();
 			$this->container['application']->setEndpoint($fullEndpoint);
 			$this->container['application']->setAuthToken($this->request->header('X_Updater_Auth'));
+			$this->container['application']->initConfig();
 			$this->container['application']->assertOwnCloudFound();
-			$configReader->init();
 		} catch (\Exception $e){
 			$content = $templates->render(
 				'partials/error',
@@ -175,9 +175,6 @@ class IndexController {
 
 		$application->setAutoExit(false);
 
-		$fullEndpoint = $this->getEndpoint();
-		$application->setEndpoint($fullEndpoint);
-		$application->setAuthToken($this->request->header('X_Updater_Auth'));
 		// Some commands dump things out instead of returning a value
 		ob_start();
 		$errorCode = $application->run($input, $output);
