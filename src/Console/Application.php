@@ -200,7 +200,7 @@ class Application extends \Symfony\Component\Console\Application {
 			$command->setContainer($this->getContainer());
 			$commandName = $this->getCommandName($input);
 			$this->getLogger()->info('Execution of ' . $commandName . ' command started');
-			if (!empty($command->getMessage())){
+			if ($command->getMessage() !== ''){
 				$message = sprintf('<info>%s</info>', $command->getMessage());
 				$output->writeln($message);
 			}
