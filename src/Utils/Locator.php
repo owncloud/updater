@@ -79,7 +79,7 @@ class Locator {
 			".user.ini",
 			"AUTHORS",
 			"console.php",
-			"COPYING-AGPL",
+			"COPYING",
 			"cron.php",
 			"db_structure.xml",
 			"index.html",
