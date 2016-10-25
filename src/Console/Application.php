@@ -129,6 +129,27 @@ class Application extends \Symfony\Component\Console\Application {
 		return $this->fallbackLogger;
 	}
 
+	public function initConfig(){
+		$configReader = $this->diContainer['utils.configReader'];
+		try {
+			$configReader->init();
+		} catch (\UnexpectedValueException $e){
+			// try fallback to localhost
+			preg_match_all('/https?:\/\/([^\/]*).*$/', $this->getEndpoint(), $matches);
+			if (isset($matches[1][0])){
+				$newEndPoint = str_replace($matches[1][0], 'localhost', $this->getEndpoint());
+				$this->setEndpoint($newEndPoint);
+				try {
+					$configReader->init();
+				} catch (\UnexpectedValueException $e){
+					// fallback to CLI
+					$this->diContainer['utils.occrunner']->setCanUseProcess(true);
+					$configReader->init();
+				}
+			}
+		}
+	}
+
 	/**
 	 * Log exception with trace
 	 * @param \Exception $e
@@ -148,12 +169,11 @@ class Application extends \Symfony\Component\Console\Application {
 	 * @throws \Exception
 	 */
 	public function doRun(InputInterface $input, OutputInterface $output){
+		$commandName = $this->getCommandName($input);
 		try{
-			$commandName = $this->getCommandName($input);
 			$this->assertOwnCloudFound();
-			$configReader = $this->diContainer['utils.configReader'];
 			try{
-				$configReader->init();
+				$this->initConfig();
 				if (!isset($this->diContainer['utils.docLink'])) {
 					$this->diContainer['utils.docLink'] = function ($c) {
 						/** @var Locator $locator */

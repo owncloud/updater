@@ -54,6 +54,13 @@ class OccRunner {
 	}
 
 	/**
+	 * @param bool $canUseProcess
+	 */
+	public function setCanUseProcess($canUseProcess){
+		$this->canUseProcess = $canUseProcess;
+	}
+
+	/**
 	 * @param $command
 	 * @param array $args
 	 * @param bool $asJson
