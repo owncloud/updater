@@ -93,7 +93,13 @@ $(function () {
 				accordion.setCurrent('#step-init');
 				$.post($('#meta-information').data('endpoint'), {command: 'upgrade:detect --only-check --exit-if-none'})
 						.then(function (response) {
-							handleResponse(response, function () {accordion.showContent('#step-init');}, '#step-init');
+							handleResponse(
+								response, 
+								function () {
+									accordion.showContent('#step-init');
+								}, 
+								'#step-init'
+							);
 							accordion.setDone('#step-init');
 							accordion.setCurrent();
 							if (!response.error_code) {
@@ -162,7 +168,13 @@ $(function () {
 							;
 				})
 				.then(function (response) {
-					handleResponse(response, function () {accordion.showContent('#step-coreupgrade');}, '#step-coreupgrade');
+					handleResponse(
+						response,
+						function () {
+							accordion.showContent('#step-coreupgrade');
+						}, 
+						'#step-coreupgrade'
+					);
 					return response.error_code === 0
 							? accordion.setCurrent('#step-coreupgrade')
 							  || $.post($('#meta-information').data('endpoint'), {command: 'upgrade:executeCoreUpgradeScripts'})
@@ -190,12 +202,18 @@ $(function () {
 							;
 				})
 				.then(function (response) {
-					handleResponse(response, function () {accordion.showContent('#step-finalize');}, '#step-finalize');
-					return response.error_code === 0
+					handleResponse(
+						response, 
+						function () {
+							accordion.showContent('#step-finalize');
+						},
+						'#step-finalize'
+					);
+					return (response.error_code === 0
 							?  accordion.setCurrent('#step-finalize')
 							  || $.post($('#meta-information').data('endpoint'), {command: 'upgrade:postUpgradeCleanup'})
 							: $.Deferred()
-							;
+					);
 				})
 				.then(function (response) {
 					handleResponse(response, function () {}, '#step-finalize');
