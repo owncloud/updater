@@ -57,6 +57,14 @@ class PostUpgradeCleanupCommand extends Command {
 		//Cleanup Filesystem
 		$fsHelper->removeIfExists($locator->getExtractionBaseDir());
 
+		//Retrigger integrity check
+		try {
+			$this->container['utils.occrunner']->run('integrity:check-core');
+		} catch (\Exception $e){
+			$this->getApplication()->getLogger()->error('Integrity check failed');
+			$this->getApplication()->logException($e);
+		}
+
 		//Cleanup updater cache
 		$registry->clearAll();
 		
