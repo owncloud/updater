@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="<?=$this->uri() . '/pub/' . $this->asset('css/main.css')?>" />
-<script src="<?=$this->uri() . '/pub/' . $this->asset('js/vendor/jquery.min.js')?>"></script>
+<script src="<?=$this->uri() . '/pub/' . $this->asset('js/vendor/jquery/jquery.min.js')?>"></script>
 <script src="<?=$this->uri() . '/pub/' . $this->asset('js/main.js')?>"></script>
 <div id="meta-information" data-endpoint="<?= $this->uri() ?>"></div>
 <header role="banner"><div id="header">

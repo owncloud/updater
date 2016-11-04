@@ -22,7 +22,6 @@ BOWER=$(build_dir)/node_modules/bower/bin/bower
 # internal aliases
 composer_deps=vendor/
 composer_dev_deps=lib/composer/phpunit
-node_modules=$(build_dir)/node_modules/
 js_deps=pub/js/vendor/
 
 #
@@ -70,17 +69,15 @@ update-composer: $(COMPOSER_BIN)
 # ownCloud updater JavaScript dependencies
 #
 $(js_deps): $(BOWER) bower.json
-	mkdir $(js_deps)
 	$(BOWER) install
-	cp $(node_modules)jquery/jquery.min.{map,js} $(js_deps)
+	touch $(js_deps)
 
 .PHONY: install-js-deps
 install-js-deps: $(js_deps)
 
 .PHONY: update-js-deps
 update-js-deps: $(js_deps)
-	$(BOWER) update
-	cp $(node_modules)jquery/jquery.min.{map,js} $(js_deps)
+
 
 .PHONY: clean-js-deps
 clean-js-deps:
@@ -98,6 +95,8 @@ $(dist_dir)/updater: $(composer_deps)  $(js_deps)
 	find $@/{vendor/,src/} -name doc -print | xargs rm -Rf
 	find $@/{vendor/,src/} -iname \*.sh -delete
 	find $@/{vendor/,src/} -iname \*.exe -delete
+	find $@/pub/js/vendor/jquery \! -name jquery.min.* -type f -exec rm -f {} +
+	find $@/pub/js/vendor/jquery/* -type d -exec rm -rf {} +
 
 .PHONY: dist
 dist: $(dist_dir)/updater
