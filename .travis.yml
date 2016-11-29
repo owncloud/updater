@@ -18,6 +18,7 @@ script:
   - find . -name \*.php -exec php -l "{}" \;
 
   # Run phpunit tests
+  - make
   - cd src/Tests
   - phpunit --configuration phpunit.xml
 
