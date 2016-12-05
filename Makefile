@@ -17,6 +17,7 @@ updater_all_src=$(updater_src_files) $(updater_src_dirs) $(updater_doc_files)
 build_dir=build
 dist_dir=$(build_dir)/dist
 COMPOSER_BIN=$(build_dir)/composer.phar
+BOX_BIN=$(build_dir)/box.phar
 BOWER=$(build_dir)/node_modules/bower/bin/bower
 
 # internal aliases
@@ -45,6 +46,8 @@ $(BOWER):
 	$(NPM) install --prefix $(build_dir) bower
 	touch $(BOWER)
 
+$(BOX_BIN):
+	cd $(build_dir) && curl -LSs https://box-project.github.io/box2/installer.php | php
 
 #
 # ownCloud updater PHP dependencies
@@ -100,6 +103,11 @@ $(dist_dir)/updater: $(composer_deps)  $(js_deps)
 
 .PHONY: dist
 dist: $(dist_dir)/updater
+
+.PHONY: phar
+phar: $(dist_dir)/updater $(BOX_BIN)
+	$(build_dir)/box.phar build
+	mv setup.phar $(dist_dir)/updater.phar
 
 .PHONY: clean-dist
 clean-dist:
