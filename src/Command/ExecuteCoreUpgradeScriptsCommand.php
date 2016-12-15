@@ -74,7 +74,8 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 
 		$installedVersion = implode('.', $locator->getInstalledVersion());
 		$registry->set('installedVersion', $installedVersion);
-		
+
+		/** @var  \Owncloud\Updater\Utils\Feed $feed */
 		$feed = $registry->get('feed');
 
 		if ($feed){
@@ -107,6 +108,20 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 			$fsHelper->mkdir($tmpDir);
 			$oldSourcesDir = $locator->getOwncloudRootPath();
 			$newSourcesDir = $fullExtractionPath . '/owncloud';
+
+			$packageVersion = $this->loadVersion($newSourcesDir);
+			$allowedPreviousVersion = $this->loadAllowedPreviousVersion($newSourcesDir);
+
+			if (!$this->isUpgradeAllowed($installedVersion, $packageVersion, $allowedPreviousVersion)){
+				$message = sprintf(
+					'Update from %s to %s is not possible. Updates between multiple major versions and downgrades are unsupported.',
+					$installedVersion,
+					$packageVersion
+				);
+				$this->getApplication()->getLogger()->error($message);
+				$output->writeln('<error>'. $message .'</error>');
+				return 1;
+			}
 
 			foreach ($locator->getRootDirContent() as $dir){
 				$this->getApplication()->getLogger()->debug('Replacing ' . $dir);
@@ -143,5 +158,30 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 				}
 			}
 		}
+	}
+
+	public function isUpgradeAllowed($installedVersion, $packageVersion, $canBeUpgradedFrom){
+		return version_compare($canBeUpgradedFrom, $installedVersion, '<=')
+			&& version_compare($installedVersion, $packageVersion, '<=');
+	}
+
+	/**
+	 * @param string $pathToPackage
+	 * @return string
+	 */
+	protected function loadVersion($pathToPackage){
+		require  $pathToPackage . '/version.php';
+		/** @var $OC_Version string */
+		return $OC_Version;
+	}
+
+	/**
+	 * @param string $pathToPackage
+	 * @return string
+	 */
+	protected function loadAllowedPreviousVersion($pathToPackage) {
+		require $pathToPackage . '/version.php';
+		/** @var array $OC_VersionCanBeUpgradedFrom */
+		return implode('.', $OC_VersionCanBeUpgradedFrom);
 	}
 }
