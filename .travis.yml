@@ -2,10 +2,7 @@ language: php
 sudo: false
 
 php:
-  - 5.4
-  - 5.5
   - 5.6
-  - hhvm
   - 7
 
 branches:
@@ -17,10 +14,13 @@ script:
   # Test lint
   - find . -name \*.php -exec php -l "{}" \;
 
+  # Install dev dependencies
+  - composer require --dev phpunit/phpunit ^5.7
+
   # Run phpunit tests
   - make
   - cd src/Tests
-  - phpunit --configuration phpunit.xml
+  - ../../vendor/bin/phpunit --configuration phpunit.xml
 
   # Create coverage report
   - sh -c "if [ '$TRAVIS_PHP_VERSION' != 'hhvm' ]; then wget https://scrutinizer-ci.com/ocular.phar; fi"
