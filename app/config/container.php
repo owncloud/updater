@@ -35,7 +35,6 @@ use Owncloud\Updater\Command\BackupDbCommand;
 use Owncloud\Updater\Command\CheckpointCommand;
 use Owncloud\Updater\Command\CheckSystemCommand;
 use Owncloud\Updater\Command\CleanCacheCommand;
-use Owncloud\Updater\Command\DbUpgradeCommand;
 use Owncloud\Updater\Command\DetectCommand;
 use Owncloud\Updater\Command\DisableNotShippedAppsCommand;
 use Owncloud\Updater\Command\EnableNotShippedAppsCommand;
@@ -105,9 +104,6 @@ $c['command.checkSystem'] = function($c){
 };
 $c['command.cleanCache'] = function($c){
 	return new CleanCacheCommand();
-};
-$c['command.dbUpgrade'] = function($c){
-	return new DbUpgradeCommand();
 };
 $c['command.detect'] = function($c){
 	return new DetectCommand($c['utils.fetcher'], $c['utils.configReader']);
