@@ -102,6 +102,8 @@ class Locator {
 			'README.md',
 			'.travis.yml',
 			'.scrutinizer.yml',
+			'.gitignore',
+			'nbproject',
 		];
 	}
 
