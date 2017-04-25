@@ -171,8 +171,8 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	 */
 	protected function loadVersion($pathToPackage){
 		require  $pathToPackage . '/version.php';
-		/** @var $OC_Version string */
-		return $OC_Version;
+		/** @var $OC_Version array */
+		return implode('.', $OC_Version);
 	}
 
 	/**
