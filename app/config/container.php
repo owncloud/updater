@@ -149,7 +149,6 @@ $c['commands'] = function($c){
 		$c['command.checkpoint'],
 		$c['command.checkSystem'],
 		$c['command.cleanCache'],
-		$c['command.dbUpgrade'],
 		$c['command.detect'],
 		$c['command.disableNotShippedApps'],
 		$c['command.enableNotShippedApps'],
