@@ -110,9 +110,9 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 			$newSourcesDir = $fullExtractionPath . '/owncloud';
 
 			$packageVersion = $this->loadVersion($newSourcesDir);
-			$allowedPreviousVersion = $this->loadAllowedPreviousVersion($newSourcesDir);
+			$allowedPreviousVersions = $this->loadAllowedPreviousVersions($newSourcesDir);
 
-			if (!$this->isUpgradeAllowed($installedVersion, $packageVersion, $allowedPreviousVersion)){
+			if (!$this->isUpgradeAllowed($installedVersion, $packageVersion, $allowedPreviousVersions)){
 				$message = sprintf(
 					'Update from %s to %s is not possible. Updates between multiple major versions and downgrades are unsupported.',
 					$installedVersion,
@@ -161,8 +161,14 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	}
 
 	public function isUpgradeAllowed($installedVersion, $packageVersion, $canBeUpgradedFrom){
-		return version_compare($canBeUpgradedFrom, $installedVersion, '<=')
-			&& version_compare($installedVersion, $packageVersion, '<=');
+		if (version_compare($installedVersion, $packageVersion, '<=')){
+			foreach ($canBeUpgradedFrom as $allowedPreviousVersion){
+				if (version_compare($allowedPreviousVersion, $installedVersion, '<=')){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -177,11 +183,31 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 
 	/**
 	 * @param string $pathToPackage
-	 * @return string
+	 * @return string[]
 	 */
-	protected function loadAllowedPreviousVersion($pathToPackage) {
+	protected function loadAllowedPreviousVersions($pathToPackage) {
+		$canBeUpgradedFrom = $this->loadCanBeUpgradedFrom($pathToPackage);
+		
+		$firstItem = reset($canBeUpgradedFrom);
+		if (!is_array($firstItem)){
+			$canBeUpgradedFrom = [$canBeUpgradedFrom];
+		}
+		
+		$allowedVersions = [];
+		foreach ($canBeUpgradedFrom as $version){
+			$allowedVersions[] = implode('.', $version);
+		}
+
+		return $allowedVersions;
+	}
+	
+	/**
+	 * @param string $pathToPackage
+	 * @return array
+	 */
+	protected function loadCanBeUpgradedFrom($pathToPackage){
 		require $pathToPackage . '/version.php';
 		/** @var array $OC_VersionCanBeUpgradedFrom */
-		return implode('.', $OC_VersionCanBeUpgradedFrom);
+		return $OC_VersionCanBeUpgradedFrom;
 	}
 }
