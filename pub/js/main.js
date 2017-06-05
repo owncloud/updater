@@ -163,7 +163,7 @@ $(function () {
 					}
 					handleResponse(response, function () {}, '#step-download');
 					return response.error_code === 0
-							? $.post($('#meta-information').data('endpoint'), {command: 'upgrade:disableNotShippedApps'})
+							? $.post($('#meta-information').data('endpoint'), {command: 'upgrade:executeCoreUpgradeScripts'})
 							: $.Deferred()
 							;
 				})
@@ -178,16 +178,6 @@ $(function () {
 					return response.error_code === 0
 							? accordion.setCurrent('#step-coreupgrade')
 							  || $.post($('#meta-information').data('endpoint'), {command: 'upgrade:executeCoreUpgradeScripts'})
-							: $.Deferred()
-							;
-				})
-				.then(function (response) {
-					if (response.error_code === 0){
-						accordion.setCurrent('#step-appupgrade');
-					}
-					handleResponse(response, function () {}, '#step-coreupgrade');
-					return response.error_code === 0
-							? $.post($('#meta-information').data('endpoint'), {command: 'upgrade:enableNotShippedApps'})
 							: $.Deferred()
 							;
 				})
