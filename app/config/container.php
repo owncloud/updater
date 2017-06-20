@@ -36,8 +36,6 @@ use Owncloud\Updater\Command\CheckpointCommand;
 use Owncloud\Updater\Command\CheckSystemCommand;
 use Owncloud\Updater\Command\CleanCacheCommand;
 use Owncloud\Updater\Command\DetectCommand;
-use Owncloud\Updater\Command\DisableNotShippedAppsCommand;
-use Owncloud\Updater\Command\EnableNotShippedAppsCommand;
 use Owncloud\Updater\Command\ExecuteCoreUpgradeScriptsCommand;
 use Owncloud\Updater\Command\InfoCommand;
 use Owncloud\Updater\Command\MaintenanceModeCommand;
@@ -108,12 +106,6 @@ $c['command.cleanCache'] = function($c){
 $c['command.detect'] = function($c){
 	return new DetectCommand($c['utils.fetcher'], $c['utils.configReader']);
 };
-$c['command.disableNotShippedApps'] = function($c){
-	return new DisableNotShippedAppsCommand();
-};
-$c['command.enableNotShippedApps'] = function($c){
-	return new EnableNotShippedAppsCommand();
-};
 $c['command.executeCoreUpgradeScripts'] = function($c){
 	return new ExecuteCoreUpgradeScriptsCommand($c['utils.occrunner']);
 };
@@ -150,8 +142,6 @@ $c['commands'] = function($c){
 		$c['command.checkSystem'],
 		$c['command.cleanCache'],
 		$c['command.detect'],
-		$c['command.disableNotShippedApps'],
-		$c['command.enableNotShippedApps'],
 		$c['command.executeCoreUpgradeScripts'],
 		$c['command.info'],
 		$c['command.maintenanceMode'],
