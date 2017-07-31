@@ -14,7 +14,7 @@
 				</header>
 
 				<br/>
-				<p class="warning">Please provide the "updater.secret" from your ownCloud's config/config.php:</p>
+				<p class="warning">Please provide the <em>unhashed</em> "updater.secret" from your ownCloud's config/config.php:</p>
 				<form method="post" name="login">
 					<fieldset>
 						<input type="password" name="password" id="password" value=""
