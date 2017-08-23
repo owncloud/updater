@@ -115,16 +115,24 @@ class OccRunner {
 	protected function runAsRequest($command, $args){
 		$application = $this->getApplication();
 		$client = new Client();
+		$endpointBase = $application->getEndpoint();
+		$params = [
+			'timeout' => 0,
+			'json' => [
+				'token' => $application->getAuthToken(),
+				'params'=> $args
+			]
+		];
+		
+		// Skip SSL validation for localhost only as localhost never has a valid cert
+		if (preg_match('/^https:\/\/localhost\/.*/i', $endpointBase)){
+			$params['verify'] = false;
+		}
+		
 		$request = $client->createRequest(
 			'POST',
-			$application->getEndpoint() . $command,
-			[
-				'timeout' => 0,
-				'json' => [
-					'token' => $application->getAuthToken(),
-					'params'=> $args
-				]
-			]
+			$endpointBase . $command,
+			$params
 		);
 
 		$response = $client->send($request);
