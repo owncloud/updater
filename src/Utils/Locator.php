@@ -70,6 +70,7 @@ class Locator {
 			".tag",
 			".user.ini",
 			"AUTHORS",
+			"CHANGELOG.md",
 			"console.php",
 			"COPYING-AGPL",
 			"COPYING",
@@ -83,7 +84,7 @@ class Locator {
 			"remote.php",
 			"robots.txt",
 			"status.php",
-			"version.php"
+			"version.php",
 		];
 	}
 
