@@ -10,6 +10,6 @@
         "guzzlehttp/guzzle": "^5.3.1",
         "psr/log": "^1.0",
         "league/plates": "^3.1",
-        "paragonie/random_compat": "^1.2"
+        "paragonie/random_compat": "^2.0"
     }
 }
