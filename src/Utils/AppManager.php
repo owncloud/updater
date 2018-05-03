@@ -109,7 +109,7 @@ class AppManager {
 	 */
 	public function getAppPath($appId){
 		try {
-			$response = $this->occRunner->run('app:getpath', ['app-id' => $appId]);
+			$response = $this->occRunner->run('app:getpath', ['app' => $appId]);
 		} catch (\Exception $e) {
 			return '';
 		}
