@@ -69,6 +69,7 @@ class Locator {
 			"core",
 			"l10n",
 			"lib",
+			"ocm-provider",
 			"ocs",
 			"ocs-provider",
 			"resources",
