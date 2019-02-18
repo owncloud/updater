@@ -106,7 +106,7 @@ class ConfigReader {
 	 * @throws \UnexpectedValueException
 	 */
 	private function load(){
-		$this->cache = $this->occRunner->runJson('config:list', ['--private' => '']);
+		$this->cache = $this->occRunner->runJson('config:list', ['--private']);
 		$this->isLoaded = true;
 	}
 
