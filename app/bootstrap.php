@@ -21,7 +21,7 @@
 
 set_time_limit(0);
 
-define('MINIMUM_PHP_VERSION', '5.6.0');
+define('MINIMUM_PHP_VERSION', '7.0.8');
 
 // Check PHP version
 if (version_compare(PHP_VERSION, MINIMUM_PHP_VERSION) === -1){
