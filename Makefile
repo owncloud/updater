@@ -90,6 +90,8 @@ clean-js-deps:
 $(dist_dir)/updater: $(composer_deps)  $(js_deps)
 	rm -Rf $@; mkdir -p $@
 	cp -R $(updater_all_src) $@
+	find $@ -name .gitkeep -delete
+	find $@ -name .gitignore -delete
 	find $@/{vendor/,src/} -type d -iname Test? -print | xargs rm -Rf
 	find $@/{vendor/,src/} -name travis -print | xargs rm -Rf
 	find $@/{vendor/,src/} -name doc -print | xargs rm -Rf
