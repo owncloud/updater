@@ -10,7 +10,7 @@ endif
 
 PHPUNIT="$(PWD)/lib/composer/phpunit/phpunit/phpunit"
 
-updater_doc_files=COPYING-AGPL README.md
+updater_doc_files=COPYING-AGPL README.md CHANGELOG.md
 updater_src_files=application.php index.php
 updater_src_dirs=app pub src vendor
 updater_all_src=$(updater_src_files) $(updater_src_dirs) $(updater_doc_files)
@@ -100,8 +100,11 @@ $(dist_dir)/updater: $(composer_deps)  $(js_deps)
 	find $@/pub/js/vendor/jquery \! -name jquery.min.* -type f -exec rm -f {} +
 	find $@/pub/js/vendor/jquery/* -type d -exec rm -rf {} +
 
+$(dist_dir)/updater.tar.gz: $(dist_dir)/updater
+	cd $(dist_dir) && tar --format=gnu --owner=nobody --group=nogroup -czf updater.tar.gz updater
+
 .PHONY: dist
-dist: $(dist_dir)/updater
+dist: $(dist_dir)/updater.tar.gz
 
 .PHONY: clean-dist
 clean-dist:
