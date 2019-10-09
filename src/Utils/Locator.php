@@ -106,6 +106,7 @@ class Locator {
 			'box.json',
 			'composer.json',
 			'composer.lock',
+			'CHANGELOG.md',
 			'CONTRIBUTING.md',
 			'COPYING-AGPL',
 			'index.php',
