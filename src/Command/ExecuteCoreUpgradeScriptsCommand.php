@@ -123,11 +123,21 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 				return 1;
 			}
 
-			foreach ($locator->getRootDirContent() as $dir){
+			$rootDirContent = array_unique(
+				array_merge(
+					$locator->getRootDirContent(),
+					$locator->getRootDirItemsFromSignature($oldSourcesDir),
+					$locator->getRootDirItemsFromSignature($newSourcesDir)
+				)
+			);
+			foreach ($rootDirContent as $dir){
+				if ($dir === 'updater') {
+					continue;
+				}
 				$this->getApplication()->getLogger()->debug('Replacing ' . $dir);
 				$fsHelper->tripleMove($oldSourcesDir, $newSourcesDir, $tmpDir, $dir);
 			}
-			
+
 			$fsHelper->copyr($tmpDir . '/config/config.php', $oldSourcesDir . '/config/config.php');
 
 			//Get a new shipped apps list
@@ -145,7 +155,7 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 				$output->writeln('Copying the application ' . $appId);
 				$fsHelper->copyr($newAppsDir . '/' . $appId, $locator->getOwnCloudRootPath() . '/apps/' . $appId, false);
 			}
-			
+
 			try {
 				$plain = $this->occRunner->run('upgrade');
 				$output->writeln($plain);
@@ -189,12 +199,12 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	 */
 	protected function loadAllowedPreviousVersions($pathToPackage) {
 		$canBeUpgradedFrom = $this->loadCanBeUpgradedFrom($pathToPackage);
-		
+
 		$firstItem = reset($canBeUpgradedFrom);
 		if (!is_array($firstItem)){
 			$canBeUpgradedFrom = [$canBeUpgradedFrom];
 		}
-		
+
 		$allowedVersions = [];
 		foreach ($canBeUpgradedFrom as $version){
 			$allowedVersions[] = implode('.', $version);
@@ -202,7 +212,7 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 
 		return $allowedVersions;
 	}
-	
+
 	/**
 	 * @param string $pathToPackage
 	 * @return array
