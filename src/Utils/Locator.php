@@ -32,7 +32,7 @@ class Locator {
 
 	/**
 	 * absolute path to ownCloud root
-	 * @var string 
+	 * @var string
 	 */
 	protected $ownCloudRootPath;
 
@@ -106,6 +106,7 @@ class Locator {
 			'box.json',
 			'composer.json',
 			'composer.lock',
+			'CHANGELOG.md',
 			'CONTRIBUTING.md',
 			'COPYING-AGPL',
 			'index.php',
@@ -117,6 +118,27 @@ class Locator {
 			'.scrutinizer.yml',
 			'nbproject',
 		];
+	}
+
+	/**
+	 * Get all files and directories in the OC root dir using signature.json as a source
+	 *
+	 * @param string $basePath
+	 *
+	 * @return array
+	 */
+	public function getRootDirItemsFromSignature($basePath) {
+		$signature = $this->getSignature($basePath);
+		$items = [];
+		if (isset($signature['hashes'])) {
+			$allItems = array_keys($signature['hashes']);
+			foreach ($allItems as $k => $v) {
+				// Get the part of the string before the first slash or entire string if there is no slash
+				$allItems[$k] = strtok($v, '/');
+			}
+			$items = array_unique($allItems);
+		}
+		return $items;
 	}
 
 	/**
@@ -264,4 +286,20 @@ class Locator {
 		return $this->ownCloudRootPath . '/version.php';
 	}
 
+	/**
+	 * @param string $rootPath
+	 *
+	 * @return array|mixed
+	 */
+	private function getSignature($rootPath) {
+		$signature = [];
+		$signaturePath = $rootPath . '/core/signature.json';
+		if (is_file($signaturePath)) {
+			$signature = \json_decode(file_get_contents($signaturePath), true);
+			if (!is_array($signature)) {
+				$signature = [];
+			}
+		}
+		return $signature;
+	}
 }
