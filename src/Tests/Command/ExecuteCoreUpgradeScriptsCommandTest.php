@@ -3,7 +3,7 @@
 namespace Owncloud\Updater\Tests\Command;
 
 
-class ExecuteCoreUpgradeScriptsCommandTest extends \PHPUnit_Framework_TestCase {
+class ExecuteCoreUpgradeScriptsCommandTest extends \PHPUnit\Framework\TestCase {
 
 	/**
 	 * @dataProvider versionProvider

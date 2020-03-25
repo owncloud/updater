@@ -9,7 +9,7 @@ use Owncloud\Updater\Utils\ConfigReader;
  *
  * @package Owncloud\Updater\Tests\Utils
  */
-class ConfigReaderTest extends \PHPUnit_Framework_TestCase {
+class ConfigReaderTest extends \PHPUnit\Framework\TestCase {
 
 	protected $config = [
 		"system" => [
@@ -37,14 +37,14 @@ class ConfigReaderTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @return array
 	 */
-	public function testGetByPathProvider(){
+	public function getByPathProvider(){
 		return [
 				[ 'apps.core.OC_Channel', 'beta']
 		];
 	}
 
 	/**
-	 * @dataProvider testGetByPathProvider
+	 * @dataProvider getByPathProvider
 	 */
 	public function testGetByPath($key, $expected){
 		$occRunnerMock = $this->getOccRunnerMock(json_encode($this->config));

@@ -9,7 +9,7 @@ use Owncloud\Updater\Utils\DocLink;
  *
  * @package Owncloud\Updater\Tests\Utils
  */
-class DocLinkTest extends \PHPUnit_Framework_TestCase {
+class DocLinkTest extends \PHPUnit\Framework\TestCase {
 	public function testGetServerUrl(){
 		$expected = 'https://doc.owncloud.org/server/9.0/admin_manual/installation/installation_wizard.html#strong-perms-label';
 
