@@ -37,14 +37,14 @@ class ConfigReaderTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @return array
 	 */
-	public function testGetByPathProvider(){
+	public function getByPathProvider(){
 		return [
 				[ 'apps.core.OC_Channel', 'beta']
 		];
 	}
 
 	/**
-	 * @dataProvider testGetByPathProvider
+	 * @dataProvider getByPathProvider
 	 */
 	public function testGetByPath($key, $expected){
 		$occRunnerMock = $this->getOccRunnerMock(json_encode($this->config));
