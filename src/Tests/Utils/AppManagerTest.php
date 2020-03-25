@@ -9,7 +9,7 @@ use Owncloud\Updater\Utils\AppManager;
  *
  * @package Owncloud\Updater\Tests\Utils
  */
-class AppManagerTest extends \PHPUnit_Framework_TestCase {
+class AppManagerTest extends \PHPUnit\Framework\TestCase {
 
 	public function testDisableApp(){
 		$appId = 'anyapp';

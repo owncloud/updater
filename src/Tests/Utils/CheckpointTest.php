@@ -11,7 +11,7 @@ use Owncloud\Updater\Utils\Locator;
  *
  * @package Owncloud\Updater\Tests\Utils
  */
-class CheckpointTest extends \PHPUnit_Framework_TestCase {
+class CheckpointTest extends \PHPUnit\Framework\TestCase {
 	public function testGetAll() {
 		$checkpointList = ['a', 'b', 'c'];
 		$fsHelper = $this->getMockBuilder('Owncloud\Updater\Utils\FilesystemHelper')

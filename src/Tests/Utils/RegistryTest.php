@@ -9,7 +9,7 @@ use Owncloud\Updater\Utils\Registry;
  *
  * @package Owncloud\Updater\Tests\Utils
  */
-class RegistryTest extends \PHPUnit_Framework_TestCase {
+class RegistryTest extends \PHPUnit\Framework\TestCase {
 	public function testGetUnsetValue(){
 		$registry = new Registry();
 		$value = $registry->get('random_key');

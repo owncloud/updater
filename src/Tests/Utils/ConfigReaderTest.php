@@ -9,7 +9,7 @@ use Owncloud\Updater\Utils\ConfigReader;
  *
  * @package Owncloud\Updater\Tests\Utils
  */
-class ConfigReaderTest extends \PHPUnit_Framework_TestCase {
+class ConfigReaderTest extends \PHPUnit\Framework\TestCase {
 
 	protected $config = [
 		"system" => [

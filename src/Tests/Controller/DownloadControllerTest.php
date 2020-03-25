@@ -11,7 +11,7 @@ use Owncloud\Updater\Utils\Feed;
  *
  * @package Owncloud\Updater\Tests\Http
  */
-class DownloadControllerTest extends \PHPUnit_Framework_TestCase {
+class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 
 	protected $feedData = [
 			'version' => '7.5.5',

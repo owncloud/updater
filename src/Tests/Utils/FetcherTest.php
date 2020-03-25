@@ -9,7 +9,7 @@ use Owncloud\Updater\Utils\Fetcher;
  *
  * @package Owncloud\Updater\Tests\Utils
  */
-class FetcherTest extends \PHPUnit_Framework_TestCase {
+class FetcherTest extends \PHPUnit\Framework\TestCase {
 
 	protected $httpClient;
 	protected $locator;

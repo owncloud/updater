@@ -9,7 +9,7 @@ use Owncloud\Updater\Http\Request;
  *
  * @package Owncloud\Updater\Tests\Http
  */
-class RequestTest extends \PHPUnit_Framework_TestCase {
+class RequestTest extends \PHPUnit\Framework\TestCase {
 
 	/**
 	 * @return array
