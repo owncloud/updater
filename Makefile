@@ -97,6 +97,7 @@ $(dist_dir)/updater: $(composer_deps)  $(js_deps)
 	find $@/{vendor/,src/} -name doc -print | xargs rm -Rf
 	find $@/{vendor/,src/} -iname \*.sh -delete
 	find $@/{vendor/,src/} -iname \*.exe -delete
+	cp $@/pub/js/vendor/jquery/dist/jquery.min.* $@/pub/js/vendor/jquery/
 	find $@/pub/js/vendor/jquery \! -name jquery.min.* -type f -exec rm -f {} +
 	find $@/pub/js/vendor/jquery/* -type d -exec rm -rf {} +
 
