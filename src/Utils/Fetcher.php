@@ -2,7 +2,7 @@
 /**
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  *
- * @copyright Copyright (c) 2015, ownCloud, Inc.
+ * @copyright Copyright (c) 2021, ownCloud GmbH
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -22,6 +22,8 @@
 namespace Owncloud\Updater\Utils;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Fetcher
@@ -78,17 +80,16 @@ class Fetcher {
 				throw new \Exception(\dirname($downloadPath) . ' is not writable.');
 			}
 			$url = $feed->getUrl();
-			$request = $this->httpClient->createRequest(
+			$response = $this->httpClient->request(
 					'GET',
 					$url,
 					[
-						'save_to' => $downloadPath,
-						'timeout' => 600
+						RequestOptions::PROGRESS => $onProgress,
+						RequestOptions::SINK => $downloadPath,
+						RequestOptions::TIMEOUT => 600
 					]
 			);
-			$request->getEmitter()->on('progress', $onProgress);
-			$response = $this->httpClient->send($request);
-			$this->validateResponse($response);
+			$this->validateResponse($response, $url);
 		}
 	}
 
@@ -179,24 +180,23 @@ class Fetcher {
 	 * @throws \UnexpectedValueException
 	 */
 	protected function download($url) {
-		$response = $this->httpClient->get($url, ['timeout' => 600]);
-		$this->validateResponse($response);
+		$response = $this->httpClient->request('GET', $url, [RequestOptions::TIMEOUT => 600]);
+		$this->validateResponse($response, $url);
 		return $response->getBody()->getContents();
 	}
 
 	/**
 	 * Check if request was successful
-	 * @param \GuzzleHttp\Message\ResponseInterface $response
+	 * @param ResponseInterface $response
+	 * @param string $url
 	 * @throws \UnexpectedValueException
 	 */
-	protected function validateResponse($response) {
-		if ($response->getStatusCode() !== 200) {
+	protected function validateResponse(ResponseInterface $response, $url) {
+		$statusCode = $response->getStatusCode();
+		if ($statusCode !== 200) {
 			throw new \UnexpectedValueException(
-					'Failed to download '
-					. $response->getEffectiveUrl()
-					. '. Server responded with '
-					. $response->getStatusCode()
-					. ' instead of 200.');
+				"Failed to download $url. Server responded with $statusCode instead of 200."
+			);
 		}
 	}
 }

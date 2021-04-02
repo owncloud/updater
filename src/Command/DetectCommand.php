@@ -2,7 +2,7 @@
 /**
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  *
- * @copyright Copyright (c) 2015, ownCloud, Inc.
+ * @copyright Copyright (c) 2021, ownCloud GmbH
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -25,7 +25,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use GuzzleHttp\Event\ProgressEvent;
 use GuzzleHttp\Exception\ClientException;
 use Owncloud\Updater\Utils\Fetcher;
 use Owncloud\Updater\Utils\ConfigReader;
@@ -160,12 +159,12 @@ class DetectCommand extends Command {
 			$this->getApplication()->getLogger()->error($e->getMessage());
 			$output->writeln('<error>Network error</error>');
 			$output->writeln(
-					\sprintf(
-							'<error>Error %d: %s while fetching an URL %s</error>',
-							$e->getCode(),
-							$e->getResponse()->getReasonPhrase(),
-							$e->getResponse()->getEffectiveUrl()
-							)
+				\sprintf(
+					'<error>Error %d: %s while fetching an URL %s</error>',
+					$e->getCode(),
+					$e->getResponse()->getReasonPhrase(),
+					(string) $e->getRequest()->getUri()
+				)
 			);
 			return 2;
 		} catch (\Exception $e) {
@@ -198,13 +197,15 @@ class DetectCommand extends Command {
 
 	/**
 	 * Callback to output download progress
-	 * @param ProgressEvent $e
+	 * @param int $downloadTotal
+	 * @param int $downloadedBytes
+	 * @param int $uploadTotal
+	 * @param int $uploadedBytes
 	 */
-	public function progress(ProgressEvent $e) {
-		if ($e->downloadSize) {
-			$percent = \intval(100 * $e->downloaded / $e->downloadSize);
-			$percentString = $percent . '%';
-			$this->output->write('Downloaded ' . $percentString . ' (' . $e->downloaded . ' of ' . $e->downloadSize . ")\r");
+	public function progress($downloadTotal, $downloadedBytes, $uploadTotal, $uploadedBytes) {
+		if ($downloadTotal > 0) {
+			$percent = \intval(100 * $downloadedBytes / $downloadTotal);
+			$this->output->write("Downloaded $percent% ($downloadedBytes of $downloadTotal)\r");
 		}
 	}
 }
