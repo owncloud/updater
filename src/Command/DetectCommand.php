@@ -2,7 +2,7 @@
 /**
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  *
- * @copyright Copyright (c) 2015, ownCloud, Inc.
+ * @copyright Copyright (c) 2021, ownCloud GmbH
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -25,7 +25,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use GuzzleHttp\Event\ProgressEvent;
 use GuzzleHttp\Exception\ClientException;
 use Owncloud\Updater\Utils\Fetcher;
 use Owncloud\Updater\Utils\ConfigReader;
@@ -148,7 +147,7 @@ class DetectCommand extends Command {
 				$registry->set('feed', null);
 				throw $packageData['exception'];
 			}
-	
+
 			if ($action === 'download') {
 				$output->writeln('Downloading has been completed. Exiting.');
 				return 64;
@@ -194,13 +193,15 @@ class DetectCommand extends Command {
 
 	/**
 	 * Callback to output download progress
-	 * @param ProgressEvent $e
+	 * @param int $downloadTotal
+	 * @param int $downloadedBytes
+	 * @param int $uploadTotal
+	 * @param int $uploadedBytes
 	 */
-	public function progress(ProgressEvent $e) {
-		if ($e->downloadSize) {
-			$percent = \intval(100 * $e->downloaded / $e->downloadSize);
-			$percentString = $percent . '%';
-			$this->output->write('Downloaded ' . $percentString . ' (' . $e->downloaded . ' of ' . $e->downloadSize . ")\r");
+	public function progress($downloadTotal, $downloadedBytes, $uploadTotal, $uploadedBytes) {
+		if ($downloadTotal > 0) {
+			$percent = \intval(100 * $downloadedBytes / $downloadTotal);
+			$this->output->write("Downloaded $percent% ($downloadedBytes of $downloadTotal)\r");
 		}
 	}
 }
