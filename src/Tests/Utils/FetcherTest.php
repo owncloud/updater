@@ -2,31 +2,28 @@
 
 namespace Owncloud\Updater\Tests\Utils;
 
+use GuzzleHttp\Client;
+use Owncloud\Updater\Tests\StreamInterface;
+use Owncloud\Updater\Utils\ConfigReader;
 use Owncloud\Updater\Utils\Fetcher;
+use Owncloud\Updater\Utils\Locator;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class FetcherTest
  *
  * @package Owncloud\Updater\Tests\Utils
  */
-class FetcherTest extends \PHPUnit\Framework\TestCase {
+class FetcherTest extends TestCase {
 	protected $httpClient;
 	protected $locator;
 	protected $configReader;
 
 	public function setUp():void {
-		$this->httpClient = $this->getMockBuilder('GuzzleHttp\Client')
-				->disableOriginalConstructor()
-				->getMock()
-		;
-		$this->locator = $this->getMockBuilder('Owncloud\Updater\Utils\Locator')
-				->disableOriginalConstructor()
-				->getMock()
-		;
-		$this->configReader = $this->getMockBuilder('Owncloud\Updater\Utils\ConfigReader')
-				->disableOriginalConstructor()
-				->getMock()
-		;
+		$this->httpClient = $this->createMock(Client::class);
+		$this->locator = $this->createMock(Locator::class);
+		$this->configReader = $this->createMock(ConfigReader::class);
 
 		$map = [
 			['apps.core.installedat', '100500'],
@@ -55,7 +52,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
   <web>https://doc.owncloud.org/server/8.1/admin_manual/maintenance/upgrade.html</web>
 </owncloud>');
 		$this->httpClient
-				->method('get')
+				->method('request')
 				->willReturn($responseMock)
 		;
 		$fetcher = new Fetcher($this->httpClient, $this->locator, $this->configReader);
@@ -68,7 +65,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 	public function testGetEmptyFeed() {
 		$responseMock = $this->getResponseMock('');
 		$this->httpClient
-				->method('get')
+				->method('request')
 				->willReturn($responseMock)
 		;
 		$fetcher = new Fetcher($this->httpClient, $this->locator, $this->configReader);
@@ -80,7 +77,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 	public function testGetGarbageFeed() {
 		$responseMock = $this->getResponseMock('<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8">');
 		$this->httpClient
-				->method('get')
+				->method('request')
 				->willReturn($responseMock)
 		;
 		$fetcher = new Fetcher($this->httpClient, $this->locator, $this->configReader);
@@ -94,7 +91,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 	 * @return mixed
 	 */
 	private function getResponseMock($body) {
-		$bodyMock = $this->getMockBuilder('Owncloud\Updater\Tests\StreamInterface')
+		$bodyMock = $this->getMockBuilder(StreamInterface::class)
 				->disableOriginalConstructor()
 				->getMock()
 		;
@@ -104,7 +101,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 				->willReturn($body)
 		;
 
-		$responseMock = $this->getMockBuilder('GuzzleHttp\Message\ResponseInterface')
+		$responseMock = $this->getMockBuilder(ResponseInterface::class)
 				->disableOriginalConstructor()
 				->getMock()
 		;
