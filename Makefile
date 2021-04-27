@@ -8,8 +8,6 @@ ifndef NPM
     $(error npm is not available on your system, please install npm)
 endif
 
-PHPUNIT="$(PWD)/lib/composer/phpunit/phpunit/phpunit"
-
 updater_doc_files=COPYING-AGPL README.md CHANGELOG.md
 updater_src_files=application.php index.php
 updater_src_dirs=app pub src vendor
@@ -83,6 +81,22 @@ update-js-deps: $(js_deps)
 clean-js-deps:
 	rm -Rf $(js_deps)
 
+##------------
+## Tests
+##------------
+
+.PHONY: test-lint
+test-lint:             ## Run php lint to check for syntax errors
+test-lint:
+	find . -name \*.php -exec php -l "{}" \;
+
+.PHONY: test-php-unit
+test-php-unit:             ## Run php unit tests
+test-php-unit: vendor/bin/phpunit
+	pwd
+	make
+	./vendor/bin/phpunit --configuration ./src/Tests/phpunit.xml
+
 #
 # dist
 #
@@ -113,3 +127,10 @@ clean-dist:
 .PHONY: clean-build
 clean-build:
 	rm -Rf $(build_dir)
+
+#
+# Dependency management
+#--------------------------------------
+vendor/bin/phpunit: composer.lock
+	composer install
+	composer require --dev phpunit/phpunit ^7.5
