@@ -15,7 +15,7 @@ config = {
 			'phpVersions': [
 				'7.2',
 			],
-			'coverage': False
+			'coverage': True
 		},
 		'reducedDatabases' : {
 			'phpVersions': [
@@ -48,10 +48,13 @@ def main(ctx):
 
 	dependsOn(before, stages)
 
+	afterCoverageTests = afterCoveragePipelines(ctx)
+	dependsOn(coverageTests, afterCoverageTests)
+
 	after = afterPipelines(ctx)
 	dependsOn(stages, after)
 
-	return before + coverageTests + stages + after
+	return before + coverageTests + afterCoverageTests + stages + after
 
 def beforePipelines():
 	return phpstan() + phan() + phplint()
@@ -73,11 +76,15 @@ def stagePipelines(ctx):
 
 	return buildPipelines + acceptancePipelines
 
+def afterCoveragePipelines(ctx):
+	return [
+		sonarAnalysis(ctx)
+	]
+
 def afterPipelines(ctx):
 	return [
 		notify()
 	]
-
 
 def phplint():
 	pipelines = []
@@ -181,7 +188,7 @@ def phpstan():
 				'name': name,
 				'workspace' : {
 					'base': '/var/www/owncloud',
-					'path': 'server/apps/%s' % config['app']
+					'path': 'server/%s' % config['app']
 				},
 				'steps':
 					installCore('daily-master-qa', 'sqlite', False) +
@@ -256,7 +263,7 @@ def phan():
 				'name': name,
 				'workspace' : {
 					'base': '/var/www/owncloud',
-					'path': 'server/apps/%s' % config['app']
+					'path': 'server/%s' % config['app']
 				},
 				'steps':
 					installCore('daily-master-qa', 'sqlite', False) +
@@ -326,7 +333,7 @@ def build():
 			'name': 'build',
 			'workspace' : {
 				'base': '/var/www/owncloud',
-				'path': 'server/apps/%s' % config['app']
+				'path': 'server/%s' % config['app']
 			},
 			'steps': [
 				{
@@ -452,7 +459,10 @@ def phpTests(ctx, testType):
 		for phpVersion in params['phpVersions']:
 
 			if testType == 'phpunit':
-				command = 'make test-php-unit'
+				if params['coverage']:
+					command = 'make test-php-unit-dbg'
+				else:
+					command = 'make test-php-unit'
 			else:
 				if params['coverage']:
 					command = 'make test-php-integration-dbg'
@@ -474,7 +484,7 @@ def phpTests(ctx, testType):
 					'name': name,
 					'workspace' : {
 						'base': '/var/www/owncloud',
-						'path': 'server/apps/%s' % config['app']
+						'path': 'server/%s' % config['app']
 					},
 					'steps':
 						installCore('daily-master-qa', db, False) +
@@ -515,7 +525,7 @@ def phpTests(ctx, testType):
 						'image': 'owncloudci/php:%s' % phpVersion,
 						'pull': 'always',
 						'commands': [
-							'coverage-cache'
+							'mv src/Tests/clover.xml ./clover-%s.xml' % (name)
 						]
 					})
 					result['steps'].append({
@@ -527,7 +537,7 @@ def phpTests(ctx, testType):
 								'from_secret': 'cache_s3_endpoint'
 							},
 							'bucket': 'cache',
-							'source': 'tests/output/clover-%s.xml' % (name),
+							'source': './clover-%s.xml' % (name),
 							'target': '%s/%s' % (ctx.repo.slug, ctx.build.commit + '-${DRONE_BUILD_NUMBER}'),
 							'path_style': True,
 							'strip_prefix': 'tests/output',
@@ -774,6 +784,89 @@ def acceptance(ctx):
 		return False
 
 	return pipelines
+
+def sonarAnalysis(ctx, phpVersion = '7.4'):
+	result = {
+		'kind': 'pipeline',
+		'type': 'docker',
+		'name': 'sonar-analysis',
+		'workspace' : {
+			'base': '/var/www/owncloud',
+			'path': 'server/%s' % config['app']
+		},
+		'steps':
+			cacheRestore() +
+			composerInstall(phpVersion) +
+			installCore('daily-master-qa', 'sqlite', False) +
+		[
+			{
+				'name': 'sync-from-cache',
+				'image': 'minio/mc:RELEASE.2020-12-18T10-53-53Z',
+				'pull': 'always',
+				'environment': {
+					'MC_HOST_cache': {
+						'from_secret': 'cache_s3_connection_url'
+					},
+				},
+				'commands': [
+					'mkdir -p results',
+					'mc mirror cache/cache/%s/%s results/' % (ctx.repo.slug, ctx.build.commit + '-${DRONE_BUILD_NUMBER}'),
+				]
+			},
+			{
+				'name': 'list-coverage-results',
+				'image': 'owncloudci/php:%s' % phpVersion,
+				'pull': 'always',
+				'commands': [
+					'ls -l results',
+				]
+			},
+			{
+				'name': 'sonarcloud',
+				'image': 'sonarsource/sonar-scanner-cli',
+				'pull': 'always',
+				'environment': {
+					'SONAR_TOKEN': {
+						'from_secret': 'sonar_token'
+					},
+					'SONAR_PULL_REQUEST_BASE': 'master' if ctx.build.event == 'pull_request' else '',
+					'SONAR_PULL_REQUEST_BRANCH': ctx.build.source if ctx.build.event == 'pull_request' else '',
+					'SONAR_PULL_REQUEST_KEY': ctx.build.ref.replace("refs/pull/", "").split("/")[0] if ctx.build.event == 'pull_request' else '',
+					'SONAR_SCANNER_OPTS': '-Xdebug'
+				},
+				'when': {
+					'instance': [
+						'drone.owncloud.services',
+						'drone.owncloud.com'
+					],
+				}
+			},
+			{
+				'name': 'purge-cache',
+				'image': 'minio/mc:RELEASE.2020-12-18T10-53-53Z',
+				'environment': {
+					'MC_HOST_cache': {
+						'from_secret': 'cache_s3_connection_url'
+					}
+				},
+				'commands': [
+				'mc rm --recursive --force cache/cache/%s/%s' % (ctx.repo.slug, ctx.build.commit + '-${DRONE_BUILD_NUMBER}'),
+				]
+			},
+		],
+		'depends_on': [],
+		'trigger': {
+			'ref': [
+				'refs/pull/**',
+				'refs/tags/**'
+			]
+		}
+	}
+
+	for branch in config['branches']:
+		result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+	return result
 
 def notify():
 	result = {
@@ -1030,6 +1123,44 @@ def getDbDatabase(db):
 		return 'XE'
 
 	return 'owncloud'
+
+def cacheRestore():
+	return [{
+		'name': 'cache-restore',
+		'image': 'plugins/s3-cache:1',
+		'pull': 'always',
+		'settings': {
+			'access_key': {
+				'from_secret': 'cache_s3_access_key'
+			},
+			'endpoint': {
+				'from_secret': 'cache_s3_endpoint'
+			},
+			'restore': True,
+			'secret_key': {
+				'from_secret': 'cache_s3_secret_key'
+			}
+		},
+		'when': {
+			'instance': [
+				'drone.owncloud.services',
+				'drone.owncloud.com'
+			],
+		}
+	}]
+
+def composerInstall(phpVersion):
+	return [{
+		'name': 'composer-install',
+		'image': 'owncloudci/php:%s' % phpVersion,
+		'pull': 'always',
+		'environment': {
+			'COMPOSER_HOME': '/drone/src/.cache/composer'
+		},
+		'commands': [
+			'make vendor'
+		]
+	}]
 
 def installCore(version, db, useBundledApp):
 	host = getDbName(db)

@@ -16,6 +16,7 @@ build_dir=build
 dist_dir=$(build_dir)/dist
 COMPOSER_BIN=$(build_dir)/composer.phar
 BOWER=$(build_dir)/node_modules/bower/bin/bower
+PHPUNITDBG=phpdbg -qrr -d memory_limit=4096M -d zend.enable_gc=0
 
 # internal aliases
 composer_deps=vendor/
@@ -93,9 +94,13 @@ test-lint:
 .PHONY: test-php-unit
 test-php-unit:             ## Run php unit tests
 test-php-unit: vendor/bin/phpunit
-	pwd
+	cd src/Tests && ../../vendor/bin/phpunit --configuration phpunit.xml --testsuite 'ownCloud - Standalone Updater Tests'
+
+.PHONY: test-php-unit-dbg
+test-php-unit-dbg:         ## Run php unit tests using phpdbg
+test-php-unit-dbg: vendor/bin/phpunit
 	make
-	./vendor/bin/phpunit --configuration ./src/Tests/phpunit.xml
+	$(PHPUNITDBG) ./vendor/bin/phpunit --configuration ./src/Tests/phpunit.xml --testsuite 'ownCloud - Standalone Updater Tests'
 
 #
 # dist
@@ -131,6 +136,12 @@ clean-build:
 #
 # Dependency management
 #--------------------------------------
+composer.lock: composer.json
+	@echo composer.lock is not up to date.
+
 vendor/bin/phpunit: composer.lock
 	composer install
 	composer require --dev phpunit/phpunit ^7.5
+
+vendor: composer.lock
+	composer install --no-dev
