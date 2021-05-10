@@ -28,7 +28,6 @@ namespace Owncloud\Updater\Utils;
  * @package Owncloud\Updater\Utils
  */
 class Registry {
-
 	protected $objects = [];
 
 	/**
@@ -36,9 +35,9 @@ class Registry {
 	 * @param string $name
 	 * @param mixed $object
 	 */
-	public function set($name, $object){
+	public function set($name, $object) {
 		$this->objects[$name] = $object;
-		$_SESSION[$name] = serialize($object);
+		$_SESSION[$name] = \serialize($object);
 	}
 
 	/**
@@ -46,11 +45,11 @@ class Registry {
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function get($name){
-		if (isset($this->objects[$name])){
+	public function get($name) {
+		if (isset($this->objects[$name])) {
 			return $this->objects[$name];
-		} else if (isset($_SESSION[$name])){
-			$this->objects[$name] = unserialize($_SESSION[$name]);
+		} elseif (isset($_SESSION[$name])) {
+			$this->objects[$name] = \unserialize($_SESSION[$name]);
 			return $this->objects[$name];
 		}
 		return null;
@@ -60,13 +59,12 @@ class Registry {
 	 *
 	 * @param string $name
 	 */
-	public function clear($name){
-		unset($this->objects[$name]);
-		unset($_SESSION[$name]);
+	public function clear($name) {
+		unset($this->objects[$name], $_SESSION[$name]);
 	}
 
-	public function clearAll(){
-		foreach ($this->objects as $name=>$value){
+	public function clearAll() {
+		foreach ($this->objects as $name=>$value) {
 			$this->clear($name);
 		}
 	}

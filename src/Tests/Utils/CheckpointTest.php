@@ -33,12 +33,12 @@ class CheckpointTest extends \PHPUnit\Framework\TestCase {
 		;
 		$checkpointMock = $this->getCheckpointInstance($locator, $fsHelper);
 		$actual = $checkpointMock->getAll();
-		$this->assertEquals(			
+		$this->assertEquals(
 			[
 				[ 'title'=>'a', 'date' => 'January 01 1970 00:03'],
 				[ 'title'=>'b', 'date' => 'January 01 1970 00:03'],
 				[ 'title'=>'c', 'date' => 'January 01 1970 00:03'],
-			], 
+			],
 			$actual
 		);
 	}
@@ -69,7 +69,7 @@ class CheckpointTest extends \PHPUnit\Framework\TestCase {
 	 * @param FilesystemHelper $fsHelper
 	 * @return Checkpoint
 	 */
-	protected function getCheckpointInstance(Locator $locator, FilesystemHelper $fsHelper){
+	protected function getCheckpointInstance(Locator $locator, FilesystemHelper $fsHelper) {
 		return new Checkpoint($locator, $fsHelper);
 	}
 }

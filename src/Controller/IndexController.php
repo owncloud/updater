@@ -56,7 +56,7 @@ class IndexController {
 	public function __construct(Container $container,
 								Request $request = null) {
 		$this->container = $container;
-		if (is_null($request)){
+		if ($request === null) {
 			$this->request = new Request(['post' => $_POST, 'headers' => $_SERVER]);
 		} else {
 			$this->request = $request;
@@ -73,13 +73,13 @@ class IndexController {
 		$configReader = $this->container['utils.configReader'];
 
 		// strip index.php and query string (if any) to get a real base url
-		$baseUrl = preg_replace('/(index\.php.*|\?.*)$/', '', $_SERVER['REQUEST_URI']);
+		$baseUrl = \preg_replace('/(index\.php.*|\?.*)$/', '', $_SERVER['REQUEST_URI']);
 		$templates = new Engine(CURRENT_DIR . '/src/Resources/views/');
 		$templates->loadExtension(new Asset(CURRENT_DIR . '/pub/', false));
 		$templates->loadExtension(new URI($baseUrl));
 		
 		// Check if the user is logged-in
-		if(!$this->isLoggedIn()) {
+		if (!$this->isLoggedIn()) {
 			return $this->showLogin($templates);
 		}
 		
@@ -89,7 +89,7 @@ class IndexController {
 			$this->container['application']->setAuthToken($this->request->header('X_Updater_Auth'));
 			$this->container['application']->initConfig();
 			$this->container['application']->assertOwnCloudFound();
-		} catch (\Exception $e){
+		} catch (\Exception $e) {
 			$content = $templates->render(
 				'partials/error',
 				[
@@ -101,7 +101,7 @@ class IndexController {
 			return $content;
 		}
 		
-		if (is_null($this->command)){
+		if ($this->command === null) {
 			/** @var Checkpoint $checkpoint */
 			$checkpoint = $this->container['utils.checkpoint'];
 			$checkpoints = $checkpoint->getAll();
@@ -114,8 +114,8 @@ class IndexController {
 					]
 			);
 		} else {
-			header('Content-Type: application/json');
-			$content = json_encode($this->ajaxAction(), JSON_UNESCAPED_SLASHES);
+			\header('Content-Type: application/json');
+			$content = \json_encode($this->ajaxAction(), JSON_UNESCAPED_SLASHES);
 		}
 		return $content;
 	}
@@ -132,7 +132,7 @@ class IndexController {
 		}
 		$sentAuthHeader = ($this->request->header('X_Updater_Auth') !== null) ? $this->request->header('X_Updater_Auth') : '';
 
-		if(password_verify($sentAuthHeader, $storedSecret)) {
+		if (\password_verify($sentAuthHeader, $storedSecret)) {
 			return true;
 		}
 
@@ -146,7 +146,7 @@ class IndexController {
 	public function showLogin(Engine $templates) {
 		// If it is a request with invalid token just return "false" so that we can catch this
 		$token = ($this->request->header('X_Updater_Auth') !== null) ? $this->request->header('X_Updater_Auth') : '';
-		if($token !== '') {
+		if ($token !== '') {
 			return 'false';
 		}
 
@@ -176,14 +176,14 @@ class IndexController {
 		$application->setAutoExit(false);
 
 		// Some commands dump things out instead of returning a value
-		ob_start();
+		\ob_start();
 		$errorCode = $application->run($input, $output);
-		if (!$result = $output->fetch()){
-			$result = ob_get_contents(); // If empty, replace it by the catched output
+		if (!$result = $output->fetch()) {
+			$result = \ob_get_contents(); // If empty, replace it by the catched output
 		}
-		ob_end_clean();
-		$result = nl2br($result);
-		$result = preg_replace('|<br />\r.*<br />(\r.*?)<br />|', '$1<br />', $result);
+		\ob_end_clean();
+		$result = \nl2br($result);
+		$result = \preg_replace('|<br />\r.*<br />(\r.*?)<br />|', '$1<br />', $result);
 
 		return [
 			'input' => $this->command,
@@ -193,9 +193,9 @@ class IndexController {
 		];
 	}
 	
-	protected function getEndpoint(){
-		$endpoint = preg_replace('/(updater\/|updater\/index.php)$/', '', $this->request->getRequestUri());
-		$fullEndpoint = sprintf(
+	protected function getEndpoint() {
+		$endpoint = \preg_replace('/(updater\/|updater\/index.php)$/', '', $this->request->getRequestUri());
+		$fullEndpoint = \sprintf(
 			'%s://%s%sindex.php/occ/',
 			$this->request->getServerProtocol(),
 			$this->request->getHost(),
@@ -204,5 +204,4 @@ class IndexController {
 		
 		return $fullEndpoint;
 	}
-
 }

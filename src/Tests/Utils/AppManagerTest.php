@@ -10,15 +10,14 @@ use Owncloud\Updater\Utils\AppManager;
  * @package Owncloud\Updater\Tests\Utils
  */
 class AppManagerTest extends \PHPUnit\Framework\TestCase {
-
-	public function testDisableApp(){
+	public function testDisableApp() {
 		$appId = 'anyapp';
 		$appManager = new AppManager($this->getOccRunnerMock(''));
 		$result = $appManager->disableApp($appId);
 		$this->assertTrue($result);
 	}
 
-	public function testEnableApp(){
+	public function testEnableApp() {
 		$appId = 'anyapp';
 		$appManager = new AppManager($this->getOccRunnerMock(''));
 		$result = $appManager->enableApp($appId);
@@ -28,7 +27,7 @@ class AppManagerTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @return array
 	 */
-	public function appListProvider(){
+	public function appListProvider() {
 		return [
 
 					[
@@ -44,8 +43,8 @@ class AppManagerTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider appListProvider
 	 */
-	public function testGetAllApps($apps, $expected){
-		$encoded = json_encode($apps);
+	public function testGetAllApps($apps, $expected) {
+		$encoded = \json_encode($apps);
 		$appManager = new AppManager($this->getOccRunnerMock($encoded));
 		$actual = $appManager->getShippedApps();
 		$this->assertEquals($expected, $actual);
@@ -54,14 +53,14 @@ class AppManagerTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider appListProvider
 	*/
-	public function testGetShippedApps($apps, $expected){
-		$encoded = json_encode($apps);
+	public function testGetShippedApps($apps, $expected) {
+		$encoded = \json_encode($apps);
 		$appManager = new AppManager($this->getOccRunnerMock($encoded));
 		$actual = $appManager->getShippedApps();
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetAppPath(){
+	public function testGetAppPath() {
 		$expected = '/dev/null';
 		$appId = 'anyapp';
 		$appManager =  new AppManager($this->getOccRunnerMock($expected));
@@ -73,7 +72,7 @@ class AppManagerTest extends \PHPUnit\Framework\TestCase {
 	 * @param $result
 	 * @return mixed
 	 */
-	protected function getOccRunnerMock($result){
+	protected function getOccRunnerMock($result) {
 		$runnerMock = $this->getMockBuilder('Owncloud\Updater\Utils\OccRunner')
 				->setMethods(['run'])
 				->disableOriginalConstructor()
@@ -86,5 +85,4 @@ class AppManagerTest extends \PHPUnit\Framework\TestCase {
 		;
 		return $runnerMock;
 	}
-
 }

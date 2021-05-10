@@ -12,7 +12,6 @@ use Owncloud\Updater\Utils\Feed;
  * @package Owncloud\Updater\Tests\Http
  */
 class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
-
 	protected $feedData = [
 			'version' => '7.5.5',
 			'versionstring' => 'version 7.5.5',
@@ -20,8 +19,7 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 			'web' => 'http://nowhere.example.org/rtfm',
 		];
 
-
-	public function testCheckFeedSuccess(){
+	public function testCheckFeedSuccess() {
 		$feed = new Feed($this->feedData);
 
 		$fetcherMock = $this->getMockBuilder('Owncloud\Updater\Utils\Fetcher')
@@ -45,7 +43,7 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 		$this->assertEquals($feed, $result['data']['feed']);
 	}
 
-	public function testCheckFeedFailure(){
+	public function testCheckFeedFailure() {
 		$badNewsException = new \Exception('Bad news');
 		$fetcherMock = $this->getMockBuilder('Owncloud\Updater\Utils\Fetcher')
 				->disableOriginalConstructor()
@@ -68,7 +66,7 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 		$this->assertEquals($badNewsException, $result['exception']);
 	}
 
-	public function testDownloadOwncloudSuccess(){
+	public function testDownloadOwncloudSuccess() {
 		$md5 = '911';
 		$path = '/dev/null/o';
 		$registry = new Registry();
@@ -109,7 +107,7 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 		$this->assertEquals($path, $result['data']['path']);
 	}
 
-	public function testDownloadOwncloudFailure(){
+	public function testDownloadOwncloudFailure() {
 		$md5 = '911';
 		$path = '/dev/null/o';
 		$registry = new Registry();
@@ -148,7 +146,7 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 		);
 		$result = $downloadController->downloadOwncloud();
 		$this->assertArraySubset(['success' => false, 'data' => []], $result);
-		$this->assertEquals($badNewsException, $result['exception']);;
+		$this->assertEquals($badNewsException, $result['exception']);
+		;
 	}
-
 }

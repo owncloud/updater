@@ -11,3 +11,8 @@
 /src/Tests/clover.xml
 *.exe
 
+# Composer
+vendor/
+vendor-bin/**/vendor
+vendor-bin/**/composer.lock
+.php_cs.cache

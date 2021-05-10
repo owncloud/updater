@@ -10,13 +10,13 @@ use Owncloud\Updater\Utils\Registry;
  * @package Owncloud\Updater\Tests\Utils
  */
 class RegistryTest extends \PHPUnit\Framework\TestCase {
-	public function testGetUnsetValue(){
+	public function testGetUnsetValue() {
 		$registry = new Registry();
 		$value = $registry->get('random_key');
 		$this->assertNull($value);
 	}
 
-	public function testGetExistingValue(){
+	public function testGetExistingValue() {
 		$data = ['someKey' => 'someValue' ];
 		$registry = new Registry();
 		$registry->set('key', $data);
@@ -24,5 +24,4 @@ class RegistryTest extends \PHPUnit\Framework\TestCase {
 
 		$this->assertEquals($data, $value);
 	}
-
 }

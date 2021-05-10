@@ -31,10 +31,9 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyleInterface;
  * @package Owncloud\Updater\Formatter
  */
 class HtmlOutputFormatter implements OutputFormatterInterface {
-
 	const PATTERN = "/\[(([\d+];?)*)m(.*?)\[(([\d+];?)*)m/i";
 
-	static private $styles = [
+	private static $styles = [
 		'30' => 'color:rgba(0,0,0,1)',
 		'31' => 'color:rgba(230,50,50,1)',
 		'32' => 'color:rgba(50,230,50,1)',
@@ -62,7 +61,7 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 	 *
 	 * @param $formatter
 	 */
-	public function __construct($formatter){
+	public function __construct($formatter) {
 		$this->formatter = $formatter;
 	}
 
@@ -70,14 +69,14 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 	 * @param bool $decorated
 	 * @return mixed
 	 */
-	public function setDecorated($decorated){
+	public function setDecorated($decorated) {
 		return $this->formatter->setDecorated($decorated);
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function isDecorated(){
+	public function isDecorated() {
 		return $this->formatter->isDecorated();
 	}
 
@@ -86,7 +85,7 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 	 * @param OutputFormatterStyleInterface $style
 	 * @return mixed
 	 */
-	public function setStyle($name, OutputFormatterStyleInterface $style){
+	public function setStyle($name, OutputFormatterStyleInterface $style) {
 		return $this->formatter->setStyle($name, $style);
 	}
 
@@ -94,7 +93,7 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function hasStyle($name){
+	public function hasStyle($name) {
 		return $this->formatter->hasStyle($name);
 	}
 
@@ -102,7 +101,7 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function getStyle($name){
+	public function getStyle($name) {
 		return $this->formatter->getStyle($name);
 	}
 
@@ -110,10 +109,10 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 	 * @param string $message
 	 * @return mixed
 	 */
-	public function format($message){
+	public function format($message) {
 		$formatted = $this->formatter->format($message);
-		$escaped = htmlspecialchars($formatted, ENT_QUOTES, 'UTF-8');
-		$converted = preg_replace_callback(self::PATTERN, [$this, 'replaceFormat'], $escaped);
+		$escaped = \htmlspecialchars($formatted, ENT_QUOTES, 'UTF-8');
+		$converted = \preg_replace_callback(self::PATTERN, [$this, 'replaceFormat'], $escaped);
 
 		return $converted;
 	}
@@ -122,18 +121,17 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 	 * @param $matches
 	 * @return string
 	 */
-	protected function replaceFormat($matches){
+	protected function replaceFormat($matches) {
 		$text = $matches[3];
-		$styles = explode(';', $matches[1]);
+		$styles = \explode(';', $matches[1]);
 		$css = [];
 
-		foreach ($styles as $style){
-			if (isset(self::$styles[$style])){
+		foreach ($styles as $style) {
+			if (isset(self::$styles[$style])) {
 				$css[] = self::$styles[$style];
 			}
 		}
 
-		return sprintf('<span style="%s">%s</span>', implode(';', $css), $text);
+		return \sprintf('<span style="%s">%s</span>', \implode(';', $css), $text);
 	}
-
 }

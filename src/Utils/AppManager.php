@@ -23,7 +23,6 @@ namespace Owncloud\Updater\Utils;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 /**
  * Class AppManager
  *
@@ -45,7 +44,7 @@ class AppManager {
 	 *
 	 * @param OccRunner $occRunner
 	 */
-	public function __construct(OccRunner $occRunner){
+	public function __construct(OccRunner $occRunner) {
 		$this->occRunner = $occRunner;
 	}
 
@@ -53,10 +52,10 @@ class AppManager {
 	 * @param $appId
 	 * @return bool
 	 */
-	public function disableApp($appId){
-		try{
+	public function disableApp($appId) {
+		try {
 			$this->occRunner->run('app:disable', ['app-id' => $appId]);
-		} catch (\Exception $e){
+		} catch (\Exception $e) {
 			return false;
 		}
 		return true;
@@ -66,11 +65,11 @@ class AppManager {
 	 * @param $appId
 	 * @return bool
 	 */
-	public function enableApp($appId){
-		try{
+	public function enableApp($appId) {
+		try {
 			$this->occRunner->run('app:enable', ['app-id' => $appId]);
-			array_unshift($this->disabledApps, $appId);
-		} catch (\Exception $e){
+			\array_unshift($this->disabledApps, $appId);
+		} catch (\Exception $e) {
 			return false;
 		}
 		return true;
@@ -79,27 +78,27 @@ class AppManager {
 	/**
 	 * @return array
 	 */
-	public function getAllApps(){
+	public function getAllApps() {
 		$shippedApps = $this->occRunner->runJson('app:list');
-		$allApps = array_merge(array_keys($shippedApps['enabled']), array_keys($shippedApps['disabled']));
+		$allApps = \array_merge(\array_keys($shippedApps['enabled']), \array_keys($shippedApps['disabled']));
 		return $allApps;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getNotShippedApps(){
+	public function getNotShippedApps() {
 		$shippedApps = $this->occRunner->runJson('app:list', ['--shipped' => 'false']);
-		$allApps = array_merge(array_keys($shippedApps['enabled']), array_keys($shippedApps['disabled']));
+		$allApps = \array_merge(\array_keys($shippedApps['enabled']), \array_keys($shippedApps['disabled']));
 		return $allApps;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getShippedApps(){
+	public function getShippedApps() {
 		$shippedApps = $this->occRunner->runJson('app:list', ['--shipped' => 'true']);
-		$allApps = array_merge(array_keys($shippedApps['enabled']), array_keys($shippedApps['disabled']));
+		$allApps = \array_merge(\array_keys($shippedApps['enabled']), \array_keys($shippedApps['disabled']));
 		return $allApps;
 	}
 
@@ -107,13 +106,12 @@ class AppManager {
 	 * @param $appId
 	 * @return string
 	 */
-	public function getAppPath($appId){
+	public function getAppPath($appId) {
 		try {
 			$response = $this->occRunner->run('app:getpath', ['app' => $appId]);
 		} catch (\Exception $e) {
 			return '';
 		}
-		return trim($response);
+		return \trim($response);
 	}
-
 }

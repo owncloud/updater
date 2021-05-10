@@ -30,7 +30,7 @@ class Collection {
 	private $notReadable = [];
 	private $notWritable = [];
 
-	public function reset(){
+	public function reset() {
 		$this->notReadable = [];
 		$this->notWritable = [];
 	}
@@ -39,7 +39,7 @@ class Collection {
 	 * @param $item
 	 */
 	public function addNotReadable($item) {
-		if (!in_array($item, $this->notReadable)) {
+		if (!\in_array($item, $this->notReadable)) {
 			$this->notReadable[] = $item;
 		}
 	}
@@ -48,7 +48,7 @@ class Collection {
 	 * @param $item
 	 */
 	public function addNotWritable($item) {
-		if (!in_array($item, $this->notWritable)) {
+		if (!\in_array($item, $this->notWritable)) {
 			$this->notWritable[] = $item;
 		}
 	}
@@ -56,14 +56,14 @@ class Collection {
 	/**
 	 * @return array
 	 */
-	public function getNotReadable(){
+	public function getNotReadable() {
 		return $this->notReadable;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getNotWritable(){
+	public function getNotWritable() {
 		return $this->notWritable;
 	}
 }

@@ -32,7 +32,6 @@ use ZipArchive;
  * @package Owncloud\Updater\Utils
  */
 class ZipExtractor {
-
 	protected $file;
 	protected $path;
 	
@@ -44,10 +43,10 @@ class ZipExtractor {
 	 * @param string $path
 	 * @param OutputInterface $output
 	 */
-	public function __construct($file, $path, OutputInterface $output = null){
+	public function __construct($file, $path, OutputInterface $output = null) {
 		$this->file = $file;
 		$this->path = $path;
-		if (!is_null($output)){
+		if ($output !== null) {
 			$this->output = $output;
 		}
 	}
@@ -55,11 +54,11 @@ class ZipExtractor {
 	/**
 	 * @return bool
 	 */
-	public function extract(){
-		if ($this->extractShell()){
+	public function extract() {
+		if ($this->extractShell()) {
 			return true;
 		}
-		if (!class_exists('ZipArchive')){
+		if (!\class_exists('ZipArchive')) {
 			throw new \RuntimeException("Could not decompress the archive, enable the PHP zip extension or install unzip.");
 		}
 		return $this->extractZipArchive();
@@ -68,7 +67,7 @@ class ZipExtractor {
 	/**
 	 * @return bool
 	 */
-	private function extractShell(){
+	private function extractShell() {
 		$command = 'unzip ' . ProcessUtils::escapeArgument($this->file) . ' -d ' . ProcessUtils::escapeArgument($this->path) . ' && chmod -R u+w ' . ProcessUtils::escapeArgument($this->path);
 		$process = new Process($command);
 		$process->setTimeout(null);
@@ -82,14 +81,14 @@ class ZipExtractor {
 	/**
 	 * @return bool
 	 */
-	private function extractZipArchive(){
+	private function extractZipArchive() {
 		$zipArchive = new ZipArchive();
 
-		if (true !== ($exitCode = $zipArchive->open($this->file))){
+		if (true !== ($exitCode = $zipArchive->open($this->file))) {
 			throw new \UnexpectedValueException($this->getErrorMessage($exitCode), $exitCode);
 		}
 
-		if (true !== $zipArchive->extractTo($this->path)){
+		if ($zipArchive->extractTo($this->path) !== true) {
 			throw new \RuntimeException("There was an error extracting the ZIP file. Corrupt file?");
 		}
 
@@ -101,28 +100,28 @@ class ZipExtractor {
 	 * @param int $exitCode
 	 * @return string
 	 */
-	protected function getErrorMessage($exitCode){
-		switch ($exitCode){
+	protected function getErrorMessage($exitCode) {
+		switch ($exitCode) {
 			case ZipArchive::ER_EXISTS:
-				return sprintf("File '%s' already exists.", $this->file);
+				return \sprintf("File '%s' already exists.", $this->file);
 			case ZipArchive::ER_INCONS:
-				return sprintf("Zip archive '%s' is inconsistent.", $this->file);
+				return \sprintf("Zip archive '%s' is inconsistent.", $this->file);
 			case ZipArchive::ER_INVAL:
-				return sprintf("Invalid argument (%s)", $this->file);
+				return \sprintf("Invalid argument (%s)", $this->file);
 			case ZipArchive::ER_MEMORY:
-				return sprintf("Malloc failure (%s)", $this->file);
+				return \sprintf("Malloc failure (%s)", $this->file);
 			case ZipArchive::ER_NOENT:
-				return sprintf("No such zip file: '%s'", $this->file);
+				return \sprintf("No such zip file: '%s'", $this->file);
 			case ZipArchive::ER_NOZIP:
-				return sprintf("'%s' is not a zip archive.", $this->file);
+				return \sprintf("'%s' is not a zip archive.", $this->file);
 			case ZipArchive::ER_OPEN:
-				return sprintf("Can't open zip file: %s", $this->file);
+				return \sprintf("Can't open zip file: %s", $this->file);
 			case ZipArchive::ER_READ:
-				return sprintf("Zip read error (%s)", $this->file);
+				return \sprintf("Zip read error (%s)", $this->file);
 			case ZipArchive::ER_SEEK:
-				return sprintf("Zip seek error (%s)", $this->file);
+				return \sprintf("Zip seek error (%s)", $this->file);
 			default:
-				return sprintf("'%s' is not a valid zip archive, got error code: %s", $this->file, $exitCode);
+				return \sprintf("'%s' is not a valid zip archive, got error code: %s", $this->file, $exitCode);
 		}
 	}
 }

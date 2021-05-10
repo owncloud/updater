@@ -31,10 +31,9 @@ use Owncloud\Updater\Utils\Collection;
  * @package Owncloud\Updater\Command
  */
 class CheckSystemCommand extends Command {
-
 	protected $message = 'Checking system health.';
 
-	protected function configure(){
+	protected function configure() {
 		$this
 				->setName('upgrade:checkSystem')
 				->setDescription('System check. System health and if dependencies are OK (we also count the number of files and DB entries and give time estimations based on hardcoded estimation)')
@@ -46,7 +45,7 @@ class CheckSystemCommand extends Command {
 	 * @param OutputInterface $output
 	 * @return int
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output){
+	protected function execute(InputInterface $input, OutputInterface $output) {
 		$locator = $this->container['utils.locator'];
 		$fsHelper = $this->container['utils.filesystemhelper'];
 		/** @var \Owncloud\Updater\Utils\Registry $registry */
@@ -62,26 +61,26 @@ class CheckSystemCommand extends Command {
 		$collection = new Collection();
 
 		$rootDirItems= $locator->getRootDirItems();
-		foreach ($rootDirItems as $item){
+		foreach ($rootDirItems as $item) {
 			$fsHelper->checkr($item, $collection);
 		}
 		$notReadableFiles = $collection->getNotReadable();
 		$notWritableFiles = $collection->getNotWritable();
 
-		if (count($notReadableFiles)){
+		if (\count($notReadableFiles)) {
 			$output->writeln('<error>The following files and directories are not readable:</error>');
 			$output->writeln($this->longArrayToString($notReadableFiles));
 		}
 
-		if (count($notWritableFiles)){
+		if (\count($notWritableFiles)) {
 			$output->writeln('<error>The following files and directories are not writable:</error>');
 			$output->writeln($this->longArrayToString($notWritableFiles));
 		}
 
-		if (count($notReadableFiles) || count($notWritableFiles)){
+		if (\count($notReadableFiles) || \count($notWritableFiles)) {
 			$output->writeln('<info>Please check if owner and permissions for these files are correct.</info>');
 			$output->writeln(
-				sprintf(
+				\sprintf(
 					'<info>See %s for details.</info>',
 					$docLink->getAdminManualUrl('installation/installation_wizard.html#strong-perms-label')
 				)
@@ -98,16 +97,15 @@ class CheckSystemCommand extends Command {
 	 * @param $array
 	 * @return string
 	 */
-	protected function longArrayToString($array){
-		if (count($array)>7){
-			$shortArray = array_slice($array, 0, 7);
-			$more = sprintf('... and %d more items', count($array) - count($shortArray));
-			array_push($shortArray, $more);
+	protected function longArrayToString($array) {
+		if (\count($array)>7) {
+			$shortArray = \array_slice($array, 0, 7);
+			$more = \sprintf('... and %d more items', \count($array) - \count($shortArray));
+			\array_push($shortArray, $more);
 		} else {
 			$shortArray = $array;
 		}
-		$string = implode(PHP_EOL, $shortArray);
+		$string = \implode(PHP_EOL, $shortArray);
 		return $string;
 	}
-
 }

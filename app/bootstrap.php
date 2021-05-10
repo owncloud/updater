@@ -19,12 +19,12 @@
  *
  */
 
-set_time_limit(0);
+\set_time_limit(0);
 
-define('MINIMUM_PHP_VERSION', '7.0.8');
+\define('MINIMUM_PHP_VERSION', '7.0.8');
 
 // Check PHP version
-if (version_compare(PHP_VERSION, MINIMUM_PHP_VERSION) === -1){
+if (\version_compare(PHP_VERSION, MINIMUM_PHP_VERSION) === -1) {
 	echo 'This application requires at least PHP ' . MINIMUM_PHP_VERSION . PHP_EOL;
 	echo 'You are currently running ' . PHP_VERSION . '. Please update your PHP version.' . PHP_EOL;
 	exit(50);
@@ -32,18 +32,18 @@ if (version_compare(PHP_VERSION, MINIMUM_PHP_VERSION) === -1){
 
 // symlinks are not resolved by PHP properly
 // getcwd always reports source and not target
- if(getcwd()){
-	define('CURRENT_DIR', trim(getcwd()));
-} elseif (isset($_SERVER['PWD'])){
-	define('CURRENT_DIR', $_SERVER['PWD']);
-} elseif (isset($_SERVER['SCRIPT_FILENAME'])){
-	define('CURRENT_DIR', dirname($_SERVER['SCRIPT_FILENAME']));
-} else {
-	echo 'Failed to detect current directory';
-	exit(1);
-}
+ if (\getcwd()) {
+ 	\define('CURRENT_DIR', \trim(\getcwd()));
+ } elseif (isset($_SERVER['PWD'])) {
+ 	\define('CURRENT_DIR', $_SERVER['PWD']);
+ } elseif (isset($_SERVER['SCRIPT_FILENAME'])) {
+ 	\define('CURRENT_DIR', \dirname($_SERVER['SCRIPT_FILENAME']));
+ } else {
+ 	echo 'Failed to detect current directory';
+ 	exit(1);
+ }
 
-session_start();
+\session_start();
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require \dirname(__DIR__) . '/vendor/autoload.php';
 $container = require(__DIR__ . '/config/container.php');

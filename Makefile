@@ -17,6 +17,7 @@ dist_dir=$(build_dir)/dist
 COMPOSER_BIN=$(build_dir)/composer.phar
 BOWER=$(build_dir)/node_modules/bower/bin/bower
 PHPUNITDBG=phpdbg -qrr -d memory_limit=4096M -d zend.enable_gc=0
+PHP_CS_FIXER=php -d zend.enable_gc=0 vendor-bin/owncloud-codestyle/vendor/bin/php-cs-fixer
 
 # internal aliases
 composer_deps=vendor/
@@ -102,6 +103,16 @@ test-php-unit-dbg: vendor/bin/phpunit
 	make
 	$(PHPUNITDBG) ./vendor/bin/phpunit --configuration ./src/Tests/phpunit.xml --testsuite 'ownCloud - Standalone Updater Tests'
 
+.PHONY: test-php-style
+test-php-style:            ## Run php-cs-fixer and check owncloud code-style
+test-php-style: vendor-bin/owncloud-codestyle/vendor
+	$(PHP_CS_FIXER) fix -v --diff --diff-format udiff --allow-risky yes --dry-run
+
+.PHONY: test-php-style-fix
+test-php-style-fix:        ## Run php-cs-fixer and fix code style issues
+test-php-style-fix: vendor-bin/owncloud-codestyle/vendor
+	$(PHP_CS_FIXER) fix -v --diff --diff-format udiff --allow-risky yes
+
 #
 # dist
 #
@@ -139,9 +150,19 @@ clean-build:
 composer.lock: composer.json
 	@echo composer.lock is not up to date.
 
+vendor: composer.lock
+	composer install --no-dev
+
 vendor/bin/phpunit: composer.lock
 	composer install
 	composer require --dev phpunit/phpunit ^7.5
 
-vendor: composer.lock
-	composer install --no-dev
+vendor/bamarni/composer-bin-plugin: composer.lock
+	composer install
+
+vendor-bin/owncloud-codestyle/vendor: vendor/bamarni/composer-bin-plugin vendor-bin/owncloud-codestyle/composer.lock
+	composer bin owncloud-codestyle install --no-progress
+
+vendor-bin/owncloud-codestyle/composer.lock: vendor-bin/owncloud-codestyle/composer.json
+	@echo owncloud-codestyle composer.lock is not up to date.
+

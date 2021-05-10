@@ -27,7 +27,6 @@ namespace Owncloud\Updater\Utils;
  * @package Owncloud\Updater\Utils
  */
 class DocLink {
-
 	const BASE_DOC_URL = 'https://doc.owncloud.org/server';
 
 	private $version;
@@ -46,8 +45,8 @@ class DocLink {
 	 * @param string $version
 	 * @return string
 	 */
-	protected function trimVersion($version){
-		if (preg_match('|^\d+\.\d+|', $version, $matches)>0){
+	protected function trimVersion($version) {
+		if (\preg_match('|^\d+\.\d+|', $version, $matches)>0) {
 			return $matches[0];
 		}
 		return '';
@@ -57,8 +56,8 @@ class DocLink {
 	 * @param string $relativePart
 	 * @return string
 	 */
-	public function getAdminManualUrl($relativePart){
-		return sprintf(
+	public function getAdminManualUrl($relativePart) {
+		return \sprintf(
 			'%s/%s/admin_manual/%s',
 			self::BASE_DOC_URL,
 			$this->version,

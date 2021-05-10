@@ -26,7 +26,7 @@ namespace Owncloud\Updater\Command;
  *
  * @package Owncloud\Updater\Command
  */
-class Command extends \Symfony\Component\Console\Command\Command{
+class Command extends \Symfony\Component\Console\Command\Command {
 	/**
 	 * @var \Pimple\Container
 	 */
@@ -40,14 +40,14 @@ class Command extends \Symfony\Component\Console\Command\Command{
 	/**
 	 * @return string
 	 */
-	public function getMessage(){
+	public function getMessage() {
 		return $this->message;
 	}
 
 	/**
 	 * @param $container
 	 */
-	public function setContainer($container){
+	public function setContainer($container) {
 		$this->container = $container;
- 	}
+	}
 }

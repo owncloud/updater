@@ -54,16 +54,16 @@ class Feed {
 	 *
 	 * @param array $data
 	 */
-	public function __construct($data){
+	public function __construct($data) {
 		$missingEntries = [];
-		foreach ($this->requiredFeedEntries as $index){
-			if (!isset($data[$index]) || empty($data[$index])){
+		foreach ($this->requiredFeedEntries as $index) {
+			if (!isset($data[$index]) || empty($data[$index])) {
 				$missingEntries[] = $index;
 				$data[$index] = '';
 			}
 		}
 
-		if (count($missingEntries)){
+		if (\count($missingEntries)) {
 			$this->isValid = false;
 			//'Got missing or empty fileds for: ' . implode(',', $missingEntries) . '. No updates found.';
 		}
@@ -76,8 +76,8 @@ class Feed {
 	 * Build filename to download as a.b.c.d.zip
 	 * @return string
 	 */
-	public function getDownloadedFileName(){
-		$extension = preg_replace('|.*?((\.tar)?\.[^.]*)$|s', '\1', $this->getUrl());
+	public function getDownloadedFileName() {
+		$extension = \preg_replace('|.*?((\.tar)?\.[^.]*)$|s', '\1', $this->getUrl());
 		return $this->getVersion() . $extension;
 	}
 
@@ -85,7 +85,7 @@ class Feed {
 	 * Does feed contain all the data required?
 	 * @return bool
 	 */
-	public function isValid(){
+	public function isValid() {
 		return $this->isValid;
 	}
 
@@ -93,7 +93,7 @@ class Feed {
 	 *
 	 * @return string
 	 */
-	public function getVersion(){
+	public function getVersion() {
 		return $this->version;
 	}
 
@@ -101,7 +101,7 @@ class Feed {
 	 *
 	 * @return string
 	 */
-	public function getVersionString(){
+	public function getVersionString() {
 		return $this->versionString;
 	}
 
@@ -109,7 +109,7 @@ class Feed {
 	 * Get url to download a new version from
 	 * @return string
 	 */
-	public function getUrl(){
+	public function getUrl() {
 		return $this->url;
 	}
 
@@ -117,8 +117,7 @@ class Feed {
 	 * Get url to download a checksum from
 	 * @return string
 	 */
-	public function getChecksumUrl(){
+	public function getChecksumUrl() {
 		return $this->url . '.md5';
 	}
-
 }

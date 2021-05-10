@@ -29,7 +29,6 @@ use Owncloud\Updater\Console\Application;
  * @package Owncloud\Updater\Utils
  */
 class Checkpoint {
-
 	const CORE_DIR = 'core';
 	const APP_DIR = 'apps';
 
@@ -48,7 +47,7 @@ class Checkpoint {
 	 * @param Locator $locator
 	 * @param FilesystemHelper $fsHelper
 	 */
-	public function __construct(Locator $locator, FilesystemHelper $fsHelper){
+	public function __construct(Locator $locator, FilesystemHelper $fsHelper) {
 		$this->locator = $locator;
 		$this->fsHelper = $fsHelper;
 	}
@@ -58,11 +57,11 @@ class Checkpoint {
 	 * @return string
 	 * @throws \Exception if base checkpoint directory is not writable
 	 */
-	public function create(){
+	public function create() {
 		$checkpointId = $this->createCheckpointId();
 		$checkpointPath = $this->getCheckpointPath($checkpointId);
-		try{
-			if (!$this->fsHelper->isWritable($this->locator->getCheckpointDir())){
+		try {
+			if (!$this->fsHelper->isWritable($this->locator->getCheckpointDir())) {
 				throw new \Exception($this->locator->getCheckpointDir() . ' is not writable.');
 			}
 			$this->fsHelper->mkdir($checkpointPath);
@@ -70,8 +69,8 @@ class Checkpoint {
 			$checkpointCorePath = $checkpointPath . '/' . self::CORE_DIR;
 			$this->fsHelper->mkdir($checkpointCorePath);
 			$core = $this->locator->getRootDirItems();
-			foreach ($core as $coreItem){
-				$cpItemPath = $checkpointCorePath . '/' . basename($coreItem);
+			foreach ($core as $coreItem) {
+				$cpItemPath = $checkpointCorePath . '/' . \basename($coreItem);
 				$this->fsHelper->copyr($coreItem, $cpItemPath, true);
 			}
 			//copy config.php
@@ -83,14 +82,13 @@ class Checkpoint {
 			$this->fsHelper->mkdir($checkpointAppPath);
 			$appManager = Application::$container['utils.appmanager'];
 			$apps = $appManager->getAllApps();
-			foreach ($apps as $appId){
+			foreach ($apps as $appId) {
 				$appPath = $appManager->getAppPath($appId);
-				if ($appPath){
+				if ($appPath) {
 					$this->fsHelper->copyr($appPath, $checkpointAppPath . '/' . $appId, true);
 				}
 			}
-
-		} catch (\Exception $e){
+		} catch (\Exception $e) {
 			$application = Application::$container['application'];
 			$application->getLogger()->error($e->getMessage());
 			$this->fsHelper->removeIfExists($checkpointPath);
@@ -105,7 +103,7 @@ class Checkpoint {
 	 * @return array
 	 * @throws \UnexpectedValueException if there is no checkpoint with this id
 	 */
-	public function restore($checkpointId){
+	public function restore($checkpointId) {
 		$this->assertCheckpointExists($checkpointId);
 		$checkpointDir = $this->locator->getCheckpointDir() . '/' . $checkpointId;
 		$ocRoot = $this->locator->getOwnCloudRootPath();
@@ -119,7 +117,7 @@ class Checkpoint {
 	 * @return array
 	 * @throws \UnexpectedValueException if there is no checkpoint with this id
 	 */
-	public function remove($checkpointId){
+	public function remove($checkpointId) {
 		$this->assertCheckpointExists($checkpointId);
 		$checkpointPath = $this->getCheckpointPath($checkpointId);
 		$this->fsHelper->removeIfExists($checkpointPath);
@@ -129,13 +127,13 @@ class Checkpoint {
 	 * Return all checkpoints as an array of items [ 'title', 'date' ]
 	 * @return array
 	 */
-	public function getAll(){
+	public function getAll() {
 		$checkpoints = [];
-		foreach ($this->getAllCheckpointIds() as $dir){
+		foreach ($this->getAllCheckpointIds() as $dir) {
 			$checkpoints[] = [
 				'title' => $dir,
-				'date' => date(
-					"F d Y H:i", 
+				'date' => \date(
+					"F d Y H:i",
 					$this->fsHelper->filemtime(
 						$this->locator->getCheckpointDir() . '/' . $dir
 					)
@@ -150,43 +148,43 @@ class Checkpoint {
 	 * @param string $checkpointId id of checkpoint
 	 * @return bool
 	 */
-	public function checkpointExists($checkpointId){
-		return in_array($checkpointId, $this->getAllCheckpointIds());
+	public function checkpointExists($checkpointId) {
+		return \in_array($checkpointId, $this->getAllCheckpointIds());
 	}
 
 	/**
 	 * Get the most recent checkpoint Id
 	 * @return string|bool
 	 */
-	public function getLastCheckpointId(){
+	public function getLastCheckpointId() {
 		$allCheckpointIds = $this->getAllCheckpointIds();
-		return count($allCheckpointIds) > 0 ? end($allCheckpointIds) : false;
+		return \count($allCheckpointIds) > 0 ? \end($allCheckpointIds) : false;
 	}
 
 	/**
 	 * Return array of all checkpoint ids
 	 * @return array
 	 */
-	public function getAllCheckpointIds(){
+	public function getAllCheckpointIds() {
 		$checkpointDir = $this->locator->getCheckpointDir();
 		$content = $this->fsHelper->isDir($checkpointDir) ? $this->fsHelper->scandir($checkpointDir) : [];
-		$checkpoints = array_filter(
- 			$content,
- 			function($dir){
- 				$checkpointPath = $this->getCheckpointPath($dir);
- 				return !in_array($dir, ['.', '..']) && $this->fsHelper->isDir($checkpointPath);
- 			}
- 		);
- 		return $checkpoints;
+		$checkpoints = \array_filter(
+			$content,
+			function ($dir) {
+				$checkpointPath = $this->getCheckpointPath($dir);
+				return !\in_array($dir, ['.', '..']) && $this->fsHelper->isDir($checkpointPath);
+			}
+		);
+		return $checkpoints;
 	}
 
 	/**
 	 * Create an unique checkpoint id
 	 * @return string
 	 */
-	protected function createCheckpointId(){
-		$versionString = implode('.', $this->locator->getInstalledVersion());
-		return uniqid($versionString . '-');
+	protected function createCheckpointId() {
+		$versionString = \implode('.', $this->locator->getInstalledVersion());
+		return \uniqid($versionString . '-');
 	}
 
 	/**
@@ -194,7 +192,7 @@ class Checkpoint {
 	 * @param string $checkpointId id of checkpoint
 	 * @return string
 	 */
-	public function getCheckpointPath($checkpointId){
+	public function getCheckpointPath($checkpointId) {
 		return $this->locator->getCheckpointDir() . '/' . $checkpointId;
 	}
 
@@ -203,9 +201,9 @@ class Checkpoint {
 	 * @param string $checkpointId id of checkpoint
 	 * @throws \UnexpectedValueException if there is no checkpoint with this id
 	 */
-	private function assertCheckpointExists($checkpointId){
-		if (!$this->checkpointExists($checkpointId) || $checkpointId === ''){
-			$message = sprintf('Checkpoint %s does not exist.', $checkpointId);
+	private function assertCheckpointExists($checkpointId) {
+		if (!$this->checkpointExists($checkpointId) || $checkpointId === '') {
+			$message = \sprintf('Checkpoint %s does not exist.', $checkpointId);
 			throw new \UnexpectedValueException($message);
 		}
 	}
