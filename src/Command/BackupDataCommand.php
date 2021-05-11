@@ -30,8 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package Owncloud\Updater\Command
  */
 class BackupDataCommand extends Command {
-
-	protected function configure(){
+	protected function configure() {
 		$this
 				->setName('upgrade:backupData')
 				->setDescription('Backup data (optionally)')
@@ -42,7 +41,6 @@ class BackupDataCommand extends Command {
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output){
+	protected function execute(InputInterface $input, OutputInterface $output) {
 	}
-
 }

@@ -10,12 +10,11 @@ use Owncloud\Updater\Utils\Fetcher;
  * @package Owncloud\Updater\Tests\Utils
  */
 class FetcherTest extends \PHPUnit\Framework\TestCase {
-
 	protected $httpClient;
 	protected $locator;
 	protected $configReader;
 
-	public function setUp(){
+	public function setUp() {
 		$this->httpClient = $this->getMockBuilder('GuzzleHttp\Client')
 				->disableOriginalConstructor()
 				->getMock()
@@ -50,7 +49,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 		;
 	}
 
-	public function testGetValidFeed(){
+	public function testGetValidFeed() {
 		$responseMock = $this->getResponseMock('<?xml version="1.0"?><owncloud>  <version>8.1.3.0</version><versionstring>ownCloud 8.1.3</versionstring>
   <url>https://download.owncloud.org/community/owncloud-8.1.3.zip</url>
   <web>https://doc.owncloud.org/server/8.1/admin_manual/maintenance/upgrade.html</web>
@@ -66,8 +65,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 		$this->assertEquals('8.1.3.0', $feed->getVersion());
 	}
 
-
-	public function testGetEmptyFeed(){
+	public function testGetEmptyFeed() {
 		$responseMock = $this->getResponseMock('');
 		$this->httpClient
 				->method('get')
@@ -79,7 +77,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 		$this->assertFalse($feed->isValid());
 	}
 
-	public function testGetGarbageFeed(){
+	public function testGetGarbageFeed() {
 		$responseMock = $this->getResponseMock('<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8">');
 		$this->httpClient
 				->method('get')
@@ -95,7 +93,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 	 * @param $body
 	 * @return mixed
 	 */
-	private function getResponseMock($body){
+	private function getResponseMock($body) {
 		$bodyMock = $this->getMockBuilder('Owncloud\Updater\Tests\StreamInterface')
 				->disableOriginalConstructor()
 				->getMock()
@@ -122,5 +120,4 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 		;
 		return $responseMock;
 	}
-
 }

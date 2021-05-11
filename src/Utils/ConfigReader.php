@@ -45,18 +45,18 @@ class ConfigReader {
 	 *
 	 * @param OccRunner $occRunner
 	 */
-	public function __construct(OccRunner $occRunner){
+	public function __construct(OccRunner $occRunner) {
 		$this->occRunner = $occRunner;
 	}
 
-	public function init(){
+	public function init() {
 		$this->load();
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function getIsLoaded(){
+	public function getIsLoaded() {
 		return $this->isLoaded;
 	}
 
@@ -66,8 +66,8 @@ class ConfigReader {
 	 * @param string $path
 	 * @return mixed
 	 */
-	public function getByPath($path){
-		return $this->get(explode('.', $path));
+	public function getByPath($path) {
+		return $this->get(\explode('.', $path));
 	}
 
 	/**
@@ -75,14 +75,14 @@ class ConfigReader {
 	 * @param array $keys
 	 * @return mixed
 	 */
-	public function get($keys){
+	public function get($keys) {
 		$config = $this->cache;
 		do {
-			$key = array_shift($keys);
-			if (!count($keys)>0 && !is_array($config)){
+			$key = \array_shift($keys);
+			if (!\count($keys)>0 && !\is_array($config)) {
 				return null;
 			}
-			if (!array_key_exists($key, $config)){
+			if (!\array_key_exists($key, $config)) {
 				return null;
 			}
 			$config = $config[$key];
@@ -95,7 +95,7 @@ class ConfigReader {
 	 * @return string
 	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
 	 */
-	public function getEdition(){
+	public function getEdition() {
 		$response = $this->occRunner->runJson('status');
 		return $response['edition'];
 	}
@@ -105,9 +105,8 @@ class ConfigReader {
 	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
 	 * @throws \UnexpectedValueException
 	 */
-	private function load(){
+	private function load() {
 		$this->cache = $this->occRunner->runJson('config:list', ['--private']);
 		$this->isLoaded = true;
 	}
-
 }

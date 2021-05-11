@@ -31,7 +31,6 @@ use Symfony\Component\Console\Input\ArrayInput;
  * @package Owncloud\Updater\Command
  */
 class StartCommand extends Command {
-
 	protected $stack = [
 		[ 'command' => 'upgrade:info'],
 		[ 'command' => 'upgrade:checkSystem'],
@@ -50,7 +49,7 @@ class StartCommand extends Command {
 		[ 'command' => 'upgrade:postUpgradeCleanup'],
 	];
 
-	protected function configure(){
+	protected function configure() {
 		$this
 				->setName('upgrade:start')
 				->setDescription('automated process')
@@ -61,17 +60,16 @@ class StartCommand extends Command {
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output){
+	protected function execute(InputInterface $input, OutputInterface $output) {
 		$app = $this->getApplication();
-		foreach ($this->stack as $command){
+		foreach ($this->stack as $command) {
 			$input = new ArrayInput($command);
 			$returnCode = $app->doRun($input, $output);
-			if ($returnCode != 0){
+			if ($returnCode != 0) {
 				// Something went wrong
 				break;
 			}
 		}
 		$output->writeln('Done');
 	}
-
 }

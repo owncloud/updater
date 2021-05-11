@@ -70,7 +70,7 @@ class Application extends \Symfony\Component\Console\Application {
 	 * Pass Pimple container into application
 	 * @param Container $container
 	 */
-	public function setContainer(Container $container){
+	public function setContainer(Container $container) {
 		$this->diContainer = $container;
 		self::$container = $container;
 	}
@@ -79,35 +79,35 @@ class Application extends \Symfony\Component\Console\Application {
 	 * Get Pimple container
 	 * @return Container
 	 */
-	public function getContainer(){
+	public function getContainer() {
 		return $this->diContainer;
 	}
 
 	/**
 	 * @param string $endpoint
 	 */
-	public function setEndpoint($endpoint){
+	public function setEndpoint($endpoint) {
 		$this->endpoint = $endpoint;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getEndpoint(){
+	public function getEndpoint() {
 		return $this->endpoint;
 	}
 
 	/**
 	 * @param $token
 	 */
-	public function setAuthToken($token){
+	public function setAuthToken($token) {
 		$this->authToken = $token;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getAuthToken(){
+	public function getAuthToken() {
 		return $this->authToken;
 	}
 
@@ -115,13 +115,13 @@ class Application extends \Symfony\Component\Console\Application {
 	 * Get logger instance
 	 * @return \Psr\Log\LoggerInterface
 	 */
-	public function getLogger(){
+	public function getLogger() {
 		if (isset($this->diContainer['logger'])) {
 			return $this->diContainer['logger'];
 		}
 
 		// Logger is not available yet, fallback to stdout
-		if (is_null($this->fallbackLogger)){
+		if ($this->fallbackLogger === null) {
 			$output = new ConsoleOutput();
 			$this->fallbackLogger = new ConsoleLogger($output);
 		}
@@ -129,19 +129,19 @@ class Application extends \Symfony\Component\Console\Application {
 		return $this->fallbackLogger;
 	}
 
-	public function initConfig(){
+	public function initConfig() {
 		$configReader = $this->diContainer['utils.configReader'];
 		try {
 			$configReader->init();
-		} catch (\UnexpectedValueException $e){
+		} catch (\UnexpectedValueException $e) {
 			// try fallback to localhost
-			preg_match_all('/https?:\/\/([^\/]*).*$/', $this->getEndpoint(), $matches);
-			if (isset($matches[1][0])){
-				$newEndPoint = str_replace($matches[1][0], 'localhost', $this->getEndpoint());
+			\preg_match_all('/https?:\/\/([^\/]*).*$/', $this->getEndpoint(), $matches);
+			if (isset($matches[1][0])) {
+				$newEndPoint = \str_replace($matches[1][0], 'localhost', $this->getEndpoint());
 				$this->setEndpoint($newEndPoint);
 				try {
 					$configReader->init();
-				} catch (\UnexpectedValueException $e){
+				} catch (\UnexpectedValueException $e) {
 					// fallback to CLI
 					$this->diContainer['utils.occrunner']->setCanUseProcess(true);
 					$configReader->init();
@@ -154,7 +154,7 @@ class Application extends \Symfony\Component\Console\Application {
 	 * Log exception with trace
 	 * @param \Exception $e
 	 */
-	public function logException($e){
+	public function logException($e) {
 		$buffer = new BufferedOutput(OutputInterface::VERBOSITY_VERBOSE);
 		$this->renderException($e, $buffer);
 		$this->getLogger()->error($buffer->fetch());
@@ -168,22 +168,22 @@ class Application extends \Symfony\Component\Console\Application {
 	 * @return int 0 if everything went fine, or an error code
 	 * @throws \Exception
 	 */
-	public function doRun(InputInterface $input, OutputInterface $output){
+	public function doRun(InputInterface $input, OutputInterface $output) {
 		$commandName = $this->getCommandName($input);
-		try{
+		try {
 			$this->assertOwnCloudFound();
-			try{
+			try {
 				$this->initConfig();
 				if (!isset($this->diContainer['utils.docLink'])) {
 					$this->diContainer['utils.docLink'] = function ($c) {
 						/** @var Locator $locator */
 						$locator = $c['utils.locator'];
-						$installedVersion = implode('.', $locator->getInstalledVersion());
+						$installedVersion = \implode('.', $locator->getInstalledVersion());
 						return new DocLink($installedVersion);
 					};
 				}
-			} catch (ProcessFailedException $e){
-				if (!in_array($commandName, $this->allowFailure)){
+			} catch (ProcessFailedException $e) {
+				if (!\in_array($commandName, $this->allowFailure)) {
 					$this->logException($e);
 					$output->writeln("<error>Initialization failed with message:</error>");
 					$output->writeln($e->getProcess()->getOutput());
@@ -198,8 +198,8 @@ class Application extends \Symfony\Component\Console\Application {
 				$locator = $this->diContainer['utils.locator'];
 				$this->initLogger($locator->getDataDir());
 			}
-		} catch (\Exception $e){
-			if (!in_array($commandName, $this->allowFailure)){
+		} catch (\Exception $e) {
+			if (!\in_array($commandName, $this->allowFailure)) {
 				$this->logException($e);
 				throw $e;
 			}
@@ -214,14 +214,14 @@ class Application extends \Symfony\Component\Console\Application {
 	 * @return int
 	 * @throws \Exception
 	 */
-	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output){
-		if ($command instanceof \Owncloud\Updater\Command\Command){
+	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output) {
+		if ($command instanceof \Owncloud\Updater\Command\Command) {
 			$command->setContainer($this->getContainer());
 			$commandName = $this->getCommandName($input);
 			$this->getLogger()->info('Execution of ' . $commandName . ' command started');
 			$message = $command->getMessage();
-			if (!empty($message)){
-				$message = sprintf('<info>%s</info>', $message);
+			if (!empty($message)) {
+				$message = \sprintf('<info>%s</info>', $message);
 				$output->writeln($message);
 			}
 			$exitCode = parent::doRunCommand($command, $input, $output);
@@ -237,16 +237,16 @@ class Application extends \Symfony\Component\Console\Application {
 	/**
 	 * @param string $baseDir
 	 */
-	protected function initLogger($baseDir){
+	protected function initLogger($baseDir) {
 		$container = $this->getContainer();
-		$container['logger.output'] = function($c) use ($baseDir) {
-			$stream = @fopen($baseDir . '/update.log', 'a+');
-			if ($stream === false){
-				$stream = @fopen('php://stderr', 'a');
+		$container['logger.output'] = function ($c) use ($baseDir) {
+			$stream = @\fopen($baseDir . '/update.log', 'a+');
+			if ($stream === false) {
+				$stream = @\fopen('php://stderr', 'a');
 			}
 			return new StreamOutput($stream, StreamOutput::VERBOSITY_DEBUG, false);
 		};
-		$container['logger'] = function($c){
+		$container['logger'] = function ($c) {
 			return new ConsoleLogger($c['logger.output']);
 		};
 	}
@@ -255,7 +255,7 @@ class Application extends \Symfony\Component\Console\Application {
 	 * Check for ownCloud instance
 	 * @throws \RuntimeException
 	 */
-	public function assertOwnCloudFound(){
+	public function assertOwnCloudFound() {
 		$container = $this->getContainer();
 		/** @var Locator $locator */
 		$locator = $container['utils.locator'];
@@ -265,42 +265,42 @@ class Application extends \Symfony\Component\Console\Application {
 
 		// has to be installed
 		$file = $locator->getPathToConfigFile();
-		$this->assertFileExists($file, 'ownCloud in ' . dirname(dirname($file)) . ' is not installed.');
+		$this->assertFileExists($file, 'ownCloud in ' . \dirname(\dirname($file)) . ' is not installed.');
 
 		// version.php should exist
 		$file = $locator->getPathToVersionFile();
-		$this->assertFileExists($file, 'ownCloud is not found in ' . dirname($file));
+		$this->assertFileExists($file, 'ownCloud is not found in ' . \dirname($file));
 
 		$status = $occRunner->runJson('status');
-		if (!isset($status['installed'])  || $status['installed'] != 'true'){
-			throw new \RuntimeException('ownCloud in ' . dirname($file) . ' is not installed.');
+		if (!isset($status['installed'])  || $status['installed'] != 'true') {
+			throw new \RuntimeException('ownCloud in ' . \dirname($file) . ' is not installed.');
 		}
 
 		// datadir should exist
 		$dataDir = $locator->getDataDir();
-		if (!$fsHelper->fileExists($dataDir)){
+		if (!$fsHelper->fileExists($dataDir)) {
 			throw new \RuntimeException('Datadirectory ' . $dataDir . ' does not exist.');
 		}
 
 		// datadir should be writable
-		if (!$fsHelper->isWritable($dataDir)){
+		if (!$fsHelper->isWritable($dataDir)) {
 			throw new \RuntimeException('Datadirectory ' . $dataDir . ' is not writable.');
 		}
 
 		// assert minimum version
-		$installedVersion = implode('.', $locator->getInstalledVersion());
-		if (version_compare($installedVersion, '9.0.0', '<')){
+		$installedVersion = \implode('.', $locator->getInstalledVersion());
+		if (\version_compare($installedVersion, '9.0.0', '<')) {
 			throw new \RuntimeException("Minimum ownCloud version 9.0.0 is required for the updater - $installedVersion was found in " . $locator->getOwnCloudRootPath());
 		}
 
-		if (!$fsHelper->fileExists($locator->getUpdaterBaseDir())){
+		if (!$fsHelper->fileExists($locator->getUpdaterBaseDir())) {
 			$fsHelper->mkdir($locator->getUpdaterBaseDir());
 		}
 
-		if (!$fsHelper->fileExists($locator->getDownloadBaseDir())){
+		if (!$fsHelper->fileExists($locator->getDownloadBaseDir())) {
 			$fsHelper->mkdir($locator->getDownloadBaseDir());
 		}
-		if (!$fsHelper->fileExists($locator->getCheckpointDir())){
+		if (!$fsHelper->fileExists($locator->getCheckpointDir())) {
 			$fsHelper->mkdir($locator->getCheckpointDir());
 		}
 	}
@@ -309,8 +309,8 @@ class Application extends \Symfony\Component\Console\Application {
 	 * @param string $path
 	 * @param string $message
 	 */
-	protected function assertFileExists($path, $message){
-		if (!file_exists($path) || !is_file($path)){
+	protected function assertFileExists($path, $message) {
+		if (!\file_exists($path) || !\is_file($path)) {
 			throw new \RuntimeException($message);
 		}
 	}

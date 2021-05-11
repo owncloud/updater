@@ -47,12 +47,12 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	 *
 	 * @param null|string $occRunner
 	 */
-	public function __construct($occRunner){
+	public function __construct($occRunner) {
 		parent::__construct();
 		$this->occRunner = $occRunner;
 	}
 
-	protected function configure(){
+	protected function configure() {
 		$this
 				->setName('upgrade:executeCoreUpgradeScripts')
 				->setDescription('execute core upgrade scripts [danger, might take long]');
@@ -63,7 +63,7 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	 * @param OutputInterface $output
 	 * @throws \Exception
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output){
+	protected function execute(InputInterface $input, OutputInterface $output) {
 		$locator = $this->container['utils.locator'];
 		/** @var FilesystemHelper $fsHelper */
 		$fsHelper = $this->container['utils.filesystemhelper'];
@@ -72,32 +72,32 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 		/** @var Checkpoint $checkpoint */
 		$checkpoint = $this->container['utils.checkpoint'];
 
-		$installedVersion = implode('.', $locator->getInstalledVersion());
+		$installedVersion = \implode('.', $locator->getInstalledVersion());
 		$registry->set('installedVersion', $installedVersion);
 
 		/** @var  \Owncloud\Updater\Utils\Feed $feed */
 		$feed = $registry->get('feed');
 
-		if ($feed){
+		if ($feed) {
 			$path = $fetcher->getBaseDownloadPath($feed);
 			$fullExtractionPath = $locator->getExtractionBaseDir() . '/' . $feed->getVersion();
 
-			if (file_exists($fullExtractionPath)){
+			if (\file_exists($fullExtractionPath)) {
 				$fsHelper->removeIfExists($fullExtractionPath);
 			}
-			try{
+			try {
 				$fsHelper->mkdir($fullExtractionPath, true);
-			} catch (\Exception $e){
-					$output->writeln('Unable create directory ' . $fullExtractionPath);
-					throw $e;
+			} catch (\Exception $e) {
+				$output->writeln('Unable create directory ' . $fullExtractionPath);
+				throw $e;
 			}
 
 			$output->writeln('Extracting source into ' . $fullExtractionPath);
 			$extractor = new ZipExtractor($path, $fullExtractionPath, $output);
 
-			try{
+			try {
 				$extractor->extract();
-			} catch (\Exception $e){
+			} catch (\Exception $e) {
 				$output->writeln('Extraction has been failed');
 				$fsHelper->removeIfExists($locator->getExtractionBaseDir());
 				throw $e;
@@ -112,8 +112,8 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 			$packageVersion = $this->loadVersion($newSourcesDir);
 			$allowedPreviousVersions = $this->loadAllowedPreviousVersions($newSourcesDir);
 
-			if (!$this->isUpgradeAllowed($installedVersion, $packageVersion, $allowedPreviousVersions)){
-				$message = sprintf(
+			if (!$this->isUpgradeAllowed($installedVersion, $packageVersion, $allowedPreviousVersions)) {
+				$message = \sprintf(
 					'Update from %s to %s is not possible. Updates between multiple major versions and downgrades are unsupported.',
 					$installedVersion,
 					$packageVersion
@@ -123,14 +123,14 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 				return 1;
 			}
 
-			$rootDirContent = array_unique(
-				array_merge(
+			$rootDirContent = \array_unique(
+				\array_merge(
 					$locator->getRootDirContent(),
 					$locator->getRootDirItemsFromSignature($oldSourcesDir),
 					$locator->getRootDirItemsFromSignature($newSourcesDir)
 				)
 			);
-			foreach ($rootDirContent as $dir){
+			foreach ($rootDirContent as $dir) {
 				if ($dir === 'updater') {
 					continue;
 				}
@@ -146,12 +146,12 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 
 			//Remove old apps
 			$appDirectories = $fsHelper->scandirFiltered($oldSourcesDir . '/apps');
-			$oldAppList = array_intersect($appDirectories, $newAppsList);
-			foreach ($oldAppList as $appDirectory){
+			$oldAppList = \array_intersect($appDirectories, $newAppsList);
+			foreach ($oldAppList as $appDirectory) {
 				$fsHelper->rmdirr($oldSourcesDir . '/apps/' . $appDirectory);
 			}
 
-			foreach ($newAppsList as $appId){
+			foreach ($newAppsList as $appId) {
 				$output->writeln('Copying the application ' . $appId);
 				$fsHelper->copyr($newAppsDir . '/' . $appId, $locator->getOwnCloudRootPath() . '/apps/' . $appId, false);
 			}
@@ -159,23 +159,23 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 			try {
 				$plain = $this->occRunner->run('upgrade');
 				$output->writeln($plain);
-			} catch (ProcessFailedException $e){
+			} catch (ProcessFailedException $e) {
 				$lastCheckpointId = $checkpoint->getLastCheckpointId();
-				if ($lastCheckpointId){
+				if ($lastCheckpointId) {
 					$lastCheckpointPath = $checkpoint->getCheckpointPath($lastCheckpointId);
 					$fsHelper->copyr($lastCheckpointPath . '/apps', $oldSourcesDir . '/apps', false);
 				}
-				if ($e->getProcess()->getExitCode() != 3){
+				if ($e->getProcess()->getExitCode() != 3) {
 					throw ($e);
 				}
 			}
 		}
 	}
 
-	public function isUpgradeAllowed($installedVersion, $packageVersion, $canBeUpgradedFrom){
-		if (version_compare($installedVersion, $packageVersion, '<=')){
-			foreach ($canBeUpgradedFrom as $allowedPreviousVersion){
-				if (version_compare($allowedPreviousVersion, $installedVersion, '<=')){
+	public function isUpgradeAllowed($installedVersion, $packageVersion, $canBeUpgradedFrom) {
+		if (\version_compare($installedVersion, $packageVersion, '<=')) {
+			foreach ($canBeUpgradedFrom as $allowedPreviousVersion) {
+				if (\version_compare($allowedPreviousVersion, $installedVersion, '<=')) {
 					return true;
 				}
 			}
@@ -187,10 +187,10 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	 * @param string $pathToPackage
 	 * @return string
 	 */
-	protected function loadVersion($pathToPackage){
+	protected function loadVersion($pathToPackage) {
 		require  $pathToPackage . '/version.php';
 		/** @var $OC_Version array */
-		return implode('.', $OC_Version);
+		return \implode('.', $OC_Version);
 	}
 
 	/**
@@ -200,14 +200,14 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	protected function loadAllowedPreviousVersions($pathToPackage) {
 		$canBeUpgradedFrom = $this->loadCanBeUpgradedFrom($pathToPackage);
 
-		$firstItem = reset($canBeUpgradedFrom);
-		if (!is_array($firstItem)){
+		$firstItem = \reset($canBeUpgradedFrom);
+		if (!\is_array($firstItem)) {
 			$canBeUpgradedFrom = [$canBeUpgradedFrom];
 		}
 
 		$allowedVersions = [];
-		foreach ($canBeUpgradedFrom as $version){
-			$allowedVersions[] = implode('.', $version);
+		foreach ($canBeUpgradedFrom as $version) {
+			$allowedVersions[] = \implode('.', $version);
 		}
 
 		return $allowedVersions;
@@ -217,7 +217,7 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	 * @param string $pathToPackage
 	 * @return array
 	 */
-	protected function loadCanBeUpgradedFrom($pathToPackage){
+	protected function loadCanBeUpgradedFrom($pathToPackage) {
 		require $pathToPackage . '/version.php';
 		/** @var array $OC_VersionCanBeUpgradedFrom */
 		return $OC_VersionCanBeUpgradedFrom;

@@ -10,7 +10,6 @@ use Owncloud\Updater\Utils\ConfigReader;
  * @package Owncloud\Updater\Tests\Utils
  */
 class ConfigReaderTest extends \PHPUnit\Framework\TestCase {
-
 	protected $config = [
 		"system" => [
 			"instanceid" => "oc8v9kkjo6bh",
@@ -37,7 +36,7 @@ class ConfigReaderTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @return array
 	 */
-	public function getByPathProvider(){
+	public function getByPathProvider() {
 		return [
 				[ 'apps.core.OC_Channel', 'beta']
 		];
@@ -46,8 +45,8 @@ class ConfigReaderTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider getByPathProvider
 	 */
-	public function testGetByPath($key, $expected){
-		$occRunnerMock = $this->getOccRunnerMock(json_encode($this->config));
+	public function testGetByPath($key, $expected) {
+		$occRunnerMock = $this->getOccRunnerMock(\json_encode($this->config));
 		$configReader = new ConfigReader($occRunnerMock);
 		$configReader->init();
 		$value = $configReader->getByPath($key);
@@ -58,7 +57,7 @@ class ConfigReaderTest extends \PHPUnit\Framework\TestCase {
 	 * @param $result
 	 * @return mixed
 	 */
-	protected function getOccRunnerMock($result){
+	protected function getOccRunnerMock($result) {
 		$runnerMock = $this->getMockBuilder('Owncloud\Updater\Utils\OccRunner')
 				->setMethods(['run'])
 				->disableOriginalConstructor()
@@ -71,5 +70,4 @@ class ConfigReaderTest extends \PHPUnit\Framework\TestCase {
 		;
 		return $runnerMock;
 	}
-
 }

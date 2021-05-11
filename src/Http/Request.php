@@ -35,7 +35,7 @@ class Request {
 	 *
 	 * @param array $vars
 	 */
-	public function __construct($vars = []){
+	public function __construct($vars = []) {
 		$this->vars = $vars;
 	}
 
@@ -52,8 +52,8 @@ class Request {
 	 */
 	public function getServerProtocol() {
 		$forwardedProto = $this->server('HTTP_X_FORWARDED_PROTO');
-		if (!is_null($forwardedProto)) {
-			$proto = strtolower($this->getPartBeforeComma($forwardedProto));
+		if ($forwardedProto !== null) {
+			$proto = \strtolower($this->getPartBeforeComma($forwardedProto));
 			// Verify that the protocol is always HTTP or HTTPS
 			// default to http if an invalid value is provided
 			return $proto === 'https' ? 'https' : 'http';
@@ -73,16 +73,16 @@ class Request {
 	/**
 	 * @return mixed|string
 	 */
-	public function getHost(){
+	public function getHost() {
 		$host = 'localhost';
 		$forwardedHost = $this->server('HTTP_X_FORWARDED_HOST');
-		if (!is_null($forwardedHost)) {
+		if ($forwardedHost !== null) {
 			$host = $this->getPartBeforeComma($forwardedHost);
 		} else {
 			$httpHost = $this->server('HTTP_HOST');
-			if (is_null($httpHost)) {
+			if ($httpHost === null) {
 				$serverName = $this->server('SERVER_NAME');
-				if (!is_null($serverName)){
+				if ($serverName !== null) {
 					$host = $serverName;
 				}
 			} else {
@@ -96,7 +96,7 @@ class Request {
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function postParameter($name){
+	public function postParameter($name) {
 		return isset($this->vars['post'][$name]) ? $this->vars['post'][$name] : null;
 	}
 
@@ -105,7 +105,7 @@ class Request {
 	 * @return mixed
 	 */
 	public function header($name) {
-		$name = strtoupper($name);
+		$name = \strtoupper($name);
 		return $this->server('HTTP_'.$name);
 	}
 
@@ -113,7 +113,7 @@ class Request {
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function server($name){
+	public function server($name) {
 		return isset($this->vars['headers'][$name]) ? $this->vars['headers'][$name] : null;
 	}
 
@@ -122,15 +122,13 @@ class Request {
 	 * @param string $str
 	 * @return string
 	 */
-	private function getPartBeforeComma($str){
-		if (strpos($str, ',') !== false) {
-			$parts = explode(',', $str);
+	private function getPartBeforeComma($str) {
+		if (\strpos($str, ',') !== false) {
+			$parts = \explode(',', $str);
 			$result = $parts[0];
 		} else {
 			$result = $str;
 		}
-		return trim($result);
+		return \trim($result);
 	}
-
 }
-

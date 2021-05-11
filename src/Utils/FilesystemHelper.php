@@ -33,20 +33,20 @@ class FilesystemHelper {
 	 * @param string $path
 	 * @return integer
 	 */
-	public function filemtime($path){
-		return filemtime($path);
+	public function filemtime($path) {
+		return \filemtime($path);
 	}
 
 	/**
-	 * Wrapper for scandir function. 
+	 * Wrapper for scandir function.
 	 * Filters current and parent directories
 	 * @param string $path
 	 * @return array
 	 */
-	public function scandirFiltered($path){
+	public function scandirFiltered($path) {
 		$content = $this->scandir($path);
-		if (is_array($content)){
-			return array_diff($content, ['.', '..']);
+		if (\is_array($content)) {
+			return \array_diff($content, ['.', '..']);
 		}
 		return [];
 	}
@@ -56,8 +56,8 @@ class FilesystemHelper {
 	 * @param string $path
 	 * @return array
 	 */
-	public function scandir($path){
-		return scandir($path);
+	public function scandir($path) {
+		return \scandir($path);
 	}
 
 	/**
@@ -65,8 +65,8 @@ class FilesystemHelper {
 	 * @param string $path
 	 * @return bool
 	 */
-	public function fileExists($path){
-		return file_exists($path);
+	public function fileExists($path) {
+		return \file_exists($path);
 	}
 
 	/**
@@ -74,8 +74,8 @@ class FilesystemHelper {
 	 * @param string $path
 	 * @return bool
 	 */
-	public function isWritable($path){
-		return is_writable($path);
+	public function isWritable($path) {
+		return \is_writable($path);
 	}
 
 	/**
@@ -83,8 +83,8 @@ class FilesystemHelper {
 	 * @param string $path
 	 * @return bool
 	 */
-	public function isDir($path){
-		return is_dir($path);
+	public function isDir($path) {
+		return \is_dir($path);
 	}
 
 	/**
@@ -92,8 +92,8 @@ class FilesystemHelper {
 	 * @param string $path
 	 * @return string
 	 */
-	public function md5File($path){
-		return md5_file($path);
+	public function md5File($path) {
+		return \md5_file($path);
 	}
 
 	/**
@@ -102,8 +102,8 @@ class FilesystemHelper {
 	 * @param bool $isRecursive
 	 * @throws \Exception on error
 	 */
-	public function mkdir($path, $isRecursive = false){
-		if (!mkdir($path, 0755, $isRecursive)){
+	public function mkdir($path, $isRecursive = false) {
+		if (!\mkdir($path, 0755, $isRecursive)) {
 			throw new \Exception("Unable to create $path");
 		}
 	}
@@ -114,25 +114,25 @@ class FilesystemHelper {
 	 * @param string $dest - destination path
 	 * @throws \Exception on error
 	 */
-	public function copyr($src, $dest, $stopOnError = true){
-		if (is_dir($src)){
-			if (!is_dir($dest)){
-				try{
+	public function copyr($src, $dest, $stopOnError = true) {
+		if (\is_dir($src)) {
+			if (!\is_dir($dest)) {
+				try {
 					$this->mkdir($dest);
-				} catch (\Exception $e){
-					if ($stopOnError){
+				} catch (\Exception $e) {
+					if ($stopOnError) {
 						throw $e;
 					}
 				}
 			}
-			$files = scandir($src);
-			foreach ($files as $file){
-				if (!in_array($file, [".", ".."])){
+			$files = \scandir($src);
+			foreach ($files as $file) {
+				if (!\in_array($file, [".", ".."])) {
 					$this->copyr("$src/$file", "$dest/$file", $stopOnError);
 				}
 			}
-		} elseif (file_exists($src)){
-			if (!copy($src, $dest) && $stopOnError){
+		} elseif (\file_exists($src)) {
+			if (!\copy($src, $dest) && $stopOnError) {
 				throw new \Exception("Unable to copy $src to $dest");
 			}
 		}
@@ -144,8 +144,8 @@ class FilesystemHelper {
 	 * @param string $dest - destination path
 	 * @throws \Exception on error
 	 */
-	public function move($src, $dest){
-		if (!rename($src, $dest)){
+	public function move($src, $dest) {
+		if (!\rename($src, $dest)) {
 			throw new \Exception("Unable to move $src to $dest");
 		}
 	}
@@ -155,20 +155,20 @@ class FilesystemHelper {
 	 * @param string $src  - path to check
 	 * @param Collection $collection - object to store incorrect permissions
 	 */
-	public function checkr($src, $collection){
-		if (!file_exists($src)){
+	public function checkr($src, $collection) {
+		if (!\file_exists($src)) {
 			return;
 		}
-		if (!is_writable($src)){
+		if (!\is_writable($src)) {
 			$collection->addNotWritable($src);
 		}
-		if (!is_readable($src)){
+		if (!\is_readable($src)) {
 			$collection->addNotReadable($src);
 		}
-		if (is_dir($src)){
-			$files = scandir($src);
-			foreach ($files as $file){
-				if (!in_array($file, [".", ".."])){
+		if (\is_dir($src)) {
+			$files = \scandir($src);
+			foreach ($files as $file) {
+				if (!\in_array($file, [".", ".."])) {
 					$this->checkr("$src/$file", $collection);
 				}
 			}
@@ -179,14 +179,14 @@ class FilesystemHelper {
 	 * @param string $path
 	 */
 	public function removeIfExists($path) {
-		if (!file_exists($path)) {
+		if (!\file_exists($path)) {
 			return;
 		}
 
-		if (is_dir($path)) {
+		if (\is_dir($path)) {
 			$this->rmdirr($path);
 		} else {
-			@unlink($path);
+			@\unlink($path);
 		}
 	}
 
@@ -195,20 +195,20 @@ class FilesystemHelper {
 	 * @return bool
 	 */
 	public function rmdirr($dir) {
-		if(is_dir($dir)) {
-			$files = scandir($dir);
-			foreach($files as $file) {
+		if (\is_dir($dir)) {
+			$files = \scandir($dir);
+			foreach ($files as $file) {
 				if ($file != "." && $file != "..") {
 					$this->rmdirr("$dir/$file");
 				}
 			}
-			@rmdir($dir);
-		}elseif(file_exists($dir)) {
-			@unlink($dir);
+			@\rmdir($dir);
+		} elseif (\file_exists($dir)) {
+			@\unlink($dir);
 		}
-		if(file_exists($dir)) {
+		if (\file_exists($dir)) {
 			return false;
-		}else{
+		} else {
 			return true;
 		}
 	}
@@ -220,15 +220,14 @@ class FilesystemHelper {
 	 * @param string $temp
 	 * @param string $dirName
 	 */
-	public function tripleMove($old, $new, $temp, $dirName){
-		if ($this->fileExists($old . '/' . $dirName)){
+	public function tripleMove($old, $new, $temp, $dirName) {
+		if ($this->fileExists($old . '/' . $dirName)) {
 			$this->copyr($old . '/' . $dirName, $temp . '/' . $dirName, false);
 			$this->rmdirr($old . '/' . $dirName);
 		}
-		if ($this->fileExists($new . '/' . $dirName)){
+		if ($this->fileExists($new . '/' . $dirName)) {
 			$this->copyr($new . '/' . $dirName, $old . '/' . $dirName, false);
 			$this->rmdirr($new . '/' . $dirName);
 		}
 	}
-
 }

@@ -8,6 +8,9 @@ config = {
 	'branches': [
 		'master'
 	],
+
+	'codestyle': True,
+
 	'phplint': True,
 
 	'phpunit': {
@@ -57,7 +60,7 @@ def main(ctx):
 	return before + coverageTests + afterCoverageTests + stages + after
 
 def beforePipelines():
-	return phpstan() + phan() + phplint()
+	return codestyle() + phpstan() + phan() + phplint()
 
 def coveragePipelines(ctx):
 	# All pipelines that might have coverage or other test analysis reported
@@ -85,6 +88,76 @@ def afterPipelines(ctx):
 	return [
 		notify()
 	]
+
+def codestyle():
+	pipelines = []
+
+	if 'codestyle' not in config:
+		return pipelines
+
+	default = {
+		'phpVersions': ['7.2'],
+	}
+
+	if 'defaults' in config:
+		if 'codestyle' in config['defaults']:
+			for item in config['defaults']['codestyle']:
+				default[item] = config['defaults']['codestyle'][item]
+
+	codestyleConfig = config['codestyle']
+
+	if type(codestyleConfig) == "bool":
+		if codestyleConfig:
+			# the config has 'codestyle' true, so specify an empty dict that will get the defaults
+			codestyleConfig = {}
+		else:
+			return pipelines
+
+	if len(codestyleConfig) == 0:
+		# 'codestyle' is an empty dict, so specify a single section that will get the defaults
+		codestyleConfig = {'doDefault': {}}
+
+	for category, matrix in codestyleConfig.items():
+		params = {}
+		for item in default:
+			params[item] = matrix[item] if item in matrix else default[item]
+
+		for phpVersion in params['phpVersions']:
+			name = 'coding-standard-php%s' % phpVersion
+
+			result = {
+				'kind': 'pipeline',
+				'type': 'docker',
+				'name': name,
+				'workspace' : {
+					'base': '/var/www/owncloud',
+					'path': 'server/%s' % config['app']
+				},
+				'steps': [
+					{
+						'name': 'coding-standard',
+						'image': 'owncloudci/php:%s' % phpVersion,
+						'pull': 'always',
+						'commands': [
+							'make test-php-style'
+						]
+					}
+				],
+				'depends_on': [],
+				'trigger': {
+					'ref': [
+						'refs/pull/**',
+						'refs/tags/**'
+					]
+				}
+			}
+
+			for branch in config['branches']:
+				result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+			pipelines.append(result)
+
+	return pipelines
 
 def phplint():
 	pipelines = []

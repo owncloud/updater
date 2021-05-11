@@ -2,7 +2,6 @@
 
 namespace Owncloud\Updater\Tests\Command;
 
-
 class ExecuteCoreUpgradeScriptsCommandTest extends \PHPUnit\Framework\TestCase {
 
 	/**
@@ -12,7 +11,7 @@ class ExecuteCoreUpgradeScriptsCommandTest extends \PHPUnit\Framework\TestCase {
 	 * @param string[] $canBeUpgradedFrom
 	 * @param bool $expectedResult
 	 */
-	public function testIsUpgradeAllowed($installedVersion, $packageVersion, $canBeUpgradedFrom, $expectedResult){
+	public function testIsUpgradeAllowed($installedVersion, $packageVersion, $canBeUpgradedFrom, $expectedResult) {
 		$commmandMock = $this->getMockBuilder('\Owncloud\Updater\Command\ExecuteCoreUpgradeScriptsCommand')
 			->disableOriginalConstructor()
 			->setMethods(null)
@@ -22,7 +21,7 @@ class ExecuteCoreUpgradeScriptsCommandTest extends \PHPUnit\Framework\TestCase {
 		$this->assertEquals($expectedResult, $actualResult);
 	}
 
-	public function versionProvider(){
+	public function versionProvider() {
 		return [
 			[ '9.0.1.2', '9.0.4.2', ['8.2'], true ],
 			[ '9.0.4.2', '9.0.1.2', ['8.2'], false ],
@@ -42,7 +41,7 @@ class ExecuteCoreUpgradeScriptsCommandTest extends \PHPUnit\Framework\TestCase {
 	 * @param array $canBeUpgradedFrom
 	 * @param array $expectedVersions
 	 */
-	public function testLoadAllowedPreviousVersions($canBeUpgradedFrom, $expectedVersions){
+	public function testLoadAllowedPreviousVersions($canBeUpgradedFrom, $expectedVersions) {
 		$commmandMock = $this->getMockBuilder('\Owncloud\Updater\Command\ExecuteCoreUpgradeScriptsCommand')
 			->disableOriginalConstructor()
 			->setMethods(['loadCanBeUpgradedFrom'])
@@ -58,7 +57,7 @@ class ExecuteCoreUpgradeScriptsCommandTest extends \PHPUnit\Framework\TestCase {
 		$this->assertEquals($expectedVersions, $actualResult);
 	}
 	
-	public function allowedPreviousVersionsProvider(){
+	public function allowedPreviousVersionsProvider() {
 		return [
 			[[8,2], ['8.2']],
 			[[ [9,0], [9,1]], ['9.0', '9.1']],

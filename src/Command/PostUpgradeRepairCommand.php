@@ -30,8 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package Owncloud\Updater\Command
  */
 class PostUpgradeRepairCommand extends Command {
-
-	protected function configure(){
+	protected function configure() {
 		$this
 				->setName('upgrade:postUpgradeRepair')
 				->setDescription('repair and cleanup step 1 (post upgrade, repair legacy storage, ..) [danger, might take long]')
@@ -42,7 +41,6 @@ class PostUpgradeRepairCommand extends Command {
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output){
+	protected function execute(InputInterface $input, OutputInterface $output) {
 	}
-
 }

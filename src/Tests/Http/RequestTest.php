@@ -14,7 +14,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @return array
 	 */
-	public function varsProvider(){
+	public function varsProvider() {
 		return [
 			[ [], 'abcd', null ],
 			[ [ 'post'=> [ 'command' => 'jump'] ], 'dummy',  null ],
@@ -26,7 +26,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider varsProvider
 	 */
-	public function testPostParameter($vars, $key, $expected){
+	public function testPostParameter($vars, $key, $expected) {
 		$request = new Request($vars);
 		$actual = $request->postParameter($key);
 		$this->assertEquals($expected, $actual);
@@ -35,7 +35,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @return array
 	 */
-	public function serverProvider(){
+	public function serverProvider() {
 		return [
 			[ [], 'abcd', null ],
 			[ [ 'headers'=> [ 'command' => 'jump'] ], 'dummy',  null ],
@@ -47,7 +47,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider serverProvider
 	 */
-	public function testServerVar($vars, $key, $expected){
+	public function testServerVar($vars, $key, $expected) {
 		$request = new Request($vars);
 		$actual = $request->server($key);
 		$this->assertEquals($expected, $actual);
@@ -56,7 +56,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @return array
 	 */
-	public function headerProvider(){
+	public function headerProvider() {
 		return [
 			[ [], 'meow', null ],
 			[ [ 'headers'=> [ 'command' => 'jump'] ], 'dummy',  null ],
@@ -69,17 +69,16 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * @dataProvider headerProvider
 	 */
-	public function testHeaderVar($vars, $key, $expected){
+	public function testHeaderVar($vars, $key, $expected) {
 		$request = new Request($vars);
 		$actual = $request->header($key);
 		$this->assertEquals($expected, $actual);
 	}
 
-
 	/**
 	 * @return array
 	 */
-	public function hostProvider(){
+	public function hostProvider() {
 		return [
 			[ [ 'headers'=> [ 'SERVER_NAME' => 'jump' ] ], 'jump', null ],
 			[ [ 'headers'=> [ 'HTTP_HOST'=> 'duck', 'SERVER_NAME' => 'jump'] ], 'duck' ],
@@ -94,7 +93,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	 * @param $vars
 	 * @param $expected
 	 */
-	public function testGetHost($vars, $expected){
+	public function testGetHost($vars, $expected) {
 		$request = new Request($vars);
 		$actual = $request->getHost();
 		$this->assertEquals($expected, $actual);

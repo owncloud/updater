@@ -54,87 +54,87 @@ $c = new Container();
   ];
  */
 
-$c['guzzle.httpClient'] = function($c){
+$c['guzzle.httpClient'] = function ($c) {
 	return new Client();
 };
 
-$c['utils.locator'] = function($c){
+$c['utils.locator'] = function ($c) {
 	return new Locator(CURRENT_DIR);
 };
 
-$c['utils.occrunner'] = function($c){
-	$disabled = explode(',', ini_get('disable_functions'));
-	$isProcOpenEnabled = function_exists('proc_open') && !in_array('proc_open', $disabled);
+$c['utils.occrunner'] = function ($c) {
+	$disabled = \explode(',', \ini_get('disable_functions'));
+	$isProcOpenEnabled = \function_exists('proc_open') && !\in_array('proc_open', $disabled);
 	return new OccRunner($c['utils.locator'], $isProcOpenEnabled && IS_CLI);
 };
 
-$c['utils.registry'] = function($c){
+$c['utils.registry'] = function ($c) {
 	return new Registry();
 };
 
-$c['utils.appmanager'] = function($c){
+$c['utils.appmanager'] = function ($c) {
 	return new AppManager($c['utils.occrunner']);
 };
-$c['utils.filesystemhelper'] = function($c){
+$c['utils.filesystemhelper'] = function ($c) {
 	return new FilesystemHelper();
 };
-$c['utils.checkpoint'] = function($c){
+$c['utils.checkpoint'] = function ($c) {
 	return new Checkpoint($c['utils.locator'], $c['utils.filesystemhelper']);
 };
-$c['utils.configReader'] = function($c){
+$c['utils.configReader'] = function ($c) {
 	return new ConfigReader($c['utils.occrunner']);
 };
-$c['utils.fetcher'] = function($c){
+$c['utils.fetcher'] = function ($c) {
 	return new Fetcher($c['guzzle.httpClient'], $c['utils.locator'], $c['utils.configReader']);
 };
 
-$c['command.backupData'] = function($c){
+$c['command.backupData'] = function ($c) {
 	return new BackupDataCommand();
 };
-$c['command.backupDb'] = function($c){
+$c['command.backupDb'] = function ($c) {
 	return new BackupDbCommand();
 };
-$c['command.checkpoint'] = function($c){
+$c['command.checkpoint'] = function ($c) {
 	return new CheckpointCommand();
 };
-$c['command.checkSystem'] = function($c){
+$c['command.checkSystem'] = function ($c) {
 	return new CheckSystemCommand();
 };
-$c['command.cleanCache'] = function($c){
+$c['command.cleanCache'] = function ($c) {
 	return new CleanCacheCommand();
 };
-$c['command.detect'] = function($c){
+$c['command.detect'] = function ($c) {
 	return new DetectCommand($c['utils.fetcher'], $c['utils.configReader']);
 };
-$c['command.executeCoreUpgradeScripts'] = function($c){
+$c['command.executeCoreUpgradeScripts'] = function ($c) {
 	return new ExecuteCoreUpgradeScriptsCommand($c['utils.occrunner']);
 };
-$c['command.info'] = function($c){
+$c['command.info'] = function ($c) {
 	return new InfoCommand();
 };
-$c['command.maintenanceMode'] = function($c){
+$c['command.maintenanceMode'] = function ($c) {
 	return new MaintenanceModeCommand($c['utils.occrunner']);
 };
-$c['command.postUpgradeCleanup'] = function($c){
+$c['command.postUpgradeCleanup'] = function ($c) {
 	return new PostUpgradeCleanupCommand();
 };
-$c['command.postUpgradeRepair'] = function($c){
+$c['command.postUpgradeRepair'] = function ($c) {
 	return new PostUpgradeRepairCommand();
 };
-$c['command.preUpgradeRepair'] = function($c){
+$c['command.preUpgradeRepair'] = function ($c) {
 	return new PreUpgradeRepairCommand();
 };
-$c['command.restartWebServer'] = function($c){
+$c['command.restartWebServer'] = function ($c) {
 	return new RestartWebServerCommand();
 };
-$c['command.updateCoreConfig'] = function($c){
+$c['command.updateCoreConfig'] = function ($c) {
 	return new UpdateConfigCommand();
 };
-$c['command.start'] = function($c){
+$c['command.start'] = function ($c) {
 	return new StartCommand();
 };
 
-$c['commands'] = function($c){
+$c['commands'] = function ($c) {
 	return [
 		$c['command.backupData'],
 		$c['command.backupDb'],
@@ -154,7 +154,7 @@ $c['commands'] = function($c){
 	];
 };
 
-$c['application'] = function($c){
+$c['application'] = function ($c) {
 	$application = new Application('ownCloud updater', '1.0.1');
 	$application->setContainer($c);
 	$application->addCommands($c['commands']);

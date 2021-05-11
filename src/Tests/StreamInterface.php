@@ -7,6 +7,6 @@ namespace Owncloud\Updater\Tests;
  *
  * @package Owncloud\Updater\Tests
  */
-interface StreamInterface{
+interface StreamInterface {
 	public function getContents();
 }

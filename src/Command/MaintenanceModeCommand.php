@@ -43,12 +43,12 @@ class MaintenanceModeCommand extends Command {
 	 *
 	 * @param OccRunner $occRunner
 	 */
-	public function __construct(OccRunner $occRunner){
+	public function __construct(OccRunner $occRunner) {
 		parent::__construct();
 		$this->occRunner = $occRunner;
 	}
 
-	protected function configure(){
+	protected function configure() {
 		$this
 				->setName('upgrade:maintenanceMode')
 				->setDescription('Toggle maintenance mode')
@@ -65,16 +65,15 @@ class MaintenanceModeCommand extends Command {
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output){
+	protected function execute(InputInterface $input, OutputInterface $output) {
 		$args = [];
-		if ($input->getOption('on')){
+		if ($input->getOption('on')) {
 			$args = ['--on' => ''];
-		} elseif ($input->getOption('off')){
+		} elseif ($input->getOption('off')) {
 			$args = ['--off' => ''];
 		}
 
 		$response = $this->occRunner->run('maintenance:mode', $args);
 		$output->writeln($response);
 	}
-
 }

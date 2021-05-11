@@ -31,8 +31,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package Owncloud\Updater\Command
  */
 class CheckpointCommand extends Command {
-
-	protected function configure(){
+	protected function configure() {
 		$this
 				->setName('upgrade:checkpoint')
 				->setDescription('Create or restore ownCloud core files')
@@ -56,43 +55,43 @@ class CheckpointCommand extends Command {
 	 * @param OutputInterface $output
 	 * @throws \Exception
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output){
-		clearstatcache();
+	protected function execute(InputInterface $input, OutputInterface $output) {
+		\clearstatcache();
 		$checkpoint = $this->container['utils.checkpoint'];
-		if ($input->getOption('create')){
+		if ($input->getOption('create')) {
 			try {
 				$checkpointId = $checkpoint->create();
 				$output->writeln('Created checkpoint ' . $checkpointId);
-			} catch (\Exception $e){
+			} catch (\Exception $e) {
 				$output->writeln('Error while creating a checkpoint');
 				throw $e;
 			}
-		} elseif ($input->getOption('remove')){
-			$checkpointId = stripslashes($input->getOption('remove'));
+		} elseif ($input->getOption('remove')) {
+			$checkpointId = \stripslashes($input->getOption('remove'));
 			try {
 				$checkpoint->remove($checkpointId);
 				$output->writeln('Removed checkpoint ' . $checkpointId);
-			} catch (\UnexpectedValueException $e){
+			} catch (\UnexpectedValueException $e) {
 				$output->writeln($e->getMessage());
-			} catch (\Exception $e){
+			} catch (\Exception $e) {
 				$output->writeln('Error while removing a checkpoint ' . $checkpointId);
 			}
 		} elseif ($input->getOption('restore')) {
-			$checkpointId = stripslashes($input->getOption('restore'));
+			$checkpointId = \stripslashes($input->getOption('restore'));
 			try {
 				$checkpoint->restore($checkpointId);
 				$checkpoint->remove($checkpointId);
 				$output->writeln('Restored checkpoint ' . $checkpointId);
-			} catch (\UnexpectedValueException $e){
+			} catch (\UnexpectedValueException $e) {
 				$output->writeln($e->getMessage());
-			} catch (\Exception $e){
+			} catch (\Exception $e) {
 				$output->writeln('Error while restoring a checkpoint ' . $checkpointId);
 			}
 		} else {
 			$checkpoints = $checkpoint->getAll();
-			if (count($checkpoints)){
-				foreach ($checkpoints as $checkpoint){
-					$output->writeln(sprintf('%s  - %s', $checkpoint['title'], $checkpoint['date']));
+			if (\count($checkpoints)) {
+				foreach ($checkpoints as $checkpoint) {
+					$output->writeln(\sprintf('%s  - %s', $checkpoint['title'], $checkpoint['date']));
 				}
 			} else {
 				$output->writeln('No checkpoints found');

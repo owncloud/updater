@@ -46,15 +46,15 @@ class Locator {
 	 *
 	 * @param string $baseDir
 	 */
-	public function __construct($baseDir){
+	public function __construct($baseDir) {
 		$this->updaterRootPath = $baseDir;
-		$this->ownCloudRootPath = dirname($baseDir);
+		$this->ownCloudRootPath = \dirname($baseDir);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getOwnCloudRootPath(){
+	public function getOwnCloudRootPath() {
 		return $this->ownCloudRootPath;
 	}
 
@@ -62,7 +62,7 @@ class Locator {
 	 * expected items in the core
 	 * @return string[]
 	 */
-	public function getRootDirContent(){
+	public function getRootDirContent() {
 		return [
 			"3rdparty",
 			"config",
@@ -99,7 +99,7 @@ class Locator {
 	/**
 	 * @return array
 	 */
-	public function getUpdaterContent(){
+	public function getUpdaterContent() {
 		return [
 			'app',
 			'application.php',
@@ -131,12 +131,12 @@ class Locator {
 		$signature = $this->getSignature($basePath);
 		$items = [];
 		if (isset($signature['hashes'])) {
-			$allItems = array_keys($signature['hashes']);
+			$allItems = \array_keys($signature['hashes']);
 			foreach ($allItems as $k => $v) {
 				// Get the part of the string before the first slash or entire string if there is no slash
-				$allItems[$k] = strtok($v, '/');
+				$allItems[$k] = \strtok($v, '/');
 			}
-			$items = array_unique($allItems);
+			$items = \array_unique($allItems);
 		}
 		return $items;
 	}
@@ -145,10 +145,12 @@ class Locator {
 	 * Absolute path to core root dir content
 	 * @return array
 	 */
-	public function getRootDirItems(){
+	public function getRootDirItems() {
 		$items = $this->getRootDirContent();
-		$items = array_map(
-			function($item){ return $this->ownCloudRootPath . "/" . $item;	},
+		$items = \array_map(
+			function ($item) {
+				return $this->ownCloudRootPath . "/" . $item;
+			},
 			$items
 		);
 		return $items;
@@ -159,15 +161,15 @@ class Locator {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function getDataDir(){
+	public function getDataDir() {
 		$container = Application::$container;
-		if (isset($container['utils.configReader']) && $container['utils.configReader']->getIsLoaded()){
+		if (isset($container['utils.configReader']) && $container['utils.configReader']->getIsLoaded()) {
 			return $container['utils.configReader']->getByPath('system.datadirectory');
 		}
 
 		// Fallback case
 		include $this->getPathToConfigFile();
-		if (isset($CONFIG['datadirectory'])){
+		if (isset($CONFIG['datadirectory'])) {
 			return $CONFIG['datadirectory'];
 		}
 
@@ -179,7 +181,7 @@ class Locator {
 	 * Absolute path to updater root dir
 	 * @return string
 	 */
-	public function getUpdaterBaseDir(){
+	public function getUpdaterBaseDir() {
 		return $this->getDataDir() . '/updater-data';
 	}
 
@@ -187,7 +189,7 @@ class Locator {
 	 * Absolute path to create a core and apps backups
 	 * @return string
 	 */
-	public function getCheckpointDir(){
+	public function getCheckpointDir() {
 		return $this->getUpdaterBaseDir() . '/checkpoint';
 	}
 
@@ -195,7 +197,7 @@ class Locator {
 	 * Absolute path to store downloaded packages
 	 * @return string
 	 */
-	public function getDownloadBaseDir(){
+	public function getDownloadBaseDir() {
 		return $this->getUpdaterBaseDir() . '/download';
 	}
 
@@ -204,15 +206,15 @@ class Locator {
 	 * to extract downloaded packages into
 	 * @return string
 	 */
-	public function getExtractionBaseDir(){
-		 return $this->getUpdaterBaseDir() . "/_oc_upgrade";
+	public function getExtractionBaseDir() {
+		return $this->getUpdaterBaseDir() . "/_oc_upgrade";
 	}
 
 	/**
 	 *
 	 * @return string
 	 */
-	public function getPathToOccFile(){
+	public function getPathToOccFile() {
 		return $this->ownCloudRootPath . '/occ';
 	}
 
@@ -220,7 +222,7 @@ class Locator {
 	 *
 	 * @return string
 	 */
-	public function getInstalledVersion(){
+	public function getInstalledVersion() {
 		include $this->getPathToVersionFile();
 
 		/** @var $OC_Version string */
@@ -231,7 +233,7 @@ class Locator {
 	 *
 	 * @return string
 	 */
-	public function getChannelFromVersionsFile(){
+	public function getChannelFromVersionsFile() {
 		include $this->getPathToVersionFile();
 
 		/** @var $OC_Channel string */
@@ -242,7 +244,7 @@ class Locator {
 	 *
 	 * @return string
 	 */
-	public function getBuild(){
+	public function getBuild() {
 		include $this->getPathToVersionFile();
 
 		/** @var $OC_Build string */
@@ -252,9 +254,9 @@ class Locator {
 	/**
 	 * @return string
 	 */
-	public function getSecretFromConfig(){
+	public function getSecretFromConfig() {
 		include $this->getPathToConfigFile();
-		if (isset($CONFIG['updater.secret'])){
+		if (isset($CONFIG['updater.secret'])) {
 			return $CONFIG['updater.secret'];
 		}
 		return '';
@@ -264,7 +266,7 @@ class Locator {
 	 * @param string $filePostfix
 	 * @return array
 	 */
-	public function getPathtoConfigFiles($filePostfix = 'config.php'){
+	public function getPathtoConfigFiles($filePostfix = 'config.php') {
 		// Only config.php for now
 		return [
 			$this->ownCloudRootPath . '/config/' . $filePostfix
@@ -274,7 +276,7 @@ class Locator {
 	/**
 	 * @return string
 	 */
-	public function getPathToConfigFile(){
+	public function getPathToConfigFile() {
 		return $this->ownCloudRootPath . '/config/config.php';
 	}
 
@@ -282,7 +284,7 @@ class Locator {
 	 *
 	 * @return string
 	 */
-	public function getPathToVersionFile(){
+	public function getPathToVersionFile() {
 		return $this->ownCloudRootPath . '/version.php';
 	}
 
@@ -294,9 +296,9 @@ class Locator {
 	private function getSignature($rootPath) {
 		$signature = [];
 		$signaturePath = $rootPath . '/core/signature.json';
-		if (is_file($signaturePath)) {
-			$signature = \json_decode(file_get_contents($signaturePath), true);
-			if (!is_array($signature)) {
+		if (\is_file($signaturePath)) {
+			$signature = \json_decode(\file_get_contents($signaturePath), true);
+			if (!\is_array($signature)) {
 				$signature = [];
 			}
 		}

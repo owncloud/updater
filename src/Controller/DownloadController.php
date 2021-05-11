@@ -33,7 +33,7 @@ use Owncloud\Updater\Utils\FilesystemHelper;
 class DownloadController {
 	
 	/**
-	 * @var Fetcher 
+	 * @var Fetcher
 	 */
 	protected $fetcher;
 
@@ -54,7 +54,7 @@ class DownloadController {
 	 * @param Registry $registry
 	 * @param FilesystemHelper $fsHelper
 	 */
-	public function __construct(Fetcher $fetcher, Registry $registry, FilesystemHelper $fsHelper){
+	public function __construct(Fetcher $fetcher, Registry $registry, FilesystemHelper $fsHelper) {
 		$this->fetcher = $fetcher;
 		$this->registry = $registry;
 		$this->fsHelper = $fsHelper;
@@ -63,13 +63,13 @@ class DownloadController {
 	/**
 	 * @return array
 	 */
-	public function checkFeed(){
+	public function checkFeed() {
 		$response = $this->getDefaultResponse();
 		try {
 			$feed = $this->fetcher->getFeed();
 			$response['success'] = true;
 			$response['data']['feed'] = $feed;
-		} catch (\Exception $e){
+		} catch (\Exception $e) {
 			$response['exception'] = $e;
 		}
 
@@ -80,34 +80,35 @@ class DownloadController {
 	 * @param null $progressCallback
 	 * @return array
 	 */
-	public function downloadOwncloud($progressCallback = null){
+	public function downloadOwncloud($progressCallback = null) {
 		$response = $this->getDefaultResponse();
-		if (is_null($progressCallback)){
-			$progressCallback = function (){};
+		if ($progressCallback === null) {
+			$progressCallback = function () {
+			};
 		}
 		try {
 			$feed = $this->getFeed();
 			$path = $this->fetcher->getBaseDownloadPath($feed);
 			// Fixme: Daily channel has no checksum
 			$isDailyChannel = $this->fetcher->getUpdateChannel() == 'daily';
-			if (!$isDailyChannel){
+			if (!$isDailyChannel) {
 				$md5 = $this->fetcher->getMd5($feed);
 			} else {
 				// We can't check md5 so we don't trust the cache
 				$this->fsHelper->removeIfExists($path);
 			}
-			if ($isDailyChannel || !$this->checkIntegrity($path, $md5)){
+			if ($isDailyChannel || !$this->checkIntegrity($path, $md5)) {
 				$this->fetcher->getOwncloud($feed, $progressCallback);
 			}
 
-			if ($isDailyChannel || $this->checkIntegrity($path, $md5)){
+			if ($isDailyChannel || $this->checkIntegrity($path, $md5)) {
 				$response['success'] = true;
 				$response['data']['path'] = $path;
 			} else {
 				$response['exception'] = new \Exception('Deleted ' . $feed->getDownloadedFileName() . ' due to wrong checksum');
 			}
 		} catch (\Exception $e) {
-			if (isset($path)){
+			if (isset($path)) {
 				$this->fsHelper->removeIfExists($path);
 			}
 			$response['exception'] = $e;
@@ -121,13 +122,13 @@ class DownloadController {
 	 * @param string $md5
 	 * @return boolean
 	 */
-	protected function checkIntegrity($path, $md5){
-			$fileExists = $this->fsHelper->fileExists($path);
-			$checksumMatch = $fileExists && $md5 === $this->fsHelper->md5File($path);
-			if (!$checksumMatch){
-				$this->fsHelper->removeIfExists($path);
-			}
-			return $checksumMatch;
+	protected function checkIntegrity($path, $md5) {
+		$fileExists = $this->fsHelper->fileExists($path);
+		$checksumMatch = $fileExists && $md5 === $this->fsHelper->md5File($path);
+		if (!$checksumMatch) {
+			$this->fsHelper->removeIfExists($path);
+		}
+		return $checksumMatch;
 	}
 
 	/**
@@ -135,8 +136,8 @@ class DownloadController {
 	 * @param bool $useCache
 	 * @return \Owncloud\Updater\Utils\Feed
 	 */
-	protected function getFeed($useCache = true){
-		if ($useCache && !is_null($this->registry->get('feed'))){
+	protected function getFeed($useCache = true) {
+		if ($useCache && $this->registry->get('feed') !== null) {
 			return $this->registry->get('feed');
 		}
 		return $this->fetcher->getFeed();
@@ -146,7 +147,7 @@ class DownloadController {
 	 * Init response array
 	 * @return array
 	 */
-	protected function getDefaultResponse(){
+	protected function getDefaultResponse() {
 		return [
 			'success' => false,
 			'exception' => '',

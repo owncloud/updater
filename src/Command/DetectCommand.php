@@ -59,13 +59,13 @@ class DetectCommand extends Command {
 	 * @param Fetcher $fetcher
 	 * @param ConfigReader $configReader
 	 */
-	public function __construct(Fetcher $fetcher, ConfigReader $configReader){
+	public function __construct(Fetcher $fetcher, ConfigReader $configReader) {
 		parent::__construct();
 		$this->fetcher = $fetcher;
 		$this->configReader = $configReader;
 	}
 
-	protected function configure(){
+	protected function configure() {
 		$this
 				->setName('upgrade:detect')
 				->setDescription('Detect
@@ -88,7 +88,7 @@ class DetectCommand extends Command {
 	 * @param OutputInterface $output
 	 * @return int
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output){
+	protected function execute(InputInterface $input, OutputInterface $output) {
 		$registry = $this->container['utils.registry'];
 		$registry->set('feed', false);
 
@@ -96,7 +96,7 @@ class DetectCommand extends Command {
 		$downloadController = new DownloadController($this->fetcher, $registry, $fsHelper);
 		try {
 			$currentVersion = $this->configReader->getByPath('system.version');
-			if (!strlen($currentVersion)){
+			if (!\strlen($currentVersion)) {
 				throw new \UnexpectedValueException('Could not detect installed version.');
 			}
 
@@ -104,7 +104,7 @@ class DetectCommand extends Command {
 			$output->writeln('Current version is ' . $currentVersion);
 
 			$feedData = $downloadController->checkFeed();
-			if (!$feedData['success']){
+			if (!$feedData['success']) {
 				// Network errors, etc
 				$output->writeln("Can't fetch feed.");
 				$output->writeln($feedData['exception']->getMessage());
@@ -115,7 +115,7 @@ class DetectCommand extends Command {
 
 			/** @var \Owncloud\Updater\Utils\Feed $feed */
 			$feed = $feedData['data']['feed'];
-			if (!$feed->isValid()){
+			if (!$feed->isValid()) {
 				// Feed is empty. Means there are no updates
 				$output->writeln('No updates found online.');
 				return $input->getOption('exit-if-none') ? 4 : null;
@@ -123,19 +123,19 @@ class DetectCommand extends Command {
 
 			$registry->set('feed', $feed);
 			$output->writeln(
-				sprintf(
+				\sprintf(
 					'Online version is %s [%s]',
 					$feed->getVersion(),
 					$this->fetcher->getUpdateChannel()
 				)
 			);
 
-			if ($input->getOption('only-check')){
+			if ($input->getOption('only-check')) {
 				return 0;
 			}
 
 			$action = $this->ask($input, $output);
-			if ($action === 'abort'){
+			if ($action === 'abort') {
 				$output->writeln('Exiting on user command.');
 				return 128;
 			}
@@ -144,20 +144,20 @@ class DetectCommand extends Command {
 			$packageData = $downloadController->downloadOwncloud([$this, 'progress']);
 			//Empty line, in order not to overwrite the progress message
 			$this->output->writeln('');
-			if (!$packageData['success']){
+			if (!$packageData['success']) {
 				$registry->set('feed', null);
 				throw $packageData['exception'];
 			}
 	
-			if ($action === 'download'){
+			if ($action === 'download') {
 				$output->writeln('Downloading has been completed. Exiting.');
 				return 64;
 			}
-		} catch (ClientException $e){
+		} catch (ClientException $e) {
 			$this->getApplication()->getLogger()->error($e->getMessage());
 			$output->writeln('<error>Network error</error>');
 			$output->writeln(
-					sprintf(
+					\sprintf(
 							'<error>Error %d: %s while fetching an URL %s</error>',
 							$e->getCode(),
 							$e->getResponse()->getReasonPhrase(),
@@ -165,7 +165,7 @@ class DetectCommand extends Command {
 							)
 			);
 			return 2;
-		} catch (\Exception $e){
+		} catch (\Exception $e) {
 			$this->getApplication()->getLogger()->error($e->getMessage());
 			$output->writeln('<error>'.$e->getMessage().'</error>');
 			return 2;
@@ -180,7 +180,7 @@ class DetectCommand extends Command {
 	 * @param OutputInterface $output
 	 * @return string
 	 */
-	public function ask(InputInterface $input, OutputInterface $output){
+	public function ask(InputInterface $input, OutputInterface $output) {
 		$helper = $this->getHelper('question');
 		$question = new ChoiceQuestion(
 			'What would you do next?',
@@ -196,11 +196,11 @@ class DetectCommand extends Command {
 	 * Callback to output download progress
 	 * @param ProgressEvent $e
 	 */
-	public function progress(ProgressEvent $e){
-		if ($e->downloadSize){
-			$percent = intval(100 * $e->downloaded / $e->downloadSize );
+	public function progress(ProgressEvent $e) {
+		if ($e->downloadSize) {
+			$percent = \intval(100 * $e->downloaded / $e->downloadSize);
 			$percentString = $percent . '%';
-			$this->output->write( 'Downloaded ' . $percentString . ' (' . $e->downloaded . ' of ' . $e->downloadSize . ")\r");
+			$this->output->write('Downloaded ' . $percentString . ' (' . $e->downloaded . ' of ' . $e->downloadSize . ")\r");
 		}
 	}
 }
