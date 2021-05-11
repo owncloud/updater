@@ -11,6 +11,10 @@ config = {
 
 	'codestyle': True,
 
+	'phpstan': True,
+
+	'phan': True,
+
 	'phplint': True,
 
 	'phpunit': {

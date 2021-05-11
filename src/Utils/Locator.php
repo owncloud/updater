@@ -220,13 +220,13 @@ class Locator {
 
 	/**
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getInstalledVersion() {
 		include $this->getPathToVersionFile();
 
-		/** @var $OC_Version string */
-		return $OC_Version;
+		/** @var $OC_Version array */
+		return $OC_Version; /* @phan-suppress-current-line PhanUndeclaredVariable */
 	}
 
 	/**
@@ -237,7 +237,7 @@ class Locator {
 		include $this->getPathToVersionFile();
 
 		/** @var $OC_Channel string */
-		return $OC_Channel;
+		return $OC_Channel; /* @phan-suppress-current-line PhanUndeclaredVariable */
 	}
 
 	/**
@@ -248,7 +248,7 @@ class Locator {
 		include $this->getPathToVersionFile();
 
 		/** @var $OC_Build string */
-		return $OC_Build;
+		return $OC_Build; /* @phan-suppress-current-line PhanUndeclaredVariable */
 	}
 
 	/**

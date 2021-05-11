@@ -76,6 +76,7 @@ class OccRunner {
 				} else {
 					$line = $optionValue;
 				}
+				/* @phan-suppress-next-line PhanDeprecatedFunction */
 				$escapedLine = ProcessUtils::escapeArgument($line);
 				$cmdLine .= " $escapedLine";
 			}
@@ -86,6 +87,7 @@ class OccRunner {
 			}
 			$response = $this->runAsRequest($command, $args);
 			$decodedResponse = \json_decode($response, true);
+			/* @phan-suppress-next-line PhanTypeArraySuspiciousNullable */
 			return $decodedResponse['response'];
 		}
 	}
@@ -123,12 +125,12 @@ class OccRunner {
 				'params'=> $args
 			]
 		];
-		
+
 		// Skip SSL validation for localhost only as localhost never has a valid cert
 		if (\preg_match('/^https:\/\/localhost\/.*/i', $endpointBase)) {
 			$params['verify'] = false;
 		}
-		
+
 		$request = $client->createRequest(
 			'POST',
 			$endpointBase . $command,

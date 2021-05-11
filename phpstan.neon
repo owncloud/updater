@@ -1,0 +1,4 @@
+parameters:
+  bootstrapFiles:
+    - %currentWorkingDirectory%/app/bootstrap.php
+    - %currentWorkingDirectory%/app/config/container.php

@@ -34,14 +34,14 @@ use ZipArchive;
 class ZipExtractor {
 	protected $file;
 	protected $path;
-	
+
 	/** @var  OutputInterface */
 	protected $output;
 
 	/**
 	 * @param string $file
 	 * @param string $path
-	 * @param OutputInterface $output
+	 * @param OutputInterface|null $output
 	 */
 	public function __construct($file, $path, OutputInterface $output = null) {
 		$this->file = $file;
@@ -68,6 +68,7 @@ class ZipExtractor {
 	 * @return bool
 	 */
 	private function extractShell() {
+		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		$command = 'unzip ' . ProcessUtils::escapeArgument($this->file) . ' -d ' . ProcessUtils::escapeArgument($this->path) . ' && chmod -R u+w ' . ProcessUtils::escapeArgument($this->path);
 		$process = new Process($command);
 		$process->setTimeout(null);
