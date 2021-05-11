@@ -71,7 +71,7 @@ class DetectCommand extends Command {
 				->setDescription('Detect
 - 1. currently existing code, 
 - 2. version in config.php, 
-- 3. online available verison.
+- 3. online available version.
 (ASK) what to do? (download, upgrade, abort, …)')
 				->addOption(
 						'exit-if-none', null, InputOption::VALUE_NONE, 'exit with non-zero status code if new version is not found'
@@ -100,6 +100,7 @@ class DetectCommand extends Command {
 				throw new \UnexpectedValueException('Could not detect installed version.');
 			}
 
+			/* @phan-suppress-next-line PhanUndeclaredMethod */
 			$this->getApplication()->getLogger()->info('ownCloud ' . $currentVersion . ' found');
 			$output->writeln('Current version is ' . $currentVersion);
 
@@ -108,6 +109,7 @@ class DetectCommand extends Command {
 				// Network errors, etc
 				$output->writeln("Can't fetch feed.");
 				$output->writeln($feedData['exception']->getMessage());
+				/* @phan-suppress-next-line PhanUndeclaredMethod */
 				$this->getApplication()->logException($feedData['exception']);
 				// Return a number to stop the queue
 				return $input->getOption('exit-if-none') ? 4 : null;
@@ -148,12 +150,13 @@ class DetectCommand extends Command {
 				$registry->set('feed', null);
 				throw $packageData['exception'];
 			}
-	
+
 			if ($action === 'download') {
 				$output->writeln('Downloading has been completed. Exiting.');
 				return 64;
 			}
 		} catch (ClientException $e) {
+			/* @phan-suppress-next-line PhanUndeclaredMethod */
 			$this->getApplication()->getLogger()->error($e->getMessage());
 			$output->writeln('<error>Network error</error>');
 			$output->writeln(
@@ -166,6 +169,7 @@ class DetectCommand extends Command {
 			);
 			return 2;
 		} catch (\Exception $e) {
+			/* @phan-suppress-next-line PhanUndeclaredMethod */
 			$this->getApplication()->getLogger()->error($e->getMessage());
 			$output->writeln('<error>'.$e->getMessage().'</error>');
 			return 2;

@@ -21,8 +21,6 @@
 
 namespace Owncloud\Updater\Utils;
 
-use Symfony\Component\Console\Output\OutputInterface;
-
 /**
  * Class AppManager
  *

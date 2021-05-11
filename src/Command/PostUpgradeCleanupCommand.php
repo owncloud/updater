@@ -58,10 +58,11 @@ class PostUpgradeCleanupCommand extends Command {
 		$fsHelper->mkdir($tmpUpdaterDir);
 
 		foreach ($locator->getUpdaterContent() as $dir) {
+			/* @phan-suppress-next-line PhanUndeclaredMethod */
 			$this->getApplication()->getLogger()->debug('Moving updater/' . $dir);
 			$fsHelper->tripleMove($oldUpdaterDir, $newUpdaterDir, $tmpUpdaterDir, $dir);
 		}
-		
+
 		//Cleanup Filesystem
 		$fsHelper->removeIfExists($locator->getExtractionBaseDir());
 
@@ -69,13 +70,15 @@ class PostUpgradeCleanupCommand extends Command {
 		try {
 			$this->container['utils.occrunner']->run('integrity:check-core');
 		} catch (\Exception $e) {
+			/* @phan-suppress-next-line PhanUndeclaredMethod */
 			$this->getApplication()->getLogger()->error('Integrity check failed');
+			/* @phan-suppress-next-line PhanUndeclaredMethod */
 			$this->getApplication()->logException($e);
 		}
 
 		//Cleanup updater cache
 		$registry->clearAll();
-		
+
 		$output->writeln('Done');
 	}
 }

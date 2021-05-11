@@ -28,7 +28,7 @@ class FeedTest extends \PHPUnit\Framework\TestCase {
 	 */
 	public function testValidity($feedData, $expectedValidity) {
 		$feed = new Feed($feedData);
-		$this->assertEquals($expectedValidity, $feed->isValid());
+		$this->assertSame($expectedValidity, $feed->isValid());
 	}
 
 	/**
@@ -46,6 +46,6 @@ class FeedTest extends \PHPUnit\Framework\TestCase {
 	 */
 	public function testGetDowngetDownloadedFileName($feedData, $filename) {
 		$feed = new Feed($feedData);
-		$this->assertEquals($filename, $feed->getDownloadedFileName());
+		$this->assertSame($filename, $feed->getDownloadedFileName());
 	}
 }

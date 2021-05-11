@@ -50,7 +50,7 @@ class ConfigReaderTest extends \PHPUnit\Framework\TestCase {
 		$configReader = new ConfigReader($occRunnerMock);
 		$configReader->init();
 		$value = $configReader->getByPath($key);
-		$this->assertEquals($expected, $value);
+		$this->assertSame($expected, $value);
 	}
 
 	/**

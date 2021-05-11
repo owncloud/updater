@@ -22,6 +22,6 @@ class RegistryTest extends \PHPUnit\Framework\TestCase {
 		$registry->set('key', $data);
 		$value = $registry->get('key');
 
-		$this->assertEquals($data, $value);
+		$this->assertSame($data, $value);
 	}
 }

@@ -9,6 +9,7 @@
 /vendor
 /composer.lock
 /src/Tests/clover.xml
+/src/Tests/.phpunit.result.cache
 *.exe
 
 # Composer

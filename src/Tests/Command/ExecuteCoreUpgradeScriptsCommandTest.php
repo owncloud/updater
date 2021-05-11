@@ -18,7 +18,7 @@ class ExecuteCoreUpgradeScriptsCommandTest extends \PHPUnit\Framework\TestCase {
 			->getMock()
 		;
 		$actualResult = $commmandMock->isUpgradeAllowed($installedVersion, $packageVersion, $canBeUpgradedFrom);
-		$this->assertEquals($expectedResult, $actualResult);
+		$this->assertSame($expectedResult, $actualResult);
 	}
 
 	public function versionProvider() {
@@ -35,7 +35,7 @@ class ExecuteCoreUpgradeScriptsCommandTest extends \PHPUnit\Framework\TestCase {
 			[ '9.2.1.2', '9.2.0.3', ['9.1'], false ],
 		];
 	}
-	
+
 	/**
 	 * @dataProvider allowedPreviousVersionsProvider
 	 * @param array $canBeUpgradedFrom
@@ -49,14 +49,14 @@ class ExecuteCoreUpgradeScriptsCommandTest extends \PHPUnit\Framework\TestCase {
 		;
 		$commmandMock->method('loadCanBeUpgradedFrom')
 			->willReturn($canBeUpgradedFrom);
-		
+
 		$class = new \ReflectionClass($commmandMock);
 		$method = $class->getMethod('loadAllowedPreviousVersions');
 		$method->setAccessible(true);
 		$actualResult = $method->invokeArgs($commmandMock, ['dummyPath']);
-		$this->assertEquals($expectedVersions, $actualResult);
+		$this->assertSame($expectedVersions, $actualResult);
 	}
-	
+
 	public function allowedPreviousVersionsProvider() {
 		return [
 			[[8,2], ['8.2']],

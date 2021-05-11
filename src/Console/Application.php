@@ -23,7 +23,9 @@
 namespace Owncloud\Updater\Console;
 
 use Owncloud\Updater\Utils\DocLink;
+/* @phan-suppress-next-line PhanUnreferencedUseNormal */
 use Owncloud\Updater\Utils\Locator;
+/* @phan-suppress-next-line PhanUnreferencedUseNormal */
 use Owncloud\Updater\Utils\OccRunner;
 use Pimple\Container;
 use Symfony\Component\Console\Logger\ConsoleLogger;

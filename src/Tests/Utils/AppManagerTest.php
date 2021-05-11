@@ -47,7 +47,7 @@ class AppManagerTest extends \PHPUnit\Framework\TestCase {
 		$encoded = \json_encode($apps);
 		$appManager = new AppManager($this->getOccRunnerMock($encoded));
 		$actual = $appManager->getShippedApps();
-		$this->assertEquals($expected, $actual);
+		$this->assertSame($expected, $actual);
 	}
 
 	/**
@@ -57,7 +57,7 @@ class AppManagerTest extends \PHPUnit\Framework\TestCase {
 		$encoded = \json_encode($apps);
 		$appManager = new AppManager($this->getOccRunnerMock($encoded));
 		$actual = $appManager->getShippedApps();
-		$this->assertEquals($expected, $actual);
+		$this->assertSame($expected, $actual);
 	}
 
 	public function testGetAppPath() {
@@ -65,7 +65,7 @@ class AppManagerTest extends \PHPUnit\Framework\TestCase {
 		$appId = 'anyapp';
 		$appManager =  new AppManager($this->getOccRunnerMock($expected));
 		$actual = $appManager->getAppPath($appId);
-		$this->assertEquals($expected, $actual);
+		$this->assertSame($expected, $actual);
 	}
 
 	/**

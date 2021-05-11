@@ -31,7 +31,7 @@ use Owncloud\Updater\Utils\FilesystemHelper;
  * @package Owncloud\Updater\Controller
  */
 class DownloadController {
-	
+
 	/**
 	 * @var Fetcher
 	 */
@@ -97,10 +97,12 @@ class DownloadController {
 				// We can't check md5 so we don't trust the cache
 				$this->fsHelper->removeIfExists($path);
 			}
+			/* @phan-suppress-next-line PhanPossiblyUndeclaredVariable */
 			if ($isDailyChannel || !$this->checkIntegrity($path, $md5)) {
 				$this->fetcher->getOwncloud($feed, $progressCallback);
 			}
 
+			/* @phan-suppress-next-line PhanPossiblyUndeclaredVariable */
 			if ($isDailyChannel || $this->checkIntegrity($path, $md5)) {
 				$response['success'] = true;
 				$response['data']['path'] = $path;

@@ -22,7 +22,9 @@
 
 namespace Owncloud\Updater\Command;
 
+/* @phan-suppress-next-line PhanUnreferencedUseNormal */
 use Owncloud\Updater\Utils\Checkpoint;
+/* @phan-suppress-next-line PhanUnreferencedUseNormal */
 use Owncloud\Updater\Utils\FilesystemHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -118,6 +120,7 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 					$installedVersion,
 					$packageVersion
 				);
+				/* @phan-suppress-next-line PhanUndeclaredMethod */
 				$this->getApplication()->getLogger()->error($message);
 				$output->writeln('<error>'. $message .'</error>');
 				return 1;
@@ -134,6 +137,7 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 				if ($dir === 'updater') {
 					continue;
 				}
+				/* @phan-suppress-next-line PhanUndeclaredMethod */
 				$this->getApplication()->getLogger()->debug('Replacing ' . $dir);
 				$fsHelper->tripleMove($oldSourcesDir, $newSourcesDir, $tmpDir, $dir);
 			}
@@ -190,7 +194,7 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	protected function loadVersion($pathToPackage) {
 		require  $pathToPackage . '/version.php';
 		/** @var $OC_Version array */
-		return \implode('.', $OC_Version);
+		return \implode('.', $OC_Version); /* @phan-suppress-current-line PhanUndeclaredVariable */
 	}
 
 	/**
@@ -220,6 +224,6 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	protected function loadCanBeUpgradedFrom($pathToPackage) {
 		require $pathToPackage . '/version.php';
 		/** @var array $OC_VersionCanBeUpgradedFrom */
-		return $OC_VersionCanBeUpgradedFrom;
+		return $OC_VersionCanBeUpgradedFrom; /* @phan-suppress-current-line PhanUndeclaredVariable */
 	}
 }
