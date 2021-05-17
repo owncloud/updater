@@ -68,6 +68,9 @@ class ZipExtractor {
 	 * @return bool
 	 */
 	private function extractShell() {
+		if ($this->output) {
+			$this->output->writeln("just some text");
+		}
 		/* @phan-suppress-next-line PhanDeprecatedFunction */
 		$command = 'unzip ' . ProcessUtils::escapeArgument($this->file) . ' -d ' . ProcessUtils::escapeArgument($this->path) . ' && chmod -R u+w ' . ProcessUtils::escapeArgument($this->path);
 		$process = new Process($command);
