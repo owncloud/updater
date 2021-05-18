@@ -13,6 +13,8 @@ config = {
 
 	'phplint': True,
 
+	'phan': True,
+
 	'phpunit': {
 		'allDatabases' : {
 			'phpVersions': [
