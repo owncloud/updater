@@ -348,6 +348,8 @@ def phan():
 						'image': 'owncloudci/php:%s' % phpVersion,
 						'pull': 'always',
 						'commands': [
+							'pwd',
+							'ls -l',
 							'make test-php-phan'
 						]
 					}
