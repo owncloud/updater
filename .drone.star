@@ -338,7 +338,7 @@ def phan():
 				'name': name,
 				'workspace' : {
 					'base': '/var/www/owncloud',
-					'path': 'server/%s' % config['app']
+					'path': 'server/apps/%s' % config['app']
 				},
 				'steps':
 					installCore('daily-master-qa', 'sqlite', False) +
