@@ -29,7 +29,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function testPostParameter($vars, $key, $expected) {
 		$request = new Request($vars);
 		$actual = $request->postParameter($key);
-		$this->assertEquals($expected, $actual);
+		$this->assertSame($expected, $actual);
 	}
 
 	/**
@@ -50,7 +50,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function testServerVar($vars, $key, $expected) {
 		$request = new Request($vars);
 		$actual = $request->server($key);
-		$this->assertEquals($expected, $actual);
+		$this->assertSame($expected, $actual);
 	}
 
 	/**
@@ -72,7 +72,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function testHeaderVar($vars, $key, $expected) {
 		$request = new Request($vars);
 		$actual = $request->header($key);
-		$this->assertEquals($expected, $actual);
+		$this->assertSame($expected, $actual);
 	}
 
 	/**
@@ -96,6 +96,6 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
 	public function testGetHost($vars, $expected) {
 		$request = new Request($vars);
 		$actual = $request->getHost();
-		$this->assertEquals($expected, $actual);
+		$this->assertSame($expected, $actual);
 	}
 }

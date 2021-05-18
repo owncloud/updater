@@ -61,7 +61,7 @@ class OccRunnerTest extends \PHPUnit\Framework\TestCase {
 			->willReturn('{"exitCode":0,"response":"{\"installed\":true,\"version\":\"9.1.0.10\",\"versionstring\":\"9.1.0 beta 2\",\"edition\":\"\"}\n"}')
 		;
 		$result = $occRunner->runJson('status');
-		$this->assertEquals(
+		$this->assertSame(
 			[
 				'installed' => true,
 				'version' => "9.1.0.10",

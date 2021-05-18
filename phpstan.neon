@@ -1,0 +1,23 @@
+parameters:
+  bootstrapFiles:
+    - %currentWorkingDirectory%/app/bootstrap.php
+    - %currentWorkingDirectory%/app/config/container.php
+  ignoreErrors:
+    -
+      message: '#Undefined variable: \$OC_Version$#'
+      path: src/Command/ExecuteCoreUpgradeScriptsCommand.php
+    -
+      message: '#Undefined variable: \$OC_VersionCanBeUpgradedFrom$#'
+      path: src/Command/ExecuteCoreUpgradeScriptsCommand.php
+    -
+      message: '#Undefined variable: \$CONFIG$#'
+      path: src/Utils/Locator.php
+    -
+      message: '#Undefined variable: \$OC_Version$#'
+      path: src/Utils/Locator.php
+    -
+      message: '#Undefined variable: \$OC_Channel$#'
+      path: src/Utils/Locator.php
+    -
+      message: '#Undefined variable: \$OC_Build$#'
+      path: src/Utils/Locator.php

@@ -39,8 +39,9 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 				$fsHelperMock
 		);
 		$result = $downloadController->checkFeed();
-		$this->assertArraySubset(['success' => true, 'exception' => ''], $result);
-		$this->assertEquals($feed, $result['data']['feed']);
+		$this->assertSame(true, $result['success']);
+		$this->assertSame('', $result['exception']);
+		$this->assertSame($feed, $result['data']['feed']);
 	}
 
 	public function testCheckFeedFailure() {
@@ -62,8 +63,9 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 				$fsHelperMock
 		);
 		$result = $downloadController->checkFeed();
-		$this->assertArraySubset(['success' => false, 'data' => []], $result);
-		$this->assertEquals($badNewsException, $result['exception']);
+		$this->assertSame(false, $result['success']);
+		$this->assertSame([], $result['data']);
+		$this->assertSame($badNewsException, $result['exception']);
 	}
 
 	public function testDownloadOwncloudSuccess() {
@@ -71,7 +73,7 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 		$path = '/dev/null/o';
 		$registry = new Registry();
 		$registry->set('feed', new Feed($this->feedData));
-		
+
 		$fetcherMock = $this->getMockBuilder('Owncloud\Updater\Utils\Fetcher')
 				->disableOriginalConstructor()
 				->getMock()
@@ -103,8 +105,9 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 				$fsHelperMock
 		);
 		$result = $downloadController->downloadOwncloud();
-		$this->assertArraySubset(['success' => true, 'exception' => ''], $result);
-		$this->assertEquals($path, $result['data']['path']);
+		$this->assertSame(true, $result['success']);
+		$this->assertSame('', $result['exception']);
+		$this->assertSame($path, $result['data']['path']);
 	}
 
 	public function testDownloadOwncloudFailure() {
@@ -145,8 +148,9 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 				$fsHelperMock
 		);
 		$result = $downloadController->downloadOwncloud();
-		$this->assertArraySubset(['success' => false, 'data' => []], $result);
-		$this->assertEquals($badNewsException, $result['exception']);
+		$this->assertSame(false, $result['success']);
+		$this->assertSame([], $result['data']);
+		$this->assertSame($badNewsException, $result['exception']);
 		;
 	}
 }

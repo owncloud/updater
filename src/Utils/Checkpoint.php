@@ -77,7 +77,7 @@ class Checkpoint {
 			$configDirSrc = $this->locator->getOwnCloudRootPath() . '/config';
 			$configDirDst = $checkpointCorePath . '/config';
 			$this->fsHelper->copyr($configDirSrc, $configDirDst, true);
-			
+
 			$checkpointAppPath = $checkpointPath . '/' . self::APP_DIR;
 			$this->fsHelper->mkdir($checkpointAppPath);
 			$appManager = Application::$container['utils.appmanager'];
@@ -100,7 +100,6 @@ class Checkpoint {
 	/**
 	 * Restore a checkpoint by id
 	 * @param string $checkpointId id of checkpoint
-	 * @return array
 	 * @throws \UnexpectedValueException if there is no checkpoint with this id
 	 */
 	public function restore($checkpointId) {
@@ -114,7 +113,6 @@ class Checkpoint {
 	/**
 	 * Remove a checkpoint by id
 	 * @param string $checkpointId id of checkpoint
-	 * @return array
 	 * @throws \UnexpectedValueException if there is no checkpoint with this id
 	 */
 	public function remove($checkpointId) {

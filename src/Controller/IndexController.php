@@ -22,7 +22,9 @@
 
 namespace Owncloud\Updater\Controller;
 
+/* @phan-suppress-next-line PhanUnreferencedUseNormal */
 use Owncloud\Updater\Utils\Checkpoint;
+/* @phan-suppress-next-line PhanUnreferencedUseNormal */
 use Owncloud\Updater\Utils\ConfigReader;
 use Pimple\Container;
 use Owncloud\Updater\Formatter\HtmlOutputFormatter;
@@ -77,12 +79,12 @@ class IndexController {
 		$templates = new Engine(CURRENT_DIR . '/src/Resources/views/');
 		$templates->loadExtension(new Asset(CURRENT_DIR . '/pub/', false));
 		$templates->loadExtension(new URI($baseUrl));
-		
+
 		// Check if the user is logged-in
 		if (!$this->isLoggedIn()) {
 			return $this->showLogin($templates);
 		}
-		
+
 		try {
 			$fullEndpoint = $this->getEndpoint();
 			$this->container['application']->setEndpoint($fullEndpoint);
@@ -100,7 +102,7 @@ class IndexController {
 			);
 			return $content;
 		}
-		
+
 		if ($this->command === null) {
 			/** @var Checkpoint $checkpoint */
 			$checkpoint = $this->container['utils.checkpoint'];
@@ -192,7 +194,7 @@ class IndexController {
 			'error_code' => $errorCode
 		];
 	}
-	
+
 	protected function getEndpoint() {
 		$endpoint = \preg_replace('/(updater\/|updater\/index.php)$/', '', $this->request->getRequestUri());
 		$fullEndpoint = \sprintf(
@@ -201,7 +203,7 @@ class IndexController {
 			$this->request->getHost(),
 			$endpoint !== '' ? $endpoint : '/'
 		);
-		
+
 		return $fullEndpoint;
 	}
 }

@@ -33,7 +33,7 @@ class CheckpointTest extends \PHPUnit\Framework\TestCase {
 		;
 		$checkpointMock = $this->getCheckpointInstance($locator, $fsHelper);
 		$actual = $checkpointMock->getAll();
-		$this->assertEquals(
+		$this->assertSame(
 			[
 				[ 'title'=>'a', 'date' => 'January 01 1970 00:03'],
 				[ 'title'=>'b', 'date' => 'January 01 1970 00:03'],
@@ -61,7 +61,7 @@ class CheckpointTest extends \PHPUnit\Framework\TestCase {
 		;
 		$checkpointMock = $this->getCheckpointInstance($locator, $fsHelper);
 		$actual = $checkpointMock->getAll();
-		$this->assertEquals([], $actual);
+		$this->assertSame([], $actual);
 	}
 
 	/**

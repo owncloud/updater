@@ -17,7 +17,7 @@ class DocLinkTest extends \PHPUnit\Framework\TestCase {
 		$relativePart = 'installation/installation_wizard.html#strong-perms-label';
 
 		$docLink = new DocLink($version);
-		$this->assertEquals($expected, $docLink->getAdminManualUrl($relativePart));
+		$this->assertSame($expected, $docLink->getAdminManualUrl($relativePart));
 	}
 
 	/**
@@ -39,6 +39,6 @@ class DocLinkTest extends \PHPUnit\Framework\TestCase {
 	public function testTrimVersion($version, $expected) {
 		$docLink = new DocLink($version);
 		$trimmedVersion = $docLink->getAdminManualUrl('');
-		$this->assertEquals($expected, $trimmedVersion);
+		$this->assertSame($expected, $trimmedVersion);
 	}
 }

@@ -128,6 +128,7 @@ class HtmlOutputFormatter implements OutputFormatterInterface {
 
 		foreach ($styles as $style) {
 			if (isset(self::$styles[$style])) {
+				/* @phan-suppress-next-line PhanTypeMismatchDimFetch */
 				$css[] = self::$styles[$style];
 			}
 		}

@@ -18,6 +18,8 @@ COMPOSER_BIN=$(build_dir)/composer.phar
 BOWER=$(build_dir)/node_modules/bower/bin/bower
 PHPUNITDBG=phpdbg -qrr -d memory_limit=4096M -d zend.enable_gc=0
 PHP_CS_FIXER=php -d zend.enable_gc=0 vendor-bin/owncloud-codestyle/vendor/bin/php-cs-fixer
+PHAN=php -d zend.enable_gc=0 vendor-bin/phan/vendor/bin/phan
+PHPSTAN=php -d zend.enable_gc=0 vendor-bin/phpstan/vendor/bin/phpstan
 
 # internal aliases
 composer_deps=vendor/
@@ -59,6 +61,7 @@ $(composer_dev_deps): $(COMPOSER_BIN) composer.json composer.lock
 clean-composer-deps:
 	rm -f $(COMPOSER_BIN)
 	rm -Rf $(composer_deps)
+	rm -Rf vendor-bin/**/vendor vendor-bin/**/composer.lock
 
 .PHONY: update-composer
 update-composer: $(COMPOSER_BIN)
@@ -113,6 +116,16 @@ test-php-style-fix:        ## Run php-cs-fixer and fix code style issues
 test-php-style-fix: vendor-bin/owncloud-codestyle/vendor
 	$(PHP_CS_FIXER) fix -v --diff --diff-format udiff --allow-risky yes
 
+
+.PHONY: test-php-phan
+test-php-phan: vendor-bin/phan/vendor
+	$(PHAN) --config-file .phan/config.php --require-config-exists -p
+
+
+.PHONY: test-php-phpstan
+test-php-phpstan: vendor-bin/phpstan/vendor
+	$(PHPSTAN) analyse --memory-limit=2G --configuration=./phpstan.neon --level=0 app pub src
+
 #
 # dist
 #
@@ -155,7 +168,6 @@ vendor: composer.lock
 
 vendor/bin/phpunit: composer.lock
 	composer install
-	composer require --dev phpunit/phpunit ^7.5
 
 vendor/bamarni/composer-bin-plugin: composer.lock
 	composer install
@@ -166,3 +178,14 @@ vendor-bin/owncloud-codestyle/vendor: vendor/bamarni/composer-bin-plugin vendor-
 vendor-bin/owncloud-codestyle/composer.lock: vendor-bin/owncloud-codestyle/composer.json
 	@echo owncloud-codestyle composer.lock is not up to date.
 
+vendor-bin/phan/vendor: vendor/bamarni/composer-bin-plugin vendor-bin/phan/composer.lock
+	composer bin phan install --no-progress
+
+vendor-bin/phan/composer.lock: vendor-bin/phan/composer.json
+	@echo phan composer.lock is not up to date.
+
+vendor-bin/phpstan/vendor: vendor/bamarni/composer-bin-plugin vendor-bin/phpstan/composer.lock
+	composer bin phpstan install --no-progress
+
+vendor-bin/phpstan/composer.lock: vendor-bin/phpstan/composer.json
+	@echo phpstan composer.lock is not up to date.

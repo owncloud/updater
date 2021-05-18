@@ -14,7 +14,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 	protected $locator;
 	protected $configReader;
 
-	public function setUp() {
+	public function setUp():void {
 		$this->httpClient = $this->getMockBuilder('GuzzleHttp\Client')
 				->disableOriginalConstructor()
 				->getMock()
@@ -27,7 +27,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 				->disableOriginalConstructor()
 				->getMock()
 		;
-		
+
 		$map = [
 			['apps.core.installedat', '100500'],
 			['apps.core.lastupdatedat', '500100'],
@@ -62,7 +62,7 @@ class FetcherTest extends \PHPUnit\Framework\TestCase {
 		$feed = $fetcher->getFeed();
 		$this->assertInstanceOf('Owncloud\Updater\Utils\Feed', $feed);
 		$this->assertTrue($feed->isValid());
-		$this->assertEquals('8.1.3.0', $feed->getVersion());
+		$this->assertSame('8.1.3.0', $feed->getVersion());
 	}
 
 	public function testGetEmptyFeed() {
