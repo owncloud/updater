@@ -526,16 +526,16 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v4.4.22",
+            "version": "v4.4.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "45b2136377cca5f10af858968d6079a482bca473"
+                "reference": "a8d2d5c94438548bff9f998ca874e202bb29d07f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/45b2136377cca5f10af858968d6079a482bca473",
-                "reference": "45b2136377cca5f10af858968d6079a482bca473",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/a8d2d5c94438548bff9f998ca874e202bb29d07f",
+                "reference": "a8d2d5c94438548bff9f998ca874e202bb29d07f",
                 "shasum": ""
             },
             "require": {
@@ -575,7 +575,7 @@
             "description": "Provides tools to ease debugging PHP code",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/debug/tree/v4.4.22"
+                "source": "https://github.com/symfony/debug/tree/v4.4.25"
             },
             "funding": [
                 {
@@ -591,7 +591,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-04-02T07:50:12+00:00"
+            "time": "2021-05-26T17:39:37+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1631,16 +1631,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.5.15",
+            "version": "8.5.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "038d4196d8e8cb405cd5e82cedfe413ad6eef9ef"
+                "reference": "cc66f2fc61296be66c99931a862200e7456b9a01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/038d4196d8e8cb405cd5e82cedfe413ad6eef9ef",
-                "reference": "038d4196d8e8cb405cd5e82cedfe413ad6eef9ef",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/cc66f2fc61296be66c99931a862200e7456b9a01",
+                "reference": "cc66f2fc61296be66c99931a862200e7456b9a01",
                 "shasum": ""
             },
             "require": {
@@ -1712,7 +1712,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.15"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.16"
             },
             "funding": [
                 {
@@ -1724,7 +1724,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-17T07:27:54+00:00"
+            "time": "2021-06-05T04:46:20+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
