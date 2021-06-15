@@ -788,7 +788,7 @@ def phpTests(ctx, testType, withCoverage):
 						'image': 'owncloudci/php:%s' % phpVersion,
 						'pull': 'always',
 						'commands': [
-							'mv tests/output/clover.xml tests/output/clover-%s.xml' % (name)
+							'mv src/Tests/clover.xml ./clover-%s.xml' % (name)
 						]
 					})
 					result['steps'].append({
@@ -800,7 +800,7 @@ def phpTests(ctx, testType, withCoverage):
 								'from_secret': 'cache_s3_endpoint'
 							},
 							'bucket': 'cache',
-							'source': 'tests/output/clover-%s.xml' % (name),
+							'source': './clover-%s.xml' % (name),
 							'target': '%s/%s' % (ctx.repo.slug, ctx.build.commit + '-${DRONE_BUILD_NUMBER}'),
 							'path_style': True,
 							'strip_prefix': 'tests/output',
