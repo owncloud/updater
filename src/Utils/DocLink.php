@@ -27,7 +27,7 @@ namespace Owncloud\Updater\Utils;
  * @package Owncloud\Updater\Utils
  */
 class DocLink {
-	const BASE_DOC_URL = 'https://doc.owncloud.org/server';
+	public const BASE_DOC_URL = 'https://doc.owncloud.org/server';
 
 	private $version;
 

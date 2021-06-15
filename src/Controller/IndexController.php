@@ -55,8 +55,10 @@ class IndexController {
 	 * @param Container $container
 	 * @param Request|null $request
 	 */
-	public function __construct(Container $container,
-								Request $request = null) {
+	public function __construct(
+		Container $container,
+		Request $request = null
+	) {
 		$this->container = $container;
 		if ($request === null) {
 			$this->request = new Request(['post' => $_POST, 'headers' => $_SERVER]);
@@ -108,8 +110,8 @@ class IndexController {
 			$checkpoint = $this->container['utils.checkpoint'];
 			$checkpoints = $checkpoint->getAll();
 			$content = $templates->render(
-					'partials/inner',
-					[
+				'partials/inner',
+				[
 						'title' => 'Updater',
 						'version' => $this->container['application']->getVersion(),
 						'checkpoints' => $checkpoints

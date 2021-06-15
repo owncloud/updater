@@ -34,9 +34,9 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 				->getMock()
 		;
 		$downloadController = new DownloadController(
-				$fetcherMock,
-				new Registry(),
-				$fsHelperMock
+			$fetcherMock,
+			new Registry(),
+			$fsHelperMock
 		);
 		$result = $downloadController->checkFeed();
 		$this->assertSame(true, $result['success']);
@@ -58,9 +58,9 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 				->getMock()
 		;
 		$downloadController = new DownloadController(
-				$fetcherMock,
-				new Registry(),
-				$fsHelperMock
+			$fetcherMock,
+			new Registry(),
+			$fsHelperMock
 		);
 		$result = $downloadController->checkFeed();
 		$this->assertSame(false, $result['success']);
@@ -100,9 +100,9 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 		;
 
 		$downloadController = new DownloadController(
-				$fetcherMock,
-				$registry,
-				$fsHelperMock
+			$fetcherMock,
+			$registry,
+			$fsHelperMock
 		);
 		$result = $downloadController->downloadOwncloud();
 		$this->assertSame(true, $result['success']);
@@ -143,9 +143,9 @@ class DownloadControllerTest extends \PHPUnit\Framework\TestCase {
 		;
 
 		$downloadController = new DownloadController(
-				$fetcherMock,
-				$registry,
-				$fsHelperMock
+			$fetcherMock,
+			$registry,
+			$fsHelperMock
 		);
 		$result = $downloadController->downloadOwncloud();
 		$this->assertSame(false, $result['success']);

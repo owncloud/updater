@@ -31,7 +31,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyleInterface;
  * @package Owncloud\Updater\Formatter
  */
 class HtmlOutputFormatter implements OutputFormatterInterface {
-	const PATTERN = "/\[(([\d+];?)*)m(.*?)\[(([\d+];?)*)m/i";
+	public const PATTERN = "/\[(([\d+];?)*)m(.*?)\[(([\d+];?)*)m/i";
 
 	private static $styles = [
 		'30' => 'color:rgba(0,0,0,1)',

@@ -29,8 +29,8 @@ use Owncloud\Updater\Console\Application;
  * @package Owncloud\Updater\Utils
  */
 class Checkpoint {
-	const CORE_DIR = 'core';
-	const APP_DIR = 'apps';
+	public const CORE_DIR = 'core';
+	public const APP_DIR = 'apps';
 
 	/**
 	 * @var Locator $locator

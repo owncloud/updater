@@ -53,10 +53,16 @@ class MaintenanceModeCommand extends Command {
 				->setName('upgrade:maintenanceMode')
 				->setDescription('Toggle maintenance mode')
 				->addOption(
-						'on', null, InputOption::VALUE_NONE, 'enable maintenance mode'
+					'on',
+					null,
+					InputOption::VALUE_NONE,
+					'enable maintenance mode'
 				)
 				->addOption(
-						'off', null, InputOption::VALUE_NONE, 'disable maintenance mode'
+					'off',
+					null,
+					InputOption::VALUE_NONE,
+					'disable maintenance mode'
 				)
 		;
 	}
