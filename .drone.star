@@ -75,7 +75,7 @@ def main(ctx):
 	return before + coverageTests + afterCoverageTests + nonCoverageTests + stages + after
 
 def beforePipelines():
-	return codestyle() + jscodestyle() + phpstan() + phan()
+	return codestyle() + jscodestyle() + phpstan() + phan() + phplint()
 
 def coveragePipelines(ctx):
 	# All unit test pipelines that have coverage or other test analysis reported
@@ -157,7 +157,7 @@ def codestyle():
 				'name': name,
 				'workspace' : {
 					'base': '/var/www/owncloud',
-					'path': 'server/apps/%s' % config['app']
+					'path': 'server/%s' % config['app']
 				},
 				'steps': [
 					{
@@ -201,7 +201,7 @@ def jscodestyle():
 		'name': 'coding-standard-js',
 		'workspace' : {
 			'base': '/var/www/owncloud',
-			'path': 'server/apps/%s' % config['app']
+			'path': 'server/%s' % config['app']
 		},
 		'steps': [
 			{
@@ -228,6 +228,64 @@ def jscodestyle():
 	pipelines.append(result)
 
 	return pipelines
+
+def phplint():
+	pipelines = []
+
+	if 'phplint' not in config:
+		return pipelines
+
+	if type(config['phplint']) == "bool":
+		if not config['phplint']:
+			return pipelines
+
+	result = {
+		'kind': 'pipeline',
+		'type': 'docker',
+		'name': 'lint-test',
+		'workspace' : {
+			'base': '/var/www/owncloud',
+			'path': config['app']
+		},
+		'steps':
+		    installNPM() +
+			lintTest(),
+		'depends_on': [],
+		'trigger': {
+			'ref': [
+				'refs/heads/master',
+				'refs/tags/**',
+				'refs/pull/**',
+			]
+		}
+	}
+
+	for branch in config['branches']:
+		result['trigger']['ref'].append('refs/heads/%s' % branch)
+
+	pipelines.append(result)
+
+	return pipelines
+
+def installNPM():
+	return [{
+		'name': 'npm-install',
+		'image': 'owncloudci/nodejs:12',
+		'pull': 'always',
+		'commands': [
+			'yarn install --frozen-lockfile'
+		]
+	}]
+
+def lintTest():
+	return [{
+		'name': 'lint-test',
+		'image': 'owncloudci/php:7.2',
+		'pull': 'always',
+		'commands': [
+			'make test-lint'
+		]
+	}]
 
 def phpstan():
 	pipelines = []
@@ -273,7 +331,7 @@ def phpstan():
 				'name': name,
 				'workspace' : {
 					'base': '/var/www/owncloud',
-					'path': 'server/apps/%s' % config['app']
+					'path': 'server/%s' % config['app']
 				},
 				'steps':
 					installCore('daily-master-qa', 'sqlite', False) +
@@ -348,7 +406,7 @@ def phan():
 				'name': name,
 				'workspace' : {
 					'base': '/var/www/owncloud',
-					'path': 'server/apps/%s' % config['app']
+					'path': 'server/%s' % config['app']
 				},
 				'steps':
 					installCore('daily-master-qa', 'sqlite', False) +
@@ -418,7 +476,7 @@ def build():
 			'name': 'build',
 			'workspace' : {
 				'base': '/var/www/owncloud',
-				'path': 'server/apps/%s' % config['app']
+				'path': 'server/%s' % config['app']
 			},
 			'steps': [
 				{
@@ -519,7 +577,7 @@ def javascript(ctx, withCoverage):
 		'name': 'javascript-tests',
 		'workspace' : {
 			'base': '/var/www/owncloud',
-			'path': 'server/apps/%s' % config['app']
+			'path': 'server/%s' % config['app']
 		},
 		'steps':
 			installCore('daily-master-qa', 'sqlite', False) +
@@ -689,7 +747,7 @@ def phpTests(ctx, testType, withCoverage):
 					'name': name,
 					'workspace' : {
 						'base': '/var/www/owncloud',
-						'path': 'server/apps/%s' % config['app']
+						'path': 'server/%s' % config['app']
 					},
 					'steps':
 						installCore('daily-master-qa', db, False) +
@@ -1015,7 +1073,7 @@ def sonarAnalysis(ctx, phpVersion = '7.4'):
 		'name': 'sonar-analysis',
 		'workspace' : {
 			'base': '/var/www/owncloud',
-			'path': 'server/apps/%s' % config['app']
+			'path': 'server/%s' % config['app']
 		},
 		'steps':
 			cacheRestore() +
@@ -1469,7 +1527,7 @@ def installApp(phpVersion):
 		'image': 'owncloudci/php:%s' % phpVersion,
 		'pull': 'always',
 		'commands': [
-			'cd /var/www/owncloud/server/apps/%s' % config['app'],
+			'cd /var/www/owncloud/server/%s' % config['app'],
 			config['appInstallCommand']
 		]
 	}]
@@ -1482,7 +1540,6 @@ def setupServerAndApp(phpVersion, logLevel):
 		'commands': [
 			'cd /var/www/owncloud/server',
 			'php occ a:l',
-			'php occ a:e %s' % config['app'],
 			'php occ a:e testing',
 			'php occ a:l',
 			'php occ config:system:set trusted_domains 1 --value=server',
