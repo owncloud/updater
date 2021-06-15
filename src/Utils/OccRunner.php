@@ -2,7 +2,7 @@
 /**
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  *
- * @copyright Copyright (c) 2015, ownCloud, Inc.
+ * @copyright Copyright (c) 2021, ownCloud GmbH
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@
 namespace Owncloud\Updater\Utils;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use Owncloud\Updater\Console\Application;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessUtils;
@@ -119,8 +120,8 @@ class OccRunner {
 		$client = new Client();
 		$endpointBase = $application->getEndpoint();
 		$params = [
-			'timeout' => 0,
-			'json' => [
+			RequestOptions::TIMEOUT => 0,
+			RequestOptions::JSON => [
 				'token' => $application->getAuthToken(),
 				'params'=> $args
 			]
@@ -128,16 +129,10 @@ class OccRunner {
 
 		// Skip SSL validation for localhost only as localhost never has a valid cert
 		if (\preg_match('/^https:\/\/localhost\/.*/i', $endpointBase)) {
-			$params['verify'] = false;
+			$params[RequestOptions::VERIFY] = false;
 		}
 
-		$request = $client->createRequest(
-			'POST',
-			$endpointBase . $command,
-			$params
-		);
-
-		$response = $client->send($request);
+		$response = $client->request('POST', "$endpointBase$command", $params);
 		$responseBody = $response->getBody()->getContents();
 		return $responseBody;
 	}
