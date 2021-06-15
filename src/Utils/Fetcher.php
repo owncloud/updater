@@ -29,7 +29,7 @@ use GuzzleHttp\Client;
  * @package Owncloud\Updater\Utils
  */
 class Fetcher {
-	const DEFAULT_BASE_URL = 'https://updates.owncloud.com/server/';
+	public const DEFAULT_BASE_URL = 'https://updates.owncloud.com/server/';
 
 	/**
 	 * @var Locator $locator
@@ -79,9 +79,9 @@ class Fetcher {
 			}
 			$url = $feed->getUrl();
 			$request = $this->httpClient->createRequest(
-					'GET',
-					$url,
-					[
+				'GET',
+				$url,
+				[
 						'save_to' => $downloadPath,
 						'timeout' => 600
 					]
@@ -192,11 +192,12 @@ class Fetcher {
 	protected function validateResponse($response) {
 		if ($response->getStatusCode() !== 200) {
 			throw new \UnexpectedValueException(
-					'Failed to download '
+				'Failed to download '
 					. $response->getEffectiveUrl()
 					. '. Server responded with '
 					. $response->getStatusCode()
-					. ' instead of 200.');
+					. ' instead of 200.'
+			);
 		}
 	}
 }

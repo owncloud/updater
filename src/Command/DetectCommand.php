@@ -74,10 +74,16 @@ class DetectCommand extends Command {
 - 3. online available version.
 (ASK) what to do? (download, upgrade, abort, …)')
 				->addOption(
-						'exit-if-none', null, InputOption::VALUE_NONE, 'exit with non-zero status code if new version is not found'
+					'exit-if-none',
+					null,
+					InputOption::VALUE_NONE,
+					'exit with non-zero status code if new version is not found'
 				)
 				->addOption(
-						'only-check', null, InputOption::VALUE_NONE, 'Only check if update is available'
+					'only-check',
+					null,
+					InputOption::VALUE_NONE,
+					'Only check if update is available'
 				)
 		;
 		;
@@ -160,12 +166,12 @@ class DetectCommand extends Command {
 			$this->getApplication()->getLogger()->error($e->getMessage());
 			$output->writeln('<error>Network error</error>');
 			$output->writeln(
-					\sprintf(
-							'<error>Error %d: %s while fetching an URL %s</error>',
-							$e->getCode(),
-							$e->getResponse()->getReasonPhrase(),
-							$e->getResponse()->getEffectiveUrl()
-							)
+				\sprintf(
+					'<error>Error %d: %s while fetching an URL %s</error>',
+					$e->getCode(),
+					$e->getResponse()->getReasonPhrase(),
+					$e->getResponse()->getEffectiveUrl()
+				)
 			);
 			return 2;
 		} catch (\Exception $e) {

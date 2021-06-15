@@ -36,16 +36,28 @@ class CheckpointCommand extends Command {
 				->setName('upgrade:checkpoint')
 				->setDescription('Create or restore ownCloud core files')
 				->addOption(
-						'create', null, InputOption::VALUE_NONE, 'create a checkpoint'
+					'create',
+					null,
+					InputOption::VALUE_NONE,
+					'create a checkpoint'
 				)
 				->addOption(
-						'restore', null, InputOption::VALUE_REQUIRED, 'revert files to a given checkpoint'
+					'restore',
+					null,
+					InputOption::VALUE_REQUIRED,
+					'revert files to a given checkpoint'
 				)
 				->addOption(
-						'list', null, InputOption::VALUE_OPTIONAL, 'show all checkpoints'
+					'list',
+					null,
+					InputOption::VALUE_OPTIONAL,
+					'show all checkpoints'
 				)
 				->addOption(
-						'remove', null, InputOption::VALUE_REQUIRED, 'remove a checkpoint'
+					'remove',
+					null,
+					InputOption::VALUE_REQUIRED,
+					'remove a checkpoint'
 				)
 		;
 	}

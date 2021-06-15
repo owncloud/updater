@@ -34,7 +34,7 @@ class InfoCommand extends Command {
 		$this
 				->setName('upgrade:info')
 				->setDescription(
-						'Your ownCloud is going to be upgraded'
+					'Your ownCloud is going to be upgraded'
 				)
 		;
 	}
@@ -44,9 +44,10 @@ class InfoCommand extends Command {
 	 * @param OutputInterface $output
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$message = \sprintf('%s %s - CLI based ownCloud server upgrades',
-						$this->getApplication()->getName(),
-						$this->getApplication()->getVersion()
+		$message = \sprintf(
+			'%s %s - CLI based ownCloud server upgrades',
+			$this->getApplication()->getName(),
+			$this->getApplication()->getVersion()
 		);
 		$output->writeln($message);
 	}

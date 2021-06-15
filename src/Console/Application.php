@@ -228,7 +228,7 @@ class Application extends \Symfony\Component\Console\Application {
 			}
 			$exitCode = parent::doRunCommand($command, $input, $output);
 			$this->getLogger()->info(
-					'Execution of ' . $commandName . ' command stopped. Exit code is ' . $exitCode
+				'Execution of ' . $commandName . ' command stopped. Exit code is ' . $exitCode
 			);
 		} else {
 			$exitCode = parent::doRunCommand($command, $input, $output);
