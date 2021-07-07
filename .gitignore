@@ -12,6 +12,8 @@
 /src/Tests/.phpunit.result.cache
 *.exe
 
+/tests/output
+
 # Composer
 vendor/
 vendor-bin/**/vendor
