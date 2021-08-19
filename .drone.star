@@ -15,7 +15,11 @@ config = {
         "master",
     ],
     "codestyle": True,
-    "phpstan": True,
+    "phpstan": {
+        "standard": {
+            "enableApp": False,
+        },
+    },
     "phan": True,
     "phplint": True,
     "phpunit": {
@@ -24,6 +28,7 @@ config = {
                 "7.2",
             ],
             "coverage": True,
+            "enableApp": False,
         },
         "reducedDatabases": {
             "phpVersions": [
@@ -35,6 +40,7 @@ config = {
                 "mariadb:10.2",
             ],
             "coverage": False,
+            "enableApp": False,
         },
     },
 }
@@ -290,6 +296,7 @@ def phpstan(ctx):
         "phpVersions": ["7.2"],
         "logLevel": "2",
         "extraApps": {},
+        "enableApp": True,
     }
 
     if "defaults" in config:
@@ -329,7 +336,7 @@ def phpstan(ctx):
                 "steps": installCore(ctx, "daily-master-qa", "sqlite", False) +
                          installApp(ctx, phpVersion) +
                          installExtraApps(phpVersion, params["extraApps"]) +
-                         setupServerAndApp(ctx, phpVersion, params["logLevel"]) +
+                         setupServerAndApp(ctx, phpVersion, params["logLevel"], False, params["enableApp"]) +
                          [
                              {
                                  "name": "phpstan",
@@ -531,6 +538,7 @@ def javascript(ctx, withCoverage):
         "extraCommandsBeforeTestRun": [],
         "extraTeardown": [],
         "skip": False,
+        "enableApp": True,
     }
 
     if "defaults" in config:
@@ -572,7 +580,7 @@ def javascript(ctx, withCoverage):
         },
         "steps": installCore(ctx, "daily-master-qa", "sqlite", False) +
                  installApp(ctx, "7.4") +
-                 setupServerAndApp(ctx, "7.4", params["logLevel"]) +
+                 setupServerAndApp(ctx, "7.4", params["logLevel"], False, params["enableApp"]) +
                  params["extraSetup"] +
                  [
                      {
@@ -652,6 +660,7 @@ def phpTests(ctx, testType, withCoverage):
         "extraApps": {},
         "extraTeardown": [],
         "skip": False,
+        "enableApp": True,
     }
 
     if "defaults" in config:
@@ -744,7 +753,7 @@ def phpTests(ctx, testType, withCoverage):
                     "steps": installCore(ctx, "daily-master-qa", db, False) +
                              installApp(ctx, phpVersion) +
                              installExtraApps(phpVersion, params["extraApps"]) +
-                             setupServerAndApp(ctx, phpVersion, params["logLevel"]) +
+                             setupServerAndApp(ctx, phpVersion, params["logLevel"], False, params["enableApp"]) +
                              setupCeph(params["cephS3"]) +
                              setupScality(params["scalityS3"]) +
                              params["extraSetup"] +
@@ -858,6 +867,7 @@ def acceptance(ctx):
         "debugSuites": [],
         "skipExceptParts": [],
         "earlyFail": True,
+        "enableApp": True,
     }
 
     if "defaults" in config:
@@ -1074,7 +1084,7 @@ def acceptance(ctx):
                              (installFederated(testConfig["server"], testConfig["phpVersion"], testConfig["logLevel"], testConfig["database"], federationDbSuffix) + owncloudLog("federated") if testConfig["federatedServerNeeded"] else []) +
                              installApp(ctx, testConfig["phpVersion"]) +
                              installExtraApps(testConfig["phpVersion"], testConfig["extraApps"]) +
-                             setupServerAndApp(ctx, testConfig["phpVersion"], testConfig["logLevel"], testConfig["federatedServerNeeded"]) +
+                             setupServerAndApp(ctx, testConfig["phpVersion"], testConfig["logLevel"], testConfig["federatedServerNeeded"], params["enableApp"]) +
                              owncloudLog("server") +
                              setupCeph(testConfig["cephS3"]) +
                              setupScality(testConfig["scalityS3"]) +
@@ -1613,7 +1623,7 @@ def installApp(ctx, phpVersion):
         ],
     }]
 
-def setupServerAndApp(ctx, phpVersion, logLevel, federatedServerNeeded = False):
+def setupServerAndApp(ctx, phpVersion, logLevel, federatedServerNeeded = False, enableApp = True):
     return [{
         "name": "setup-server-%s" % ctx.repo.name,
         "image": "owncloudci/php:%s" % phpVersion,
@@ -1621,6 +1631,7 @@ def setupServerAndApp(ctx, phpVersion, logLevel, federatedServerNeeded = False):
         "commands": [
             "cd %s" % dir["server"],
             "php occ a:l",
+            "php occ a:e %s" % ctx.repo.name if enableApp else "",
             "php occ a:e testing",
             "php occ a:l",
             "php occ config:system:set trusted_domains 1 --value=server",
@@ -1930,8 +1941,6 @@ def checkStarlark():
         },
     }]
 
-# Updater specific code
-# this is extra bit of code from the standard .drone.star from activity app
 def phplint(ctx):
     pipelines = []
 
