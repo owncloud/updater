@@ -1,12 +1,6 @@
 SHELL := /bin/bash
 
-#
-# Define NPM and check if it is available on the system.
-#
 NPM := $(shell command -v npm 2> /dev/null)
-ifndef NPM
-    $(error npm is not available on your system, please install npm)
-endif
 
 updater_doc_files=COPYING-AGPL README.md CHANGELOG.md
 updater_src_files=application.php index.php
