@@ -97,7 +97,6 @@ test-php-unit: vendor/bin/phpunit
 .PHONY: test-php-unit-dbg
 test-php-unit-dbg:         ## Run php unit tests using phpdbg
 test-php-unit-dbg: vendor/bin/phpunit
-	make
 	$(PHPUNITDBG) ./vendor/bin/phpunit --configuration ./src/Tests/phpunit.xml --testsuite 'ownCloud - Standalone Updater Tests'
 
 .PHONY: test-php-style
