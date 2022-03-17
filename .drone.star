@@ -54,14 +54,14 @@ config = {
     "phpunit": {
         "allDatabases": {
             "phpVersions": [
-                "7.3",
+                DEFAULT_PHP_VERSION,
             ],
             "coverage": True,
             "enableApp": False,
         },
         "reducedDatabases": {
             "phpVersions": [
-                DEFAULT_PHP_VERSION,
+                "7.3",
             ],
             "databases": [
                 "sqlite",
