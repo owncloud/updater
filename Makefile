@@ -10,7 +10,8 @@ build_dir=build
 dist_dir=$(build_dir)/dist
 COMPOSER_BIN=$(build_dir)/composer.phar
 BOWER=$(build_dir)/node_modules/bower/bin/bower
-PHPUNITDBG=phpdbg -qrr -d memory_limit=4096M -d zend.enable_gc=0
+PHPUNIT=php -d zend.enable_gc=0 ./vendor/bin/phpunit
+PHPUNITDBG=phpdbg -qrr -d memory_limit=4096M -d zend.enable_gc=0 ./vendor/bin/phpunit
 PHP_CS_FIXER=php -d zend.enable_gc=0 vendor-bin/owncloud-codestyle/vendor/bin/php-cs-fixer
 PHAN=php -d zend.enable_gc=0 vendor-bin/phan/vendor/bin/phan
 PHPSTAN=php -d zend.enable_gc=0 vendor-bin/phpstan/vendor/bin/phpstan
@@ -92,12 +93,12 @@ test-lint:
 .PHONY: test-php-unit
 test-php-unit:             ## Run php unit tests
 test-php-unit: vendor/bin/phpunit
-	cd src/Tests && ../../vendor/bin/phpunit --configuration phpunit.xml --testsuite 'ownCloud - Standalone Updater Tests'
+	$(PHPUNIT) --configuration ./phpunit.xml --testsuite unit
 
 .PHONY: test-php-unit-dbg
 test-php-unit-dbg:         ## Run php unit tests using phpdbg
 test-php-unit-dbg: vendor/bin/phpunit
-	$(PHPUNITDBG) ./vendor/bin/phpunit --configuration ./src/Tests/phpunit.xml --testsuite 'ownCloud - Standalone Updater Tests'
+	$(PHPUNITDBG) --configuration ./phpunit.xml --testsuite unit
 
 .PHONY: test-php-style
 test-php-style:            ## Run php-cs-fixer and check owncloud code-style

@@ -1,6 +1,9 @@
 {
     "autoload": {
-        "psr-4": {"Owncloud\\Updater\\": "src/"}
+        "psr-4": {
+            "Owncloud\\Updater\\": "src/",
+            "Owncloud\\Updater\\Tests\\": "tests/unit"
+        }
     },
     "config": {
         "platform": {
