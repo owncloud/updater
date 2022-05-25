@@ -8,8 +8,7 @@
 /build
 /vendor
 /composer.lock
-/src/Tests/clover.xml
-/src/Tests/.phpunit.result.cache
+.phpunit.result.cache
 *.exe
 
 /tests/output

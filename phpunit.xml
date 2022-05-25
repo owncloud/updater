@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        bootstrap="./tests/unit/bootstrap.php" 
+        verbose="true" 
+        timeoutForSmallTests="900" 
+        timeoutForMediumTests="900" 
+        timeoutForLargeTests="900" 
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <testsuite name="unit">
+    <directory suffix="Test.php">./tests/unit</directory>
+  </testsuite>
+  <coverage>
+    <include>
+      <directory suffix=".php">./src</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">./vendor</directory>
+    </exclude>
+    <report>
+      <clover outputFile="./tests/output/clover.xml"/>
+    </report>
+  </coverage>
+</phpunit>
