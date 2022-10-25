@@ -19,3 +19,9 @@ vendor-bin/**/vendor
 vendor-bin/**/composer.lock
 .php_cs.cache
 .php-cs-fixer.cache
+
+
+.idea/
+
+# Generated from .drone.star
+.drone.yml
