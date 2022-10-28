@@ -53,7 +53,11 @@ config = {
     },
     "phan": True,
     "phplint": True,
-    "phpunit": True,
+    "phpunit": {
+        "allDatabases": {
+            "enableApp": False,
+        },
+    },
 }
 
 def main(ctx):
