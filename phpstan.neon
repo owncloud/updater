@@ -4,6 +4,9 @@ parameters:
     - %currentWorkingDirectory%/app/config/container.php
   ignoreErrors:
     -
+      message: '#File ends with a trailing whitespace. This may cause problems when running the code in the web browser. Remove the closing \?\> mark or remove the whitespace.#'
+      path:  src/Resources/views/partials/error.php
+    -
       message: '#Undefined variable: \$OC_Version$#'
       path: src/Command/ExecuteCoreUpgradeScriptsCommand.php
     -
