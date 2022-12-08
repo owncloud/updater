@@ -51,7 +51,14 @@ config = {
             "enableApp": False,
         },
     },
-    "phan": True,
+    "phan": {
+        "multipleVersions": {
+            "phpVersions": [
+                DEFAULT_PHP_VERSION,
+                "7.3",
+            ],
+        },
+    },
     "phplint": True,
     "phpunit": {
         "allDatabases": {
