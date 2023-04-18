@@ -3,12 +3,12 @@
 namespace Owncloud\Updater\Tests\Utils;
 
 use GuzzleHttp\Client;
-use Owncloud\Updater\Tests\StreamInterface;
 use Owncloud\Updater\Utils\ConfigReader;
 use Owncloud\Updater\Utils\Fetcher;
 use Owncloud\Updater\Utils\Locator;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Class FetcherTest
