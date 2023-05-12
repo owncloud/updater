@@ -11,7 +11,7 @@ use Owncloud\Updater\Utils\DocLink;
  */
 class DocLinkTest extends \PHPUnit\Framework\TestCase {
 	public function testGetServerUrl() {
-		$expected = 'https://doc.owncloud.org/server/9.0/admin_manual/installation/installation_wizard.html#strong-perms-label';
+		$expected = 'https://doc.owncloud.com/server/9.0/admin_manual/installation/installation_wizard.html#strong-perms-label';
 
 		$version = '9.0';
 		$relativePart = 'installation/installation_wizard.html#strong-perms-label';
@@ -25,9 +25,9 @@ class DocLinkTest extends \PHPUnit\Framework\TestCase {
 	 */
 	public function versionDataProvider() {
 		return [
-			[ '1.2.3.4', 'https://doc.owncloud.org/server/1.2/admin_manual/' ],
-			[ '41.421.31.4.7.5.5', 'https://doc.owncloud.org/server/41.421/admin_manual/' ],
-			[ '42.24', 'https://doc.owncloud.org/server/42.24/admin_manual/' ],
+			[ '1.2.3.4', 'https://doc.owncloud.com/server/1.2/admin_manual/' ],
+			[ '41.421.31.4.7.5.5', 'https://doc.owncloud.com/server/41.421/admin_manual/' ],
+			[ '42.24', 'https://doc.owncloud.com/server/42.24/admin_manual/' ],
 		];
 	}
 
