@@ -11,9 +11,9 @@ use Owncloud\Updater\Utils\DocLink;
  */
 class DocLinkTest extends \PHPUnit\Framework\TestCase {
 	public function testGetServerUrl() {
-		$expected = 'https://doc.owncloud.com/server/9.0/admin_manual/installation/installation_wizard.html#strong-perms-label';
+		$expected = 'https://doc.owncloud.com/server/10.12/admin_manual/installation/installation_wizard.html#strong-perms-label';
 
-		$version = '9.0';
+		$version = '10.12';
 		$relativePart = 'installation/installation_wizard.html#strong-perms-label';
 
 		$docLink = new DocLink($version);
