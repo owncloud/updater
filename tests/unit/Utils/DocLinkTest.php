@@ -12,7 +12,7 @@ use Owncloud\Updater\Utils\DocLink;
 class DocLinkTest extends \PHPUnit\Framework\TestCase {
 	public function testGetServerUrl() {
 		// This test constructs strings, from version and relative part and compares that
-		// construct with the expected result. It does not check our actual servers. 
+		// construct with the expected result. It does not check our actual servers.
 		$expected = 'https://doc.owncloud.com/server/10.12/admin_manual/installation/installation_wizard.html#strong-perms-label';
 
 		$version = '10.12';
