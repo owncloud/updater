@@ -49,7 +49,7 @@ class FetcherTest extends TestCase {
 	public function testGetValidFeed() {
 		$responseMock = $this->getResponseMock('<?xml version="1.0"?><owncloud>  <version>8.1.3.0</version><versionstring>ownCloud 8.1.3</versionstring>
   <url>https://download.owncloud.org/community/owncloud-8.1.3.zip</url>
-  <web>https://doc.owncloud.org/server/8.1/admin_manual/maintenance/upgrade.html</web>
+  <web>https://doc.owncloud.com/server/next/admin_manual/maintenance/upgrading/upgrade.html</web>
 </owncloud>');
 		$this->httpClient
 				->method('request')
