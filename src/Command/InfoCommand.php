@@ -42,13 +42,15 @@ class InfoCommand extends Command {
 	/**
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
+	 * @return int
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$message = \sprintf(
 			'%s %s - CLI based ownCloud server upgrades',
 			$this->getApplication()->getName(),
 			$this->getApplication()->getVersion()
 		);
 		$output->writeln($message);
+		return 0;
 	}
 }

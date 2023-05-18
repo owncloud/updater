@@ -63,9 +63,10 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 	/**
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
+	 * @return int
 	 * @throws \Exception
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$locator = $this->container['utils.locator'];
 		/** @var FilesystemHelper $fsHelper */
 		$fsHelper = $this->container['utils.filesystemhelper'];
@@ -174,6 +175,7 @@ class ExecuteCoreUpgradeScriptsCommand extends Command {
 				}
 			}
 		}
+		return 0;
 	}
 
 	public function isUpgradeAllowed($installedVersion, $packageVersion, $canBeUpgradedFrom) {

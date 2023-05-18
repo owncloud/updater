@@ -93,7 +93,7 @@ class DetectCommand extends Command {
 	 * @param OutputInterface $output
 	 * @return int
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$registry = $this->container['utils.registry'];
 		$registry->set('feed', false);
 
@@ -117,7 +117,7 @@ class DetectCommand extends Command {
 				/* @phan-suppress-next-line PhanUndeclaredMethod */
 				$this->getApplication()->logException($feedData['exception']);
 				// Return a number to stop the queue
-				return $input->getOption('exit-if-none') ? 4 : null;
+				return $input->getOption('exit-if-none') ? 4 : 0;
 			}
 
 			/** @var \Owncloud\Updater\Utils\Feed $feed */
@@ -125,7 +125,7 @@ class DetectCommand extends Command {
 			if (!$feed->isValid()) {
 				// Feed is empty. Means there are no updates
 				$output->writeln('No updates found online.');
-				return $input->getOption('exit-if-none') ? 4 : null;
+				return $input->getOption('exit-if-none') ? 4 : 0;
 			}
 
 			$registry->set('feed', $feed);

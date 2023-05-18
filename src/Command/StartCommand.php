@@ -59,8 +59,10 @@ class StartCommand extends Command {
 	/**
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
+	 * @return int
+	 * @throws \Throwable
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$app = $this->getApplication();
 		foreach ($this->stack as $command) {
 			$input = new ArrayInput($command);
@@ -71,5 +73,6 @@ class StartCommand extends Command {
 			}
 		}
 		$output->writeln('Done');
+		return 0;
 	}
 }

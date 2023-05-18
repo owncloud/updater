@@ -45,7 +45,7 @@ class CheckSystemCommand extends Command {
 	 * @param OutputInterface $output
 	 * @return int
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$locator = $this->container['utils.locator'];
 		$fsHelper = $this->container['utils.filesystemhelper'];
 		/** @var \Owncloud\Updater\Utils\Registry $registry */

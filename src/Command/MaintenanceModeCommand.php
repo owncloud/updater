@@ -70,8 +70,9 @@ class MaintenanceModeCommand extends Command {
 	/**
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
+	 * @return int
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$args = [];
 		if ($input->getOption('on')) {
 			$args = ['--on' => ''];
@@ -81,5 +82,6 @@ class MaintenanceModeCommand extends Command {
 
 		$response = $this->occRunner->run('maintenance:mode', $args);
 		$output->writeln($response);
+		return 0;
 	}
 }
