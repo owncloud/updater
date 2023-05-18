@@ -65,9 +65,10 @@ class CheckpointCommand extends Command {
 	/**
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
+	 * @return int
 	 * @throws \Exception
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		\clearstatcache();
 		$checkpoint = $this->container['utils.checkpoint'];
 		if ($input->getOption('create')) {
@@ -85,8 +86,10 @@ class CheckpointCommand extends Command {
 				$output->writeln('Removed checkpoint ' . $checkpointId);
 			} catch (\UnexpectedValueException $e) {
 				$output->writeln($e->getMessage());
+				return 1;
 			} catch (\Exception $e) {
 				$output->writeln('Error while removing a checkpoint ' . $checkpointId);
+				return 1;
 			}
 		} elseif ($input->getOption('restore')) {
 			$checkpointId = \stripslashes($input->getOption('restore'));
@@ -96,8 +99,10 @@ class CheckpointCommand extends Command {
 				$output->writeln('Restored checkpoint ' . $checkpointId);
 			} catch (\UnexpectedValueException $e) {
 				$output->writeln($e->getMessage());
+				return 1;
 			} catch (\Exception $e) {
 				$output->writeln('Error while restoring a checkpoint ' . $checkpointId);
+				return 1;
 			}
 		} else {
 			$checkpoints = $checkpoint->getAll();
@@ -109,5 +114,6 @@ class CheckpointCommand extends Command {
 				$output->writeln('No checkpoints found');
 			}
 		}
+		return 0;
 	}
 }

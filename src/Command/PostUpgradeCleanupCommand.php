@@ -40,8 +40,9 @@ class PostUpgradeCleanupCommand extends Command {
 	/**
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
+	 * @return int
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$registry = $this->container['utils.registry'];
 		$fsHelper = $this->container['utils.filesystemhelper'];
 		$locator = $this->container['utils.locator'];
@@ -80,5 +81,6 @@ class PostUpgradeCleanupCommand extends Command {
 		$registry->clearAll();
 
 		$output->writeln('Done');
+		return 0;
 	}
 }

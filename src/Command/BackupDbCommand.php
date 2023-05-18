@@ -40,7 +40,10 @@ class BackupDbCommand extends Command {
 	/**
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
+	 * @return int
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
+		$output->writeln('upgrade:backupDb command is not implemented');
+		return 1;
 	}
 }
