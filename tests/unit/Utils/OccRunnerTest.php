@@ -28,7 +28,6 @@ namespace Owncloud\Updater\Tests\Utils;
  * @package Owncloud\Updater\Tests\Utils
  */
 class OccRunnerTest extends \PHPUnit\Framework\TestCase {
-
 	/**
 	 */
 	public function testInvalidJson() {

@@ -36,7 +36,6 @@ use \Owncloud\Updater\Controller\DownloadController;
  * @package Owncloud\Updater\Command
  */
 class DetectCommand extends Command {
-
 	/**
 	 * @var Fetcher $fetcher
 	 */

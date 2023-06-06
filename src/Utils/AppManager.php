@@ -27,7 +27,6 @@ namespace Owncloud\Updater\Utils;
  * @package Owncloud\Updater\Utils
  */
 class AppManager {
-
 	/**
 	 * @var OccRunner $occRunner
 	 */

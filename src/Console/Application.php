@@ -43,7 +43,6 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  * @package Owncloud\Updater\Console
  */
 class Application extends \Symfony\Component\Console\Application {
-
 	/** @var Container */
 	public static $container;
 
