@@ -41,7 +41,6 @@ use Symfony\Component\Console\Input\StringInput;
  * @package Owncloud\Updater\Controller
  */
 class IndexController {
-
 	/** @var Container */
 	protected $container;
 

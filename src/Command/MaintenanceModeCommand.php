@@ -32,7 +32,6 @@ use Owncloud\Updater\Utils\OccRunner;
  * @package Owncloud\Updater\Command
  */
 class MaintenanceModeCommand extends Command {
-
 	/**
 	 * @var OccRunner $occRunner
 	 */

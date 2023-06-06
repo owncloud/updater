@@ -3,7 +3,6 @@
 namespace Owncloud\Updater\Tests\Command;
 
 class ExecuteCoreUpgradeScriptsCommandTest extends \PHPUnit\Framework\TestCase {
-
 	/**
 	 * @dataProvider versionProvider
 	 * @param string $installedVersion

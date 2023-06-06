@@ -38,7 +38,6 @@ use Owncloud\Updater\Utils\ZipExtractor;
  * @package Owncloud\Updater\Command
  */
 class ExecuteCoreUpgradeScriptsCommand extends Command {
-
 	/**
 	 * @var OccRunner $occRunner
 	 */

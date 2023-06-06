@@ -10,7 +10,6 @@ use Owncloud\Updater\Http\Request;
  * @package Owncloud\Updater\Tests\Http
  */
 class RequestTest extends \PHPUnit\Framework\TestCase {
-
 	/**
 	 * @return array
 	 */

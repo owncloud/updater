@@ -6,21 +6,28 @@ parameters:
     -
       message: '#File ends with a trailing whitespace. This may cause problems when running the code in the web browser. Remove the closing \?\> mark or remove the whitespace.#'
       path:  src/Resources/views/partials/error.php
+      count: 1
     -
       message: '#Undefined variable: \$OC_Version$#'
       path: src/Command/ExecuteCoreUpgradeScriptsCommand.php
+      count: 1
     -
       message: '#Undefined variable: \$OC_VersionCanBeUpgradedFrom$#'
       path: src/Command/ExecuteCoreUpgradeScriptsCommand.php
+      count: 1
     -
       message: '#Undefined variable: \$CONFIG$#'
       path: src/Utils/Locator.php
+      count: 2
     -
       message: '#Undefined variable: \$OC_Version$#'
       path: src/Utils/Locator.php
+      count: 1
     -
       message: '#Undefined variable: \$OC_Channel$#'
       path: src/Utils/Locator.php
+      count: 1
     -
       message: '#Undefined variable: \$OC_Build$#'
       path: src/Utils/Locator.php
+      count: 1

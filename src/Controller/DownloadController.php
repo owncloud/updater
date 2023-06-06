@@ -31,7 +31,6 @@ use Owncloud\Updater\Utils\FilesystemHelper;
  * @package Owncloud\Updater\Controller
  */
 class DownloadController {
-
 	/**
 	 * @var Fetcher
 	 */

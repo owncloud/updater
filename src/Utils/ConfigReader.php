@@ -27,7 +27,6 @@ namespace Owncloud\Updater\Utils;
  * @package Owncloud\Updater\Utils
  */
 class ConfigReader {
-
 	/** @var array Associative array ($key => $value) */
 	protected $cache = [];
 

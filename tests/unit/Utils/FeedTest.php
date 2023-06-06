@@ -10,7 +10,6 @@ use Owncloud\Updater\Utils\Feed;
  * @package Owncloud\Updater\Tests\Utils
  */
 class FeedTest extends \PHPUnit\Framework\TestCase {
-
 	/**
 	 * @return array
 	 */

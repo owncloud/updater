@@ -29,7 +29,6 @@ use \Owncloud\Updater\Console\Application;
  * @package Owncloud\Updater\Utils
  */
 class Locator {
-
 	/**
 	 * absolute path to ownCloud root
 	 * @var string
