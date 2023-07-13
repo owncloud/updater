@@ -11,18 +11,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Added support for PHP 7.4
 
 ### Changed
-- Bump symfony/process from 3.4.39 to 3.4.40 - [#549](https://github.com/owncloud/updater/pull/549)
-- Bump symfony/console from 3.4.39 to 3.4.40 - [#548](https://github.com/owncloud/updater/pull/548)
-- Bump symfony/process from 3.4.38 to 3.4.39 - [#547](https://github.com/owncloud/updater/pull/547)
-- Bump symfony/console from 3.4.38 to 3.4.39 - [#546](https://github.com/owncloud/updater/pull/546)
-- Bump psr/log from 1.1.2 to 1.1.3 - [#540](https://github.com/owncloud/updater/pull/540)
-- Bump symfony/console from 3.4.37 to 3.4.38 - [#539](https://github.com/owncloud/updater/pull/539)
-- Bump symfony/process from 3.4.37 to 3.4.38 - [#538](https://github.com/owncloud/updater/pull/538)
-- Bump symfony/process from 3.4.36 to 3.4.37 - [#537](https://github.com/owncloud/updater/pull/537)
-- Bump symfony/console from 3.4.36 to 3.4.37 - [#536](https://github.com/owncloud/updater/pull/536)
-- Bump symfony/process from 3.4.35 to 3.4.36 - [#535](https://github.com/owncloud/updater/pull/535)
-- Bump symfony/console from 3.4.33 to 3.4.36 - [#534](https://github.com/owncloud/updater/pull/534)
-- Bump symfony/process from 3.4.33 to 3.4.35 - [#532](https://github.com/owncloud/updater/pull/532)
+
+* [#711](https://github.com/owncloud/updater/pull/711) - Always return an int from Symfony Command execute method
+* Bump libraries
 
 ## [1.0.1]
 
@@ -51,6 +42,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Removed support for PHP 5.6
 
 
-[Unreleased]: https://github.com/owncloud/updater/compare/v1.0.1...master
+[Unreleased]: https://github.com/owncloud/updater/compare/v1.1.0...master
+[1.1.0]: https://github.com/owncloud/updater/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/owncloud/updater/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/owncloud/updater/compare/v10.1.1...v1.0.0
