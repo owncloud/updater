@@ -12,7 +12,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+* [#712](https://github.com/owncloud/updater/pull/712) - Bump guzzlehttp/guzzle to 7.7.0
 * [#711](https://github.com/owncloud/updater/pull/711) - Always return an int from Symfony Command execute method
+* Strings updated
 * Bump libraries
 
 ## [1.0.1]
