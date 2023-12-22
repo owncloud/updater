@@ -44,6 +44,6 @@ class BackupDbCommand extends Command {
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$output->writeln('upgrade:backupDb command is not implemented');
-		return 1;
+		return 0;
 	}
 }
