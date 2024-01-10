@@ -6,14 +6,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-### Added
-
-- Added support for PHP 7.4
+## [1.1.1]
 
 ### Changed
 
-* [#711](https://github.com/owncloud/updater/pull/711) - Always return an int from Symfony Command execute method
-* Bump libraries
+- [#730](https://github.com/owncloud/updater/pull/730) - exit with success command line status 0 for not implemented methods
+- Bump libraries
+
+## [1.1.0]
+
+### Changed
+
+- [#711](https://github.com/owncloud/updater/pull/711) - Always return an int from Symfony Command execute method
+- Bump libraries
 
 ## [1.0.1]
 
