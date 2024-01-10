@@ -44,6 +44,6 @@ class PreUpgradeRepairCommand extends Command {
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$output->writeln('upgrade:preUpgradeRepair command is not implemented');
-		return 1;
+		return 0;
 	}
 }
