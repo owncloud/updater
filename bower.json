@@ -1,10 +1,10 @@
 {
-  "name": "ownCloud Updater",
+  "name": "owncloud updater",
   "version": "1.0",
   "homepage": "https://github.com/owncloud/updater",
   "license": "AGPL",
   "private": true,
   "dependencies": {
-    "jquery": "1.10.2"
+    "jquery": "2.2.4"
   }
 }
