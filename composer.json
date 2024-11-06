@@ -16,7 +16,7 @@
     "require": {
         "symfony/console": "^3.4",
         "pimple/pimple": "^3.5",
-        "symfony/process": "^3.4",
+        "symfony/process": "^5.4",
         "guzzlehttp/guzzle": "^7.7.0",
         "psr/log": "^1.1",
         "league/plates": "^3.5"
