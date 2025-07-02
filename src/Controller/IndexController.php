@@ -26,6 +26,7 @@ namespace Owncloud\Updater\Controller;
 use Owncloud\Updater\Utils\Checkpoint;
 /* @phan-suppress-next-line PhanUnreferencedUseNormal */
 use Owncloud\Updater\Utils\ConfigReader;
+use Owncloud\Updater\Utils\Locator;
 use Pimple\Container;
 use Owncloud\Updater\Formatter\HtmlOutputFormatter;
 use Owncloud\Updater\Http\Request;
@@ -81,6 +82,11 @@ class IndexController {
 		$templates->loadExtension(new Asset(CURRENT_DIR . '/pub/', false));
 		$templates->loadExtension(new URI($baseUrl));
 
+		# check if the updater is enabled
+		if (!$this->updaterEnabled()) {
+			return 'The web updater is not enabled. Please refer to the documentation on how to update your instance.<br><br><a href="https://doc.owncloud.com/server/latest/admin_manual/maintenance/upgrading/upgrade.html">ownCloud Server Maintenance Documentation</a>';
+		}
+
 		// Check if the user is logged-in
 		if (!$this->isLoggedIn()) {
 			return $this->showLogin($templates);
@@ -123,11 +129,21 @@ class IndexController {
 		return $content;
 	}
 
+
+	/**
+	 * @return bool
+	 */
+	private function updaterEnabled() {
+		/** @var Locator $locator */
+		$locator = $this->container['utils.locator'];
+		return $locator->isWebUpdaterEnabled();
+	}
+
 	/**
 	 * @return bool
 	 */
 	protected function isLoggedIn() {
-		/** @var ConfigReader $configReader */
+		/** @var Locator $locator */
 		$locator = $this->container['utils.locator'];
 		$storedSecret = $locator->getSecretFromConfig();
 		if ($storedSecret === '') {

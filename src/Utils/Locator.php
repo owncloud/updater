@@ -262,6 +262,17 @@ class Locator {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function isWebUpdaterEnabled() {
+		include $this->getPathToConfigFile();
+		if (isset($CONFIG['web-updater.enabled'])) {
+			return $CONFIG['web-updater.enabled'] === true;
+		}
+		return false;
+	}
+
+	/**
 	 * @param string $filePostfix
 	 * @return array
 	 */
